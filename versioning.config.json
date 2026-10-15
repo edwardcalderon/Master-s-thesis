@@ -1,0 +1,33 @@
+{
+  "rootPackageJson": "package.json",
+  "packages": [
+    "apps/web",
+    "packages/content",
+    "packages/ui"
+  ],
+  "changelogFile": "CHANGELOG.md",
+  "conventionalCommits": true,
+  "syncDependencies": true,
+  "ignorePackages": [],
+  "releaseGuard": {
+    "enabled": true,
+    "tagPrefix": "v",
+    "allowBuildMetadata": false,
+    "checkReleaseFloor": true
+  },
+  "extensionConfig": {
+    "readme-maintainer": {
+      "enabled": true,
+      "repositoryUrl": "https://github.com/edwardcalderon/Master-s-thesis",
+      "releasesUrl": "https://github.com/edwardcalderon/Master-s-thesis/releases"
+    },
+    "secrets-check": {
+      "enabled": true,
+      "allowlist": [
+        "YOUR_API_KEY",
+        "YOUR_TOKEN",
+        "EXAMPLE_SECRET"
+      ]
+    }
+  }
+}

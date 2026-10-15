@@ -1,0 +1,15 @@
+:root {
+  --ink: #161817;
+  --ink-soft: #5e635f;
+  --paper: #f3f2ed;
+  --paper-strong: #fbfaf6;
+  --line: rgba(22, 24, 23, 0.14);
+  --line-light: rgba(243, 242, 237, 0.16);
+  --signal: #c7f36b;
+  --signal-deep: #8ab63c;
+  --burnt: #e66b43;
+  --sky: #9cb8d7;
+  --display: "Newsreader", Georgia, serif;
+  --sans: "Manrope", "Helvetica Neue", sans-serif;
+  --mono: "DM Mono", "SFMono-Regular", Consolas, monospace;
+}

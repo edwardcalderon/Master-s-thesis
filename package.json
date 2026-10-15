@@ -1,0 +1,33 @@
+{
+  "name": "master-thesis-lab",
+  "version": "0.1.1",
+  "private": true,
+  "packageManager": "pnpm@9.15.5",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "test": "turbo test",
+    "docs:build": "node scripts/build-docs.mjs",
+    "prepare": "husky",
+    "version:check": "node scripts/version.mjs check",
+    "version:sync": "node scripts/version.mjs sync",
+    "version:validate": "pnpm exec versioning validate --config versioning.config.json && pnpm version:check",
+    "readme:sync": "node scripts/version.mjs sync --readme-only",
+    "readme:update": "pnpm exec versioning update-readme",
+    "secrets:check": "pnpm exec versioning check-secrets",
+    "release:patch": "node scripts/release-patch.mjs",
+    "release:verify": "pnpm version:validate && pnpm secrets:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm docs:build",
+    "release": "pnpm release:verify"
+  },
+  "devDependencies": {
+    "@edcalderon/versioning": "1.5.13",
+    "husky": "^9.1.7",
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.2"
+  }
+}

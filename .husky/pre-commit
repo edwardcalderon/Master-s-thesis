@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+# === secrets-check: start ===
+pnpm secrets:check
+# === secrets-check: end ===
+
+pnpm version:check

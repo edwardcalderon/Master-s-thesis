@@ -1,0 +1,14 @@
+[
+  {
+    "version": "0.1.0",
+    "date": "2026-10-15",
+    "status": "draft",
+    "summary": "Initial public research workspace and v0.1.0 thesis draft: multi-agent experimental infrastructure for hybrid CEX/DEX ecosystems."
+  },
+  {
+    "version": "0.1.1",
+    "date": "2026-10-15",
+    "status": "release",
+    "summary": "Synchronized release v0.1.1 with @edcalderon/versioning."
+  }
+]
