@@ -4,36 +4,26 @@
 \setmainfont{DejaVu Serif}
 \setsansfont{DejaVu Sans}
 \usepackage{geometry}
-\geometry{left=27mm,right=25mm,top=24mm,bottom=24mm}
-\usepackage{amsmath,amssymb,amsthm,booktabs,longtable,array,microtype,xcolor,hyperref,enumitem,fancyhdr}
-\definecolor{navy}{HTML}{18354D}\definecolor{muted}{HTML}{526777}
+\geometry{left=25mm,right=23mm,top=22mm,bottom=22mm}
+\usepackage{amsmath,amssymb,amsthm,booktabs,array,microtype,xcolor,hyperref,enumitem,fancyhdr}
+\definecolor{navy}{HTML}{18354D}
 \hypersetup{colorlinks=true,linkcolor=navy,urlcolor=navy,citecolor=navy}
-\setlength{\parindent}{0pt}\setlength{\parskip}{6pt}
-\pagestyle{fancy}\fancyhf{}\fancyhead[L]{\small\sffamily TESIS -- alcance científico v2.0}\fancyhead[R]{\small\sffamily 21-10-2026}\fancyfoot[C]{\thepage}
-\newcommand{\sectionlabel}[1]{\textcolor{navy}{\textbf{#1}}}
+\setlength{\parindent}{0pt}\setlength{\parskip}{3pt}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\sffamily Estabilidad no lineal en mercados CEX/DEX}
+\fancyhead[R]{\small\sffamily Preprint -- octubre de 2026}
+\fancyfoot[C]{\thepage}
+\title{\vspace{-1cm}\textbf{Análisis de estabilidad no lineal y fragilidad sistémica en mercados cripto híbridos CEX/DEX}\\[4pt]\large Un marco matemático y experimental basado en agentes}
+\author{Edward Calderón\\\small Universidad Nacional de Colombia, Facultad de Minas\\\small Maestría en Ingeniería de Sistemas e Informática}
+\date{Octubre de 2026}
 \begin{document}
-\begin{center}
-{\large\bfseries UNIVERSIDAD NACIONAL DE COLOMBIA}\\
-Facultad de Minas -- Maestría en Ingeniería de Sistemas e Informática\\[17mm]
-{\huge\color{navy}\bfseries Análisis de estabilidad no lineal y fragilidad sistémica en mercados cripto híbridos CEX/DEX}\\[3mm]
-{\large mediante modelado dinámico y simulación basada en agentes}\\[14mm]
-{\large\bfseries Documento de reformulación de alcance -- borrador v2.0}\\[5mm]
-Edward Calderón\\
-\href{https://github.com/edwardcalderon/Master-s-thesis}{github.com/edwardcalderon/Master-s-thesis}\\[9mm]
-\fbox{\begin{minipage}{0.87\linewidth}\centering
-\textbf{Estado: propuesta de trabajo, pendiente de revisión y aprobación académica.}\\
-Este documento no reemplaza administrativamente la propuesta registrada en julio de 2026. El alcance histórico v1.0 se conserva sin modificaciones; la presente reformulación constituye una nueva versión trazable.
-\end{minipage}}\\[12mm]
-\textbf{Fecha: 21 de octubre de 2026}
-\end{center}
-\vfill
-\sectionlabel{Registro de cambios.} v1.0 (julio 2026): micromundo multiagente para observar patrones emergentes de liquidez, arbitraje y riesgo. v2.0 (octubre 2026): marco de hipótesis centrado en estabilidad de seguimiento CEX/DEX, perturbaciones, realimentación de agentes y liquidez adaptativa; modelo reducido analizable y contraste experimental con ABM reproducible.\newpage
+\maketitle
 \section{Resumen}
 Los mercados cripto híbridos combinan mecanismos centralizados de negociación con creadores automáticos de mercado descentralizados (AMM). El arbitraje puede reducir discrepancias entre precios, mientras que restricciones de ejecución, decisiones heterogéneas de negociación y cambios endógenos de liquidez pueden modificar la dinámica de ajuste. Se propone un marco metodológico de dos niveles: (i) un modelo dinámico no lineal reducido susceptible de análisis de equilibrio, linealización, funciones de Lyapunov y perturbaciones; (ii) un micromundo computacional estocástico basado en agentes con un precio CEX de referencia, un AMM de producto constante y cuatro tipos de agentes. La investigación contrastará condiciones analíticas bajo supuestos explícitos frente a regiones de comportamiento observadas en experimentos controlados. No pretende predecir cotizaciones futuras ni garantizar estabilidad del mercado real.
 \textbf{Palabras clave:} sistemas dinámicos no lineales; Lyapunov; estabilidad entrada-estado; arbitraje; AMM; liquidez adaptativa; simulación multiagente; reproducibilidad.
-\section{Antecedentes y evolución de alcance}
-La propuesta original, titulada \emph{Micromundo de simulación multi-agente para el análisis de dinámicas emergentes de liquidez, arbitraje y riesgo en mercados cripto híbridos CEX/DEX} (julio de 2026), prevé un CEX abstracto, un DEX AMM, traders de ruido, seguidores de tendencia, arbitrajistas y proveedores de liquidez, junto con escenarios E0--E3, protocolo ODD, pruebas de conservación y Monte Carlo. Esta arquitectura sigue siendo un punto de partida útil, pero su pregunta inicial es principalmente descriptiva. El nuevo enfoque busca explicación mecanística, propiedades matemáticamente definidas y contraste entre teoría reducida y simulación.
-El título formal archivado y su estado institucional no deberán modificarse hasta una decisión de dirección. El repositorio GitHub es la fuente de verdad del código, protocolos y artefactos versionados; Notion registra el contexto, las decisiones y las referencias cruzadas.
+\section{Introducción}
+Los intercambios descentralizados basados en creadores automáticos de mercado (AMM) y los mercados centralizados (CEX) representan mecanismos complementarios de formación de precios. Su interacción mediante arbitraje y diferencias de liquidez permite estudiar la convergencia de precios y la respuesta a shocks desde la perspectiva de sistemas dinámicos no lineales. El aporte esperado se centra en identificar condiciones de estabilidad bajo hipótesis explícitas y contrastar su alcance con una simulación estocástica basada en agentes, sin asumir equivalencia automática entre un sistema continuo reducido y un mercado real.
+
 \section{Problema, pregunta e hipótesis}
 \subsection{Problema científico}
 No está suficientemente determinado, para el modelo mínimo propuesto, bajo qué combinaciones de capacidad de arbitraje, profundidad de liquidez, fricciones de ejecución y comportamiento de los agentes se logra seguimiento de precios, persiste una discrepancia o se amplifica una perturbación. Una simulación que solo grafique estos efectos no constituye por sí sola una explicación de las condiciones que los producen.
@@ -117,19 +107,23 @@ El mercado teórico básico seguirá la mecánica CPMM compatible con un AMM tip
 \textbf{Dentro del alcance:} AMM constante, precio CEX externo, cuatro agentes, un modelo analítico reducido, condiciones locales o de conjunto, E0--E3, reproducibilidad y comparación limitada con hechos de mercado.\\
 \textbf{Fuera del alcance:} predicción rentable, exchanges operativos, réplicas LOB completas, consenso blockchain, MEV avanzado, lending, bridges, aprendizaje por refuerzo y garantías generales sobre todos los mercados.
 \textbf{Riesgo principal:} que el reducido no aproxime adecuadamente al ABM. Mitigación: documentar las hipótesis de cierre, contrastar ablaciones y reportar desacuerdos como resultado. Otros riesgos: sobreparametrización, dependencia de semillas, supuestos de liquidez ilimitada, confusión entre estabilidad local y global, y sesgo en calibración.
-\section{Hitos y gobernanza documental}
-La meta interna previamente registrada en Notion es preparar el paquete reproducible para dirección hasta el \textbf{25 de noviembre de 2026}; las fechas institucionales y su viabilidad deben confirmarse con dirección. Plan de recuperación: (1) congelar especificaciones y esquema de registro; (2) entregar E0 con pruebas AMM y una proposición demostrada; (3) añadir E1/E2 contrafactual; (4) realizar E3/validación si el tiempo alcanza; (5) cerrar resultados, limitaciones y documentos. Se prohíbe ampliar el producto sin evidencia de que el mecanismo agregado responde una hipótesis.
-Cada pivote de alcance tendrá un registro inmutable con versión, fecha, pregunta, hipótesis, cambio, motivación, evidencia, estado de aprobación y commit. Notion es el índice; GitHub contiene \texttt{.tex}, código, configuraciones y resultados reproducibles. Las versiones científicas v1/v2 son independientes del versionado de software (v0.1.x).
-\section{Bibliografía inicial}
-\begin{enumerate}[leftmargin=*,itemsep=2pt]
-\item Calderón, E. (2026). \emph{Micromundo de simulación multi-agente para el análisis de dinámicas emergentes de liquidez, arbitraje y riesgo en mercados cripto híbridos CEX/DEX}. Propuesta institucional de trabajo final, julio 2026 (documento histórico).
-\item Khalil, H. K. (2002). \emph{Nonlinear Systems}, 3rd ed. Prentice Hall. Secciones de linealización, estabilidad de Lyapunov e input-to-state stability.
-\item Slotine, J.-J. E., \& Li, W. (1991). \emph{Applied Nonlinear Control}. Prentice Hall. Capítulos de fundamentos y teoría avanzada de estabilidad.
-\item Seron, M. M., \& Braslavsky, J. H. (2001). \emph{Sistemas No Lineales: Notas de Clase}. Fundamentos, perturbaciones y realimentación.
-\item Roubal, J., Hu\v{s}ek, P., \& \v{S}techa, J. (2010). Linearization: Students Forget the Operating Point. \emph{IEEE Transactions on Education}, 53(3). DOI: \href{https://doi.org/10.1109/TE.2009.2026427}{DOI (enlace)}.
-\item Fernández Sanjuán, M. A. (2016). Dinámica no lineal, teoría del caos y sistemas complejos: una perspectiva histórica. \emph{Revista de la Real Academia de Ciencias Exactas, Físicas y Naturales de España}, 109, 107--126.
-\end{enumerate}
-\vfill
-\hrule\vspace{3pt}
-{\footnotesize\color{muted}Documento de trabajo académico. No constituye aprobación de dirección, validación empírica ni demostración de estabilidad del modelo completo. Código y manifest de experimentos: \url{https://github.com/edwardcalderon/Master-s-thesis}.}
+\section{Discusión y límites de inferencia}
+El análisis debe distinguir tres niveles: propiedades mecánicas deducidas del AMM ideal, resultados matemáticos condicionados por las ecuaciones auxiliares y patrones de un modelo discreto estocástico sujetos a validación. La condición local obtenida por el Jacobiano y la cota de entrada acotada no constituyen por sí solas garantías de estabilidad de los mercados reales. La investigación deberá reportar también los regímenes donde las aproximaciones del modelo reducido fallen.
+
+\section{Conclusiones y trabajo futuro}
+Se ha planteado un marco matemático-computacional que combina análisis de sistemas dinámicos no lineales y simulación basada en agentes para estudiar mecanismos de seguimiento de precios y fragilidad de liquidez en mercados CEX/DEX simplificados. Las relaciones analíticas corresponden a sistemas ideales. La evaluación de las hipótesis depende todavía de la ejecución y verificación de los experimentos E0--E3, así como de la evaluación de su validez externa.
+
+\section*{Disponibilidad de código y datos}
+El repositorio público de investigación se encuentra en \url{https://github.com/edwardcalderon/Master-s-thesis}. Los resultados experimentales y artefactos reproducibles descritos constituyen trabajo en desarrollo; no se reportan como resultados ejecutados o validados.
+
+\section*{Referencias}
+\begin{thebibliography}{9}
+\bibitem{khalil2002} Khalil, H. K. (2002). \emph{Nonlinear Systems}, 3rd ed. Prentice Hall.
+\bibitem{slotine1991} Slotine, J.-J. E., y Li, W. (1991). \emph{Applied Nonlinear Control}. Prentice Hall.
+\bibitem{angeris2020} Angeris, G., y Chitra, T. (2020). Improved Price Oracles: Constant Function Market Makers. \emph{Proceedings of the ACM Conference on Advances in Financial Technologies}. \url{https://doi.org/10.1145/3419614.3423251}.
+\bibitem{uniswap2020} Adams, H., Zinsmeister, N., y Robinson, D. (2020). \emph{Uniswap v2 Core}. \url{https://blog.uniswap.org/whitepaper.pdf}.
+\bibitem{grimm2020} Grimm, V. et al. (2020). The ODD Protocol for Describing Agent-Based and Other Simulation Models: A Second Update. \emph{Journal of Artificial Societies and Social Simulation}, 23(2). \url{https://doi.org/10.18564/jasss.4259}.
+\bibitem{roubal2010} Roubal, J., Hu\v{s}ek, P., y \v{S}techa, J. (2010). Linearization: Students Forget the Operating Point. \emph{IEEE Transactions on Education}, 53(3). \url{https://doi.org/10.1109/TE.2009.2026427}.
+\end{thebibliography}
+
 \end{document}
