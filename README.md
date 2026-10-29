@@ -14,6 +14,18 @@ The public experience is inspired by the useful parts of [GeoAuPredict](https://
 
 For full version history, see [CHANGELOG.md](./CHANGELOG.md) and [GitHub releases](https://github.com/edwardcalderon/Master-s-thesis/releases)
 
+## Preliminary manuscript - 29 Oct 2026
+
+The current review draft is mechanism-first: it studies CEX/DEX price tracking, bounded arbitrage and liquidity fragility through a discrete reduced map and a synthetic agent-based prototype.
+
+- [LaTeX manuscript](thesis/preprint/manuscrito_cex_dex_revision_direccion_2026-10-29.tex)
+- [Compilation instructions](thesis/preprint/README.md)
+- [Preliminary CPMM simulation](experiments/cex_dex_preliminary/cex_dex_preliminary.py)
+- [Methods and limitations](experiments/cex_dex_preliminary/PRELIMINARY_ANALYSIS_2026-10-29.md)
+- [Summary metrics](experiments/cex_dex_preliminary/results/preliminary_summary.csv)
+
+The E0-E3 outputs are synthetic mechanism checks, not empirical market validation.
+
 ## Monorepo map
 
 ```text
