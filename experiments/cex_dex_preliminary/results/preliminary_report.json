@@ -1,0 +1,99 @@
+{
+  "model_status": "synthetic mechanism check; not real-market validation",
+  "seeds_per_variant": 100,
+  "summary": [
+    {
+      "experiment": "E0",
+      "variant": "arbitrage_active",
+      "runs": 100,
+      "max_abs_error_median": 0.04088239551691125,
+      "mean_abs_error_median": 0.003420915505743299,
+      "time_to_band_median": 2.0,
+      "min_liquidity_median": 10000.0,
+      "fixed_trade_impact_median": 0.0,
+      "cascade_ticks_median": 2.0
+    },
+    {
+      "experiment": "E0",
+      "variant": "arbitrage_off",
+      "runs": 100,
+      "max_abs_error_median": 0.10000000000000007,
+      "mean_abs_error_median": 0.10000000000000006,
+      "time_to_band_median": NaN,
+      "min_liquidity_median": 10000.0,
+      "fixed_trade_impact_median": 0.0,
+      "cascade_ticks_median": 0.0
+    },
+    {
+      "experiment": "E1",
+      "variant": "high_capacity",
+      "runs": 100,
+      "max_abs_error_median": 0.0030000000000002763,
+      "mean_abs_error_median": 0.002999999999999838,
+      "time_to_band_median": 1.0,
+      "min_liquidity_median": 10000.0,
+      "fixed_trade_impact_median": 0.0,
+      "cascade_ticks_median": 1.0
+    },
+    {
+      "experiment": "E1",
+      "variant": "low_capacity",
+      "runs": 100,
+      "max_abs_error_median": 0.1080358566449051,
+      "mean_abs_error_median": 0.008717928322452398,
+      "time_to_band_median": 9.0,
+      "min_liquidity_median": 9999.999999999998,
+      "fixed_trade_impact_median": 0.0,
+      "cascade_ticks_median": 9.0
+    },
+    {
+      "experiment": "E2",
+      "variant": "lp_adaptive",
+      "runs": 100,
+      "max_abs_error_median": 0.11850908276354966,
+      "mean_abs_error_median": 0.004659713072073289,
+      "time_to_band_median": NaN,
+      "min_liquidity_median": 4500.0,
+      "fixed_trade_impact_median": 0.20315307180406014,
+      "cascade_ticks_median": 4.0
+    },
+    {
+      "experiment": "E2",
+      "variant": "lp_static",
+      "runs": 100,
+      "max_abs_error_median": 0.009336120346739463,
+      "mean_abs_error_median": 0.0030704013371857662,
+      "time_to_band_median": 0.0,
+      "min_liquidity_median": 10000.0,
+      "fixed_trade_impact_median": 0.09398010938724931,
+      "cascade_ticks_median": 2.0
+    },
+    {
+      "experiment": "E3",
+      "variant": "liquidity_adaptive",
+      "runs": 100,
+      "max_abs_error_median": 0.3718763304761141,
+      "mean_abs_error_median": 0.06829775436959526,
+      "time_to_band_median": 47.0,
+      "min_liquidity_median": 4499.999999999998,
+      "fixed_trade_impact_median": 0.0,
+      "cascade_ticks_median": 33.0
+    },
+    {
+      "experiment": "E3",
+      "variant": "liquidity_static",
+      "runs": 100,
+      "max_abs_error_median": 0.06603943864181856,
+      "mean_abs_error_median": 0.0034328362561442324,
+      "time_to_band_median": 30.0,
+      "min_liquidity_median": 9999.999999999998,
+      "fixed_trade_impact_median": 0.0,
+      "cascade_ticks_median": 3.0
+    }
+  ],
+  "local_map_excess_slope_k": 0.1874014475136154,
+  "local_effective_arbitrage_contraction_alpha": 0.8125985524863846,
+  "local_contraction_median": 0.1071435853011086,
+  "local_contraction_max": 0.3576696991472086,
+  "config_note": "The discrete map is anchored to AMM swaps and bounded arbitrage. It is a candidate abstraction, not a calibrated market law."
+}
