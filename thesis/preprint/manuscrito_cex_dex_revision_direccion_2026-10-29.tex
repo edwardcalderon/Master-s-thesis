@@ -141,7 +141,7 @@ La referencia pública y versionada de la arquitectura es el repositorio \emph{M
 \begin{enumerate}[leftmargin=*,itemsep=1pt]
 \item Configuraciones YAML versionadas, unidades económicas especificadas y dependencias bloqueadas (`uv.lock' o equivalente).
 \item Pruebas de swaps, reservas positivas, inventarios y conservación neta, con reglas explícitas para comisiones y retiros.
-\item Comandos estables: `run one', `run sweep', `analyze', `verify' y `reproduce figure'. El prototipo actual se reproduce con \texttt{python3 experiments/cex\_dex\_preliminary/cex\_dex\_preliminary.py --output output/preliminary\_simulations --seeds 100}.
+\item Comandos estables: `run one', `run sweep', `analyze', `verify' y `reproduce figure'. El prototipo actual se reproduce ejecutando \texttt{python3}, seguido de la ruta \url{experiments/cex_dex_preliminary/cex_dex_preliminary.py}, con los argumentos \texttt{--output} \url{output/preliminary_simulations} \texttt{--seeds 100}.
 \item CI con simulaciones de referencia y tolerancias numéricas documentadas; resultados extensos en almacén de artefactos, no necesariamente en Git.
 \item Dataset sintético como referencia primaria y conjunto empírico acotado con licencia, procedencia, timestamps y scripts de ingestión.
 \end{enumerate}
@@ -170,7 +170,7 @@ Los artefactos mínimos a conservar son: el archivo de configuración o sus par�
 \section*{Disponibilidad de código y datos}
 El repositorio público de investigación se encuentra en \url{https://github.com/edwardcalderon/Master-s-thesis}. Esta versión incluye el código, la figura, el resumen de resultados y el informe de las simulaciones preliminares en las rutas citadas en la sección de arquitectura. Los resultados actuales son sintéticos y no se presentan como validación empírica.
 
-\section*{Referencias}
+\renewcommand{\refname}{Referencias}
 \begin{thebibliography}{9}
 \bibitem{angeris2020} Angeris, G., y Chitra, T. (2020). Improved Price Oracles: Constant Function Market Makers. \emph{Proceedings of the ACM Conference on Advances in Financial Technologies}. \url{https://doi.org/10.1145/3419614.3423251}.
 \bibitem{uniswap2020} Adams, H., Zinsmeister, N., y Robinson, D. (2020). \emph{Uniswap v2 Core}. \url{https://blog.uniswap.org/whitepaper.pdf}.
