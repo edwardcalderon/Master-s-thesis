@@ -162,8 +162,11 @@ El proyecto queda planteado como un marco experimental centrado en mecanismos: s
 \label{app:reproducibility}
 Los resultados de la Tabla 2 y la Figura \ref{fig:preliminary} se generan con un prototipo de producto constante, una referencia CEX exógena, arbitraje acotado y una regla opcional de retiro adaptativo de liquidez. La versión pública del código, el resumen de métricas, la figura y el informe metodológico se encuentran en las rutas indicadas en la sección de arquitectura. Para esta comprobación se ejecutaron 100 semillas por variante. E0--E2 son comparaciones mecánicas sin ruido intencional; E3 incluye innovaciones, tendencia y ventas forzadas. Por ello, la repetición numérica de E0--E2 no debe confundirse con independencia estadística.
 
-El punto de partida reproducible es:\\
-\texttt{python3 experiments/cex\_dex\_preliminary/cex\_dex\_preliminary.py --output output/preliminary\_simulations --seeds 100}
+El punto de partida reproducible es:
+\begin{quote}\small
+\texttt{python3} \url{experiments/cex_dex_preliminary/cex_dex_preliminary.py}\\
+\texttt{--output} \url{output/preliminary_simulations} \texttt{--seeds 100}
+\end{quote}
 
 Los artefactos mínimos a conservar son: el archivo de configuración o sus parámetros equivalentes, las semillas, la versión del intérprete, el resumen \texttt{preliminary\_summary.csv}, las trayectorias cuando proceda y la figura reproducida. Una réplica futura debe tratar las simulaciones actuales como \emph{selección de mecanismos}; las configuraciones de confirmación y cualquier conjunto empírico deben separarse antes de informar métricas conclusivas.
 
