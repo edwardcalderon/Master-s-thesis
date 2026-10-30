@@ -1,0 +1,129 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[spanish,es-noquoting]{babel}
+\usepackage{fontspec}
+\setmainfont{DejaVu Serif}
+\setsansfont{DejaVu Sans}
+\usepackage{geometry}
+\geometry{left=25mm,right=23mm,top=22mm,bottom=22mm}
+\usepackage{amsmath,amssymb,amsthm,booktabs,array,microtype,xcolor,hyperref,enumitem,fancyhdr}
+\definecolor{navy}{HTML}{18354D}
+\hypersetup{colorlinks=true,linkcolor=navy,urlcolor=navy,citecolor=navy}
+\setlength{\parindent}{0pt}\setlength{\parskip}{3pt}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\sffamily Estabilidad no lineal en mercados CEX/DEX}
+\fancyhead[R]{\small\sffamily Preprint -- octubre de 2026}
+\fancyfoot[C]{\thepage}
+\title{\vspace{-1cm}\textbf{Análisis de estabilidad no lineal y fragilidad sistémica en mercados cripto híbridos CEX/DEX}\\[4pt]\large Un marco matemático y experimental basado en agentes}
+\author{Edward Calderón\\\small Universidad Nacional de Colombia, Facultad de Minas\\\small Maestría en Ingeniería de Sistemas e Informática}
+\date{Octubre de 2026}
+\begin{document}
+\maketitle
+\section{Resumen}
+Los mercados cripto híbridos combinan mecanismos centralizados de negociación con creadores automáticos de mercado descentralizados (AMM). El arbitraje puede reducir discrepancias entre precios, mientras que restricciones de ejecución, decisiones heterogéneas de negociación y cambios endógenos de liquidez pueden modificar la dinámica de ajuste. Se propone un marco metodológico de dos niveles: (i) un modelo dinámico no lineal reducido susceptible de análisis de equilibrio, linealización, funciones de Lyapunov y perturbaciones; (ii) un micromundo computacional estocástico basado en agentes con un precio CEX de referencia, un AMM de producto constante y cuatro tipos de agentes. La investigación contrastará condiciones analíticas bajo supuestos explícitos frente a regiones de comportamiento observadas en experimentos controlados. No pretende predecir cotizaciones futuras ni garantizar estabilidad del mercado real.
+\textbf{Palabras clave:} sistemas dinámicos no lineales; Lyapunov; estabilidad entrada-estado; arbitraje; AMM; liquidez adaptativa; simulación multiagente; reproducibilidad.
+\section{Introducción}
+Los intercambios descentralizados basados en creadores automáticos de mercado (AMM) y los mercados centralizados (CEX) representan mecanismos complementarios de formación de precios. Su interacción mediante arbitraje y diferencias de liquidez permite estudiar la convergencia de precios y la respuesta a shocks desde la perspectiva de sistemas dinámicos no lineales. El aporte esperado se centra en identificar condiciones de estabilidad bajo hipótesis explícitas y contrastar su alcance con una simulación estocástica basada en agentes, sin asumir equivalencia automática entre un sistema continuo reducido y un mercado real.
+
+\section{Problema, pregunta e hipótesis}
+\subsection{Problema científico}
+No está suficientemente determinado, para el modelo mínimo propuesto, bajo qué combinaciones de capacidad de arbitraje, profundidad de liquidez, fricciones de ejecución y comportamiento de los agentes se logra seguimiento de precios, persiste una discrepancia o se amplifica una perturbación. Una simulación que solo grafique estos efectos no constituye por sí sola una explicación de las condiciones que los producen.
+\subsection{Pregunta principal}
+\emph{¿Bajo qué condiciones de arbitraje, liquidez y comportamiento heterogéneo puede caracterizarse la estabilidad de seguimiento de precios de un mercado híbrido CEX/DEX simplificado, y hasta qué punto las condiciones de un modelo no lineal reducido explican los regímenes observados en un micromundo multiagente estocástico?}
+\subsection{Hipótesis de trabajo}
+La estabilidad de seguimiento depende del balance entre realimentación correctiva (arbitraje) y mecanismos potencialmente amplificadores (presión de negociación y liquidez adaptativa). La variación de estos mecanismos produce regiones de comportamiento diferenciables por criterios matemáticos y métricas experimentales; un modelo reducido puede anticipar parcialmente las transiciones entre regímenes.
+\textbf{H1a.} Bajo supuestos definidos de capacidad, latencia y costes, el arbitraje reduce las discrepancias posteriores a una perturbación aislada.\\
+\textbf{H1b.} La retirada proporcional de liquidez aumenta el impacto de una operación posterior de tamaño fijo; ciertas reglas adaptativas de LP amplifican shocks en comparación con un contrafactual de liquidez estática.\\
+\textbf{H1c.} Las condiciones de estabilidad local del modelo reducido presentan concordancia predictiva contrastable con una parte de los regímenes obtenidos mediante ABM, y es posible identificar dónde fallan dichas aproximaciones.
+\section{Objetivos}
+\textbf{General.} Desarrollar y evaluar un marco matemático-computacional para analizar estabilidad de seguimiento CEX/DEX y fragilidad de liquidez combinando teoría no lineal con simulación basada en agentes heterogéneos.
+\begin{enumerate}[leftmargin=*,itemsep=2pt]
+\item Formalizar el estado, los mecanismos de transacción del AMM, el arbitraje y las políticas de los cuatro agentes con especificación ODD.
+\item Construir un modelo reducido con equilibrio o conjunto de no arbitraje; derivar condiciones locales y, cuando sea posible, resultados Lyapunov/ISS.
+\item Implementar y verificar un simulador reproducible con reservas, inventarios, costes y eventos ordenados de forma explícita.
+\item Diseñar experimentos factoriales o de sensibilidad para shocks, intensidad de arbitraje, profundidad y respuesta de LP.
+\item Contrastar resultados teóricos y simulados, incluyendo regiones de desacuerdo, robustez estadística y límites de extrapolación.
+\end{enumerate}
+\section{Modelo de mercado y observables}
+Sea $p_t^C>0$ el precio externo CEX y $p_t^D>0$ el precio marginal del AMM. En una piscina de producto constante sin comisiones durante el swap, $x_ty_t=k_t$ y $p_t^D=y_t/x_t$. Se define el error logarítmico de seguimiento
+\begin{equation}
+e_t=\log(p_t^D/p_t^C),\qquad D_t=(|e_t|-\gamma_t)_+,
+\end{equation}
+donde $\gamma_t\ge 0$ representa una banda de no arbitraje operativa, cuyos costes, orientación y dependencia del tamaño de operación deben justificarse. El conjunto $\mathcal{E}_{\gamma}=\{e:|e|\leq\gamma\}$ no es lo mismo que el equilibrio puntual $e=0$.
+Para una venta de $q>0$ unidades del activo $x$ en un AMM ideal sin comisiones:
+\begin{equation}
+p^{D\prime}=\frac{p^D}{(1+q/x)^2},\quad \Delta\log p^D=-2\log(1+q/x).
+\end{equation}
+Si un LP retira proporcionalmente las reservas dejando $r x,r y$, $0<r<1$, el precio marginal inmediato no cambia; el impacto de la misma venta sí aumenta. Las reglas para entradas/salidas de LP y comisiones distinguen transacciones que mantienen $xy=k$ de aquellas que modifican $k$.
+\subsection{Modelo completo}
+\begin{equation}
+S_{t+1}=F(S_t,\xi_t,J_t;\theta),
+\end{equation}
+con estado que incluya precios, reservas, inventarios, cuentas, memoria requerida por políticas, y variables de liquidez; $\xi_t$ son innovaciones aleatorias, $J_t$ shocks experimentales y $\theta$ parámetros. Las métricas principales son error excedente, recuperación sostenida, respuesta máxima, profundidad, slippage, frecuencia de cascadas y sensibilidad a semillas. El CEX permanece \emph{exógeno}; no se afirmará contagio bidireccional.
+\section{Ruta de análisis de estabilidad}
+\subsection{Modelo reducido ilustrativo}
+Como candidato de trabajo, no como ley financiera ya validada, se propone:
+\begin{align}
+\dot e&=-a\tanh(e)+b\tanh(z)+u(t),\\
+\dot z&=c\tanh(e)-dz,
+\end{align}
+con $a,d>0$, $b,c\ge0$. La variable $z$ abstrae presión direccional con memoria o respuesta agregada. Para el sistema autónomo con $u=0$, $(0,0)$ es equilibrio. El Jacobiano es
+\begin{equation}
+A=\begin{pmatrix}-a&b\\c&-d\end{pmatrix};\quad \operatorname{tr}A=-(a+d)<0;\quad \det A=ad-bc.
+\end{equation}
+Si $ad>bc$, el equilibrio es localmente asintóticamente estable; si $ad<bc$, es inestable. En $ad=bc$, la linealización no basta para concluir estabilidad asintótica. Estos resultados \textbf{solo} aplican al modelo reducido bajo sus hipótesis; conectar $(a,b,c,d)$ con parámetros ABM es parte de la investigación.
+\subsection{Perturbaciones, banda y Lyapunov}
+Para una ley ilustrativa $\dot e=-a\,\operatorname{sgn}(e)(|e|-\gamma)_++u(t)$, con $a>0$ y $\gamma$ constante, tomar $V(e)=\frac12(|e|-\gamma)_+^2$. Sin entradas, fuera de la banda $\dot V=-a(|e|-\gamma)_+^2$. Con $|u(t)|\le\bar u$, una cota de comparación es
+\begin{equation}
+D(t)\le e^{-at}D(0)+\frac{\bar u}{a}(1-e^{-at}).
+\end{equation}
+Se distingue convergencia \emph{hacia un conjunto} de convergencia a un punto, así como estabilidad de la ODE y estabilidad de momentos, recorrencia o probabilidad de salida de un ABM estocástico. LaSalle, ISS, teorema de pequeñas ganancias y análisis de bifurcaciones serán usados solo cuando su estructura e hipótesis sean aplicables.
+\section{Diseño experimental y falsación}
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{p{.08\linewidth}p{.33\linewidth}p{.46\linewidth}}
+\toprule ID & Intervención controlada & Contrafactual y pregunta \\\midrule
+E0 & Referencia constante, LP fijo, arbitraje activado/desactivado & Verificar existencia y naturaleza de un régimen de seguimiento.\\
+E1 & Shock exógeno del precio CEX; variar capacidad, costes y retardo & Medir error, cota, tiempo de retorno sostenido y resiliencia.\\
+E2 & LP estático contra LP adaptativo sensible a volatilidad & Distinguir impacto mecánico de menor profundidad de la realimentación endógena.\\
+E3 & Presión de ventas/reacciones heterogéneas, mismo shock externo & Identificar amplificación, persistencia y límites de la aproximación analítica.\\
+\bottomrule
+\end{tabular}
+\end{table}
+El diseño utilizará pares de semillas comunes cuando sean compatibles, barridos reducidos, análisis de sensibilidad con intervalo de incertidumbre, y preregistro de criterios de clasificación. El número de réplicas se fijará mediante convergencia y precisión del estimador, no solo mediante una regla universal de treinta. Para evitar sesgo por exploración, las configuraciones de confirmación estarán separadas de las de selección.
+\section{Playground reproducible y transferencia tecnológica}
+\subsection{Arquitectura}
+Un motor determinista de eventos ejecutará el AMM, arbitraje, políticas y contabilidad. El generador pseudoaleatorio se fijará y sus flujos se separarán por componente; los shocks y el orden de ejecución serán configurables y registrados. Cada corrida producirá `run-id', archivo de configuración, commit SHA, versión de entorno, semillas, series temporales, métricas, validación de invariantes y suma criptográfica de artefactos.
+\subsection{Contratos de reproducción}
+\begin{enumerate}[leftmargin=*,itemsep=1pt]
+\item Configuraciones YAML versionadas, unidades económicas especificadas y dependencias bloqueadas (`uv.lock' o equivalente).
+\item Pruebas de swaps, reservas positivas, inventarios y conservación neta, con reglas explícitas para comisiones y retiros.
+\item Comandos estables: `run one', `run sweep', `analyze', `verify' y `reproduce figure'.
+\item CI con simulaciones de referencia y tolerancias numéricas documentadas; resultados extensos en almacén de artefactos, no necesariamente en Git.
+\item Dataset sintético como referencia primaria y conjunto empírico acotado con licencia, procedencia, timestamps y scripts de ingestión.
+\end{enumerate}
+\subsection{Relación con software de mercado abierto}
+El mercado teórico básico seguirá la mecánica CPMM compatible con un AMM tipo Uniswap v2; no se extrapolará sin pruebas a posiciones concentradas de Uniswap v3/v4. Se propone verificar swaps contra contratos de referencia desplegados localmente con Foundry/Anvil y librerías Web3, bajo configuración controlada y sin dinero real. Para la referencia CEX se podrán utilizar series públicas obtenidas con adaptadores de mercado como CCXT o API pública del exchange, verificando licencias, identidad del par, latencia, spreads y timestamp. Un segundo nivel, opcional, consiste en replay de eventos on-chain indexados (p. ej. registros de swaps y Sync de pools compatibles) para validar la magnitud del error de ejecución. No se requiere correr nodos mainnet, MEV ni trading real.
+\section{Alcance, riesgos y criterios de salida}
+\textbf{Dentro del alcance:} AMM constante, precio CEX externo, cuatro agentes, un modelo analítico reducido, condiciones locales o de conjunto, E0--E3, reproducibilidad y comparación limitada con hechos de mercado.\\
+\textbf{Fuera del alcance:} predicción rentable, exchanges operativos, réplicas LOB completas, consenso blockchain, MEV avanzado, lending, bridges, aprendizaje por refuerzo y garantías generales sobre todos los mercados.
+\textbf{Riesgo principal:} que el reducido no aproxime adecuadamente al ABM. Mitigación: documentar las hipótesis de cierre, contrastar ablaciones y reportar desacuerdos como resultado. Otros riesgos: sobreparametrización, dependencia de semillas, supuestos de liquidez ilimitada, confusión entre estabilidad local y global, y sesgo en calibración.
+\section{Discusión y límites de inferencia}
+El análisis debe distinguir tres niveles: propiedades mecánicas deducidas del AMM ideal, resultados matemáticos condicionados por las ecuaciones auxiliares y patrones de un modelo discreto estocástico sujetos a validación. La condición local obtenida por el Jacobiano y la cota de entrada acotada no constituyen por sí solas garantías de estabilidad de los mercados reales. La investigación deberá reportar también los regímenes donde las aproximaciones del modelo reducido fallen.
+
+\section{Conclusiones y trabajo futuro}
+Se ha planteado un marco matemático-computacional que combina análisis de sistemas dinámicos no lineales y simulación basada en agentes para estudiar mecanismos de seguimiento de precios y fragilidad de liquidez en mercados CEX/DEX simplificados. Las relaciones analíticas corresponden a sistemas ideales. La evaluación de las hipótesis depende todavía de la ejecución y verificación de los experimentos E0--E3, así como de la evaluación de su validez externa.
+
+\section*{Disponibilidad de código y datos}
+El repositorio público de investigación se encuentra en \url{https://github.com/edwardcalderon/Master-s-thesis}. Los resultados experimentales y artefactos reproducibles descritos constituyen trabajo en desarrollo; no se reportan como resultados ejecutados o validados.
+
+\section*{Referencias}
+\begin{thebibliography}{9}
+\bibitem{khalil2002} Khalil, H. K. (2002). \emph{Nonlinear Systems}, 3rd ed. Prentice Hall.
+\bibitem{slotine1991} Slotine, J.-J. E., y Li, W. (1991). \emph{Applied Nonlinear Control}. Prentice Hall.
+\bibitem{angeris2020} Angeris, G., y Chitra, T. (2020). Improved Price Oracles: Constant Function Market Makers. \emph{Proceedings of the ACM Conference on Advances in Financial Technologies}. \url{https://doi.org/10.1145/3419614.3423251}.
+\bibitem{uniswap2020} Adams, H., Zinsmeister, N., y Robinson, D. (2020). \emph{Uniswap v2 Core}. \url{https://blog.uniswap.org/whitepaper.pdf}.
+\bibitem{grimm2020} Grimm, V. et al. (2020). The ODD Protocol for Describing Agent-Based and Other Simulation Models: A Second Update. \emph{Journal of Artificial Societies and Social Simulation}, 23(2). \url{https://doi.org/10.18564/jasss.4259}.
+\bibitem{roubal2010} Roubal, J., Hu\v{s}ek, P., y \v{S}techa, J. (2010). Linearization: Students Forget the Operating Point. \emph{IEEE Transactions on Education}, 53(3). \url{https://doi.org/10.1109/TE.2009.2026427}.
+\end{thebibliography}
+
+\end{document}
