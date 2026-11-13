@@ -10,6 +10,11 @@ capacity, and how liquidity depth changes the impact of a fixed-size sale. The r
 model is subordinate to this computational evidence and is not presented as an
 automatic equivalent of a real market.
 
+The intended research contribution is a reusable, auditable experiment and a test of
+where its reduced description fails. For traders, the controlled comparisons can
+illustrate how assumed capacity and liquidity alter execution exposure; they are
+scenario analysis, not validated trade signals or estimates of live trading costs.
+
 \section{Problem, research question, and hypotheses}
 
 \subsection{Scientific problem}
@@ -22,10 +27,9 @@ conditions that produce them.
 
 \subsection{Main research question}
 
-Under what conditions of arbitrage, liquidity, and heterogeneous behavior does a
-simplified hybrid CEX/DEX market reduce or maintain bounded tracking error, and to
-what extent does a reduced discrete map describe the regimes observed in a stochastic
-multi-agent microworld?
+How do arbitrage capacity and liquidity-provider responses affect peak tracking error
+and recovery after controlled shocks in a simulated CEX/DEX market, and how accurately
+does a reduced discrete map classify contraction in held-out simulation scenarios?
 
 \subsection{Working hypotheses}
 
@@ -41,16 +45,17 @@ explicitly when its assumptions are no longer reasonable.
   \item[H1b.] Proportional liquidity withdrawal increases the impact of a subsequent
     fixed-size trade; certain adaptive LP rules amplify shocks compared with a static
     liquidity counterfactual.
-  \item[H1c.] A discrete map estimated or diagnosed around an operating region can
-    partially classify error contraction or persistence in the ABM; disagreements are
-    outcomes that delimit its validity.
+  \item[H1c.] A map fitted in a stated operating region can distinguish contraction
+    from non-contraction in held-out ABM scenarios. Confirmation must specify the
+    decision rule, an independent baseline, and a minimum acceptable improvement in
+    advance; the existing 3/8 diagnostic does not establish that improvement.
 \end{description}
 
 \section{Objectives}
 
-\textbf{General objective.} Develop and evaluate a computational framework for
-analyzing CEX/DEX price tracking and liquidity fragility by combining a traceable
-reduced dynamic map with heterogeneous-agent simulation.
+\textbf{General objective.} Develop and evaluate a reproducible computational framework that quantifies how
+arbitrage capacity and liquidity responses affect price tracking after controlled shocks,
+and tests the predictive limits of a reduced map against held-out agent-based simulations.
 
 \begin{enumerate}
   \item Specify the state, AMM transaction mechanics, arbitrage, and author-approved

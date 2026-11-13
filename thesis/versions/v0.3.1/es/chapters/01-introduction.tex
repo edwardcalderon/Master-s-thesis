@@ -1,0 +1,68 @@
+\section{Introducción}
+
+Los intercambios descentralizados basados en creadores automáticos de mercado (AMM) y
+los mercados centralizados (CEX) representan mecanismos complementarios de
+formación de precios. Su interacción mediante arbitraje y diferencias de liquidez
+permite estudiar el seguimiento de precios y la respuesta a shocks. El aporte esperado
+no es una teoría general de estabilidad de mercados, sino un conjunto de mecanismos
+verificables en un simulador: qué parte de la corrección procede del arbitraje, cómo
+cambia con capacidad limitada y cómo la profundidad de liquidez transforma una venta
+de tamaño fijo. El modelo reducido se subordina a esa evidencia computacional y no se
+presenta como equivalente automático a un mercado real.
+
+\section{Problema, pregunta e hipótesis}
+
+\subsection{Problema científico}
+
+No está suficientemente determinado, para el modelo mínimo propuesto, bajo qué
+combinaciones de capacidad de arbitraje, profundidad de liquidez, fricciones de
+ejecución y comportamiento de los agentes se logra seguimiento de precios, persiste
+una discrepancia o se amplifica una perturbación. Una simulación que solo grafique
+estos efectos no constituye por sí sola una explicación de las condiciones que los
+producen.
+
+\subsection{Pregunta principal}
+
+¿Bajo qué condiciones de arbitraje, liquidez y comportamiento heterogéneo un mercado
+híbrido CEX/DEX simplificado reduce o mantiene un error de seguimiento acotado, y en
+qué medida un mapa discreto reducido describe los regímenes observados en un
+micromundo multiagente estocástico?
+
+\subsection{Hipótesis de trabajo}
+
+El seguimiento depende del balance entre realimentación correctiva (arbitraje) y
+mecanismos potencialmente amplificadores (presión de negociación y liquidez
+adaptativa). La variación de estos mecanismos produce regiones de comportamiento
+distinguibles con métricas experimentales; el mapa reducido sirve como diagnóstico
+local y debe fallar explícitamente cuando sus hipótesis dejan de ser razonables.
+
+\begin{description}[style=nextline]
+  \item[H1a.] Bajo supuestos definidos de capacidad, latencia y costes, el arbitraje
+    reduce las discrepancias posteriores a una perturbación aislada.
+  \item[H1b.] La retirada proporcional de liquidez aumenta el impacto de una operación
+    posterior de tamaño fijo; ciertas reglas adaptativas de LP amplifican shocks en
+    comparación con un contrafactual de liquidez estática.
+  \item[H1c.] Un mapa discreto estimado o diagnosticado alrededor de una región de
+    operación puede clasificar parcialmente la contracción o persistencia del error en
+    el ABM; los desacuerdos son un resultado que delimita su validez.
+\end{description}
+
+\section{Objetivos}
+
+\textbf{General.} Desarrollar y evaluar un marco computacional para analizar seguimiento
+CEX/DEX y fragilidad de liquidez, combinando un mapa dinámico reducido trazable con
+simulación basada en agentes heterogéneos.
+
+\begin{enumerate}
+  \item Formalizar el estado, los mecanismos de transacción del AMM, el arbitraje y las
+    políticas de la taxonomía de cuatro roles aprobada por el autor mediante ODD \cite{grimm2020odd}.
+  \item Construir un mapa discreto reducido con banda de no arbitraje y variables
+    observables en el ABM; evaluar contracción local y condiciones de estabilidad de la
+    linealización solo en las regiones donde aplique.
+  \item Implementar y verificar un simulador reproducible con reservas, inventarios,
+    costes y eventos ordenados de forma explícita.
+  \item Diseñar experimentos factoriales o de sensibilidad para shocks, intensidad de
+    arbitraje, profundidad y respuesta de LP.
+  \item Contrastar resultados teóricos y simulados, incluyendo regiones de desacuerdo,
+    robustez estadística y límites de extrapolación.
+\end{enumerate}

@@ -4,18 +4,13 @@ Un espacio de investigación abierto y reproducible para una tesis de maestría.
 
 La experiencia pública toma como referencia algunos elementos útiles de [GeoAuPredict](https://github.com/edwardcalderon/GeoAuPredict): una presentación clara de la investigación, un explorador de cuadernos, una superficie de documentación y una publicación orientada a artefactos mediante GitHub Pages. El código específico para predicción de oro y los servicios pesados se dejan fuera hasta que la tesis los necesite.
 
-## 📋 Últimos cambios (v0.1.2)
-
-### Añadido
-
-- Superficies públicas en inglés y español para la aplicación, documentación, cuadernos y tesis, con inglés como idioma principal.
-- Revisión local con refscan para ambas ediciones de la tesis y un fixture de evaluación etiquetado.
-- Ejecutores reproducibles deterministas y estocásticos emparejados del MVP CEX/DEX, con un diagnóstico H1c reservado.
+## 📋 Últimos cambios (v0.1.3)
 
 ### Cambios
 
-- Se actualizó el manuscrito bilingüe a v0.3.1 con resultados trazables del MVP, la taxonomía de cuatro roles aprobada por el autor y los límites explícitos del resultado H1c de 3/8.
-- Se conservaron las fuentes v0.2.0 y v0.3.0; las cifras preliminares históricas siguen sin verificarse.
+- Se aclararon los resúmenes bilingües, la pregunta, los objetivos y los límites de la hipótesis del mapa reducido.
+- Se corrigieron la descripción del escenario de liquidez adaptativa y la referencia ODD.
+- Se registró la revisión sustantiva del manuscrito como v0.4.0 y se conservaron las instantáneas bilingües v0.3.1 y v0.4.0.
 
 Consulta el [historial completo](./CHANGELOG.es.md) y las [versiones de GitHub](https://github.com/edwardcalderon/Master-s-thesis/releases). [English version](./README.md).
 
@@ -82,7 +77,7 @@ Consulta la [política de idiomas](docs/es/language-policy.md) para conocer las 
 [`@edcalderon/versioning`](https://www.npmjs.com/package/@edcalderon/versioning) gestiona los incrementos SemVer del espacio de trabajo y el changelog en inglés. El sincronizador del repositorio proyecta la versión en `VERSION`, ambos historiales, los dos archivos de idioma de la aplicación, las dos macros LaTeX de versión y los bloques de versión de ambos README. `pnpm readme:update` copia las entradas completas en inglés y español del changelog a los resúmenes correspondientes del README. Una macro distinta identifica la revisión del manuscrito y mantiene vinculadas las dos ediciones.
 
 <!-- versioning:release:start -->
-**Versión actual:** [`v0.1.2`](https://github.com/edwardcalderon/Master-s-thesis/releases/tag/v0.1.2)
+**Versión actual:** [`v0.1.3`](https://github.com/edwardcalderon/Master-s-thesis/releases/tag/v0.1.3)
 **Registro:** [Versiones de GitHub](https://github.com/edwardcalderon/Master-s-thesis/releases) · sincronizado con `@edcalderon/versioning`
 <!-- versioning:release:end -->
 

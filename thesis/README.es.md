@@ -7,7 +7,7 @@ La edición en inglés es la principal. Cada revisión del manuscrito debe inclu
 - PDF en inglés: `main.pdf`
 - PDF en español: `es/main.pdf`
 
-La revisión actual del manuscrito es v0.3.1. La versión del espacio de trabajo se registra por separado en el archivo raíz `VERSION` y se sincroniza en ambas entradas LaTeX. La instantánea bilingüe v0.3.0 conserva la fuente previa a la actualización de la taxonomía de roles aprobada por el autor. La instantánea v0.2.0 conserva el borrador del 29 de octubre con sus cifras preliminares no verificadas; también se retiene v0.1.1.
+La revisión actual del manuscrito es v0.4.0. La versión del espacio de trabajo se registra por separado en el archivo raíz `VERSION` y se sincroniza en ambas entradas LaTeX. La instantánea v0.3.1 conserva la fuente bilingüe anterior a esta aclaración de objetivos; v0.3.0 conserva la redacción anterior de la taxonomía de roles, v0.2.0 conserva el borrador del 29 de octubre y sus cifras preliminares no verificadas, y también se retiene v0.1.1.
 
 ## Compilar ambos PDF
 

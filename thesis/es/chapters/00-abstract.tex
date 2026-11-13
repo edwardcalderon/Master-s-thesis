@@ -1,20 +1,7 @@
 \section{Resumen}
 
-Los mercados cripto híbridos combinan mecanismos centralizados de negociación con
-creadores automáticos de mercado descentralizados (AMM). El arbitraje puede reducir
-discrepancias entre precios, mientras que las restricciones de ejecución, las
-decisiones heterogéneas y los cambios endógenos de liquidez pueden modificar la
-dinámica de ajuste. Esta tesis propone un marco de dos niveles: (i) un mapa discreto
-reducido con variables observables en el simulador y (ii) un micromundo estocástico con
-referencia CEX externa, AMM de producto constante y cuatro roles representativos aprobados por el autor. El MVP reproducible contiene comprobaciones mecánicas deterministas y
-un modelo de selección emparejado de 300 semillas. En los escenarios configurados, una
-mayor capacidad de arbitraje reduce el error máximo de seguimiento, mientras que el
-efecto del LP adaptativo cambia según la dirección del shock. Con semillas y magnitudes
-de shock reservadas, la etiqueta de estabilidad de Schur del mapa estimado coincide con
-el resultado mayoritario de contracción en solo 3 de 8 grupos. Estos resultados
-sintéticos de selección no validan el modelo frente a mercados reales ni convierten los
-coeficientes del mapa en parámetros empíricos. Aún se requiere revisar el diseño de
-agentes y ejecutar experimentos confirmatorios más amplios.
+En los mercados de criptoactivos, un mismo activo puede negociarse en una plataforma centralizada (CEX) y en un mercado descentralizado (DEX) basado en un creador automático de mercado (AMM). Las operaciones, la capacidad limitada de arbitraje y los cambios de liquidez pueden generar discrepancias entre sus precios. Esta tesis desarrolla un marco computacional y realiza experimentos de simulación controlados para estudiar cómo el arbitraje y la liquidez adaptativa afectan el seguimiento de precios y la respuesta a perturbaciones.
 
-\textbf{Palabras clave:} seguimiento CEX/DEX; AMM; arbitraje; liquidez adaptativa;
-simulación multiagente; mapa discreto; reproducibilidad.
+El marco combina un mapa reducido de tiempo discreto con un modelo estocástico de mercado basado en agentes que incluye una referencia CEX exógena, un AMM de producto constante y cuatro roles representativos. El prototipo reproducible comprende comprobaciones mecánicas deterministas y experimentos emparejados con 300 semillas para la selección del modelo. En los escenarios configurados, una mayor capacidad de arbitraje reduce el error máximo de seguimiento, mientras que el efecto de la provisión adaptativa de liquidez depende de la dirección del shock. Con semillas y magnitudes de shock reservadas, la clasificación de estabilidad de Schur del mapa estimado coincide con el resultado mayoritario de contracción en solo tres de ocho grupos. Estos resultados sintéticos no validan el modelo frente a mercados reales ni establecen sus coeficientes como parámetros empíricos. Se requieren una revisión adicional del diseño de agentes y experimentos de confirmación más amplios para identificar las condiciones en que el mapa reducido resulta informativo.
+
+\textbf{Palabras clave:} seguimiento CEX/DEX; AMM; arbitraje; liquidez adaptativa; simulación multiagente; mapa discreto; reproducibilidad.

@@ -32,9 +32,11 @@ byte-for-byte.
 
 The author approved the four-role taxonomy: arbitrageur, noise trader, trend/panic
 trader as one policy, and LP with static/adaptive conditions. The current policy rules
-remain simplified selection assumptions. Manuscript v0.3.1 carries this taxonomy; the
-v0.3.0 snapshot preserves the previous wording, and v0.2.0 preserves the old table and
-scalar map estimate as unverified claims. THESIS-003 is broadening held-out conditions.
+remain simplified selection assumptions. Manuscript v0.3.1 carries this taxonomy;
+release PR #2 prepares v0.4.0 to clarify the operational question and objectives while
+preserving v0.3.1 and earlier snapshots. The v0.2.0 snapshot preserves the old table
+and scalar map estimate as unverified claims. THESIS-003 is broadening held-out
+conditions.
 
 CHECK-001 and LANG-001 are complete. The latest CHECK-001 scan for v0.3.1 found zero
 matches in both editions against four local source PDFs; two bibliography entries remain

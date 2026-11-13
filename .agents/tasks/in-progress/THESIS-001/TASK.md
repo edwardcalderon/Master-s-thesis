@@ -64,10 +64,17 @@ from explicit, versioned configurations and traceable run artifacts.
 - Manuscript revision v0.3.0 now reports the deterministic, stochastic selection, and
   H1c outputs in both languages. The previous bilingual source is preserved at
   `thesis/versions/v0.2.0/`, including the unverified old numeric claims.
-- `pnpm language:check`, `pnpm docs:build`, and `make -C thesis pdf` pass on the current
-  tree; both generated PDFs are eight pages with no overfull boxes. The final local
+- The v0.1.3 release PR advances the manuscript to v0.4.0 with the clarified research
+  question/objectives and records the prior v0.3.1 source alongside the new bilingual
+  snapshot. Broader H1c confirmation remains pending under THESIS-003.
+- At manuscript v0.3.1, `pnpm language:check`, `pnpm docs:build`, and `make -C thesis pdf`
+  passed; both generated PDFs were eight pages. The final local
   refscan preflight reports zero findings against four indexed PDFs in each edition;
   two bibliography entries remain uncovered and network verification was skipped.
+- On v0.4.0, `pnpm release:verify` exits successfully and the paired thesis build passes;
+  the English PDF is eight pages and Spanish is nine. The built-in secret scan warns
+  that it cannot identify the Git repository in this runner, so a staged scan is
+  required before merge.
 
 ## Next action
 

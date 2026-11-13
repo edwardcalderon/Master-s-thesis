@@ -21,6 +21,9 @@ the reduced map on held-out configurations without concealing disagreement.
 
 ## Progress
 
+- Prepared manuscript revision v0.4.0 to make the existing simulation question,
+  objectives, and held-out-map limits explicit in both languages. Archived the published
+  v0.3.1 source and the revised v0.4.0 source as bilingual snapshots.
 - Archived the pre-reconciliation bilingual manuscript as the source snapshot
   `thesis/versions/v0.2.0/`; its former numeric table and local-map estimate remain
   preserved as historical claims because the original source and raw outputs are absent.

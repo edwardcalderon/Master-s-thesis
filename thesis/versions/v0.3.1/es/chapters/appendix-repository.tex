@@ -1,0 +1,45 @@
+\section{Bitácora de reproducibilidad de las ejecuciones del MVP}
+
+La evidencia actual se genera con los ejecutores versionados en
+\texttt{experiments/cex\_dex\_mvp/}. La ejecución mecánica determinista informada en
+la Sección 3 es \texttt{cex-dex-mvp-f183520b90aa}; su versión de modelo es 0.3.0. La
+cuadrícula determinista de sensibilidad asociada es
+\texttt{cex-dex-sweep-5e33d51c51a3}. La ejecución estocástica de selección es
+\texttt{cex-dex-abm-a99f9be866b2} (modelo 0.4.0) y el análisis reservado del mapa es
+\texttt{cex-dex-h1c-43e446f04adf} (análisis 0.1.0).
+
+Desde la raíz del repositorio, los comandos son:
+
+\begin{quote}
+\texttt{pnpm experiment:mvp:run} (ejecución mecánica determinista)\\
+\texttt{pnpm experiment:mvp:check} (invariantes mecánicas y contables)\\
+\texttt{pnpm experiment:mvp:sweep} (cuadrícula determinista de selección)\\
+\texttt{pnpm experiment:mvp:abm} (selección estocástica emparejada)\\
+\texttt{pnpm experiment:mvp:h1c}\\
+Indique \texttt{-{}-selection-run-dir} con la ruta de ejecución estocástica identificada arriba.
+\end{quote}
+
+Cada ejecución escribe su configuración, resumen y series temporales en su directorio
+generado. Los metadatos registran la versión del
+modelo o análisis, sumas de verificación de configuración y código, entorno, semillas
+y sumas de los artefactos generados. Los resultados son archivos locales generados y no
+se incluyen en esta instantánea de fuentes; los comandos permiten regenerarlos. Las
+configuraciones exactas y protocolos de análisis están versionados junto a los
+ejecutores. Los intervalos de selección estocástica usan semillas emparejadas y una
+aproximación normal; cuantifican variación por semillas bajo el modelo especificado, no
+la incertidumbre sobre el diseño de agentes o la selección de parámetros.
+
+La tabla preliminar del 29 de octubre se conserva en la instantánea de fuentes
+\texttt{thesis/versions/v0.2.0/}. El prototipo citado y sus resultados sin procesar no
+están disponibles, por lo que las cifras históricas no se presentan como reproducidas
+por las ejecuciones anteriores. Todos los resultados del MVP son salidas sintéticas de
+mecanismos y selección de modelo, no evidencia empírica de mercado.
+
+\subsection*{Disponibilidad de código y datos}
+
+El repositorio público de investigación está en
+\href{https://github.com/edwardcalderon/Master-s-thesis}{Master-s-thesis}. El modelo
+determinista, el modelo estocástico de agentes representativos, el protocolo H1c, las
+configuraciones y los comandos de reproducción están incluidos en este repositorio.
+Los conjuntos de datos externos de mercado y los experimentos confirmatorios siguen
+pendientes.

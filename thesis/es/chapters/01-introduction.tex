@@ -10,6 +10,13 @@ cambia con capacidad limitada y cómo la profundidad de liquidez transforma una 
 de tamaño fijo. El modelo reducido se subordina a esa evidencia computacional y no se
 presenta como equivalente automático a un mercado real.
 
+El aporte esperado para la investigación es un experimento reutilizable y auditable,
+junto con una evaluación de dónde falla su descripción reducida. Para los participantes
+del mercado, las
+comparaciones controladas pueden ilustrar cómo los supuestos de capacidad y liquidez
+modifican la exposición de ejecución; son análisis de escenarios, no señales validadas
+ni estimaciones de costos de negociación reales.
+
 \section{Problema, pregunta e hipótesis}
 
 \subsection{Problema científico}
@@ -23,10 +30,10 @@ producen.
 
 \subsection{Pregunta principal}
 
-¿Bajo qué condiciones de arbitraje, liquidez y comportamiento heterogéneo un mercado
-híbrido CEX/DEX simplificado reduce o mantiene un error de seguimiento acotado, y en
-qué medida un mapa discreto reducido describe los regímenes observados en un
-micromundo multiagente estocástico?
+¿Cómo afectan la capacidad de arbitraje y la respuesta de los proveedores de liquidez
+al error máximo de seguimiento y a la recuperación tras shocks controlados en un mercado
+CEX/DEX simulado, y con qué precisión clasifica un mapa discreto reducido la contracción
+en escenarios de simulación reservados?
 
 \subsection{Hipótesis de trabajo}
 
@@ -42,16 +49,18 @@ local y debe fallar explícitamente cuando sus hipótesis dejan de ser razonable
   \item[H1b.] La retirada proporcional de liquidez aumenta el impacto de una operación
     posterior de tamaño fijo; ciertas reglas adaptativas de LP amplifican shocks en
     comparación con un contrafactual de liquidez estática.
-  \item[H1c.] Un mapa discreto estimado o diagnosticado alrededor de una región de
-    operación puede clasificar parcialmente la contracción o persistencia del error en
-    el ABM; los desacuerdos son un resultado que delimita su validez.
+  \item[H1c.] Un mapa estimado en una región de operación declarada puede distinguir
+    contracción de no contracción en escenarios ABM reservados. La confirmación debe
+    especificar de antemano la regla de decisión, una referencia independiente y una
+    mejora mínima aceptable; el diagnóstico actual de 3/8 no demuestra esa mejora.
 \end{description}
 
 \section{Objetivos}
 
-\textbf{General.} Desarrollar y evaluar un marco computacional para analizar seguimiento
-CEX/DEX y fragilidad de liquidez, combinando un mapa dinámico reducido trazable con
-simulación basada en agentes heterogéneos.
+\textbf{General.} Desarrollar y evaluar un marco computacional reproducible que cuantifique cómo la
+capacidad de arbitraje y las respuestas de liquidez afectan el seguimiento de precios
+tras shocks controlados, y contraste los límites predictivos de un mapa reducido con
+simulaciones basadas en agentes reservadas para evaluación.
 
 \begin{enumerate}
   \item Formalizar el estado, los mecanismos de transacción del AMM, el arbitraje y las
