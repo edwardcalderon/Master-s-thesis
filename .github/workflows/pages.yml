@@ -53,8 +53,13 @@ jobs:
       - name: Compile required Spanish thesis translation
         uses: xu-cheng/latex-action@v4
         with:
-          root_file: es/main.tex
-          working_directory: thesis
+          root_file: main.tex
+          working_directory: thesis/es
+
+      - name: Verify bilingual thesis PDFs
+        run: |
+          test -s thesis/main.pdf
+          test -s thesis/es/main.pdf
 
       - name: Copy research assets into Pages artifact
         run: |
