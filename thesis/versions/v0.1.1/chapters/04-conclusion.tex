@@ -1,0 +1,28 @@
+\section{Estado actual}
+
+La versión \versionTesis{} convierte la primera entrega en un borrador de tesis consistente. Conserva su problema central --la necesidad de una infraestructura reproducible para estudiar ecosistemas CEX/DEX-- y delimita mejor el artefacto académico: un entorno de simulación y evaluación, no una promesa de rentabilidad ni un sistema de operación financiera.
+
+En este punto se han definido la pregunta, los objetivos, los agentes mínimos, las capas de la arquitectura, los escenarios iniciales y los criterios de evaluación. El repositorio asociado establece el espacio para documentación, notebooks, datos, código y el manuscrito fuente. Aún no se reportan experimentos empíricos ni comparaciones de desempeño.
+
+\section{Hoja de ruta}
+
+La evolución propuesta se organiza en cuatro incrementos:
+
+\begin{enumerate}
+  \item \textbf{Fundación de datos.} Seleccionar fuentes iniciales, documentar licencia y procedencia, implementar validación de esquema y publicar un notebook de exploración.
+  \item \textbf{Simulación mínima.} Implementar el AMM o libro de órdenes simplificado, los agentes básicos y un escenario de shock reproducible.
+  \item \textbf{Evaluación.} Añadir costos de ejecución, baselines, sensibilidad de parámetros y reporte estructurado de métricas.
+  \item \textbf{Extensión.} Incorporar agentes adaptativos, componentes multi-resolución, grafos de exposición y escenarios adicionales solo cuando los incrementos anteriores sean estables.
+\end{enumerate}
+
+Cada incremento deberá generar una versión de manuscrito, un conjunto de artefactos ejecutables y una nota de cambios. Las afirmaciones del capítulo de resultados se redactarán después de ejecutar ese ciclo, con evidencia enlazada y limitaciones explícitas.
+
+\section{Limitaciones y consideraciones éticas}
+
+Una simulación no reproduce por completo un mercado real. Los resultados dependerán de las fuentes disponibles, las reglas de los agentes, el modelo de costos, el intervalo temporal y las simplificaciones de protocolo. En especial, la representación de MEV, liquidaciones y riesgo sistémico debe interpretarse como un modelo experimental y no como una reconstrucción exhaustiva de una cadena o venue particular.
+
+El proyecto no administrará fondos de terceros, no ejecutará operaciones reales con capital significativo y no ofrecerá asesoría de inversión, jurídica o tributaria. Los datos y artefactos públicos se publicarán respetando licencias, privacidad y restricciones de las fuentes. La transparencia de supuestos será tan importante como cualquier métrica de desempeño.
+
+\section{Cierre}
+
+El valor esperado de la tesis no reside en predecir el próximo movimiento de un activo, sino en ofrecer un instrumento para examinar cómo interactúan liquidez, reglas de ejecución, incentivos y riesgo en mercados digitales híbridos. Al mantener el manuscrito, el código, los notebooks y la evidencia dentro de un mismo flujo versionado, la investigación puede ser discutida, auditada y ampliada como un objeto reproducible.

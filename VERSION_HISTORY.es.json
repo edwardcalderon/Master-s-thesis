@@ -1,0 +1,20 @@
+[
+  {
+    "version": "0.1.0",
+    "date": "2026-10-15",
+    "status": "draft",
+    "summary": "Espacio público inicial de investigación y primer borrador de tesis v0.1.0: infraestructura experimental multiagente para ecosistemas híbridos CEX/DEX."
+  },
+  {
+    "version": "0.1.1",
+    "date": "2026-10-15",
+    "status": "release",
+    "summary": "Versión sincronizada v0.1.1 con @edcalderon/versioning."
+  },
+  {
+    "version": "0.1.2",
+    "date": "2026-11-12",
+    "status": "release",
+    "summary": "Versión v0.1.2 sincronizada con @edcalderon/versioning."
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "shock_log_returns": [-0.1, 0.05, 0.1],
+  "arbitrage_capacity_fractions": [0.0, 0.005, 0.01, 0.03],
+  "no_arbitrage_band_logs": [0.0, 0.003, 0.01],
+  "execution_delay_ticks": [0, 1, 2],
+  "liquidity_remaining_fractions": [1.0, 0.75, 0.45, 0.25],
+  "e3_policy_selection": {
+    "trigger_log_errors": [0.01, 0.02, 0.04, 0.08],
+    "remaining_reserve_fractions": [0.4, 0.55, 0.7, 0.85]
+  }
+}

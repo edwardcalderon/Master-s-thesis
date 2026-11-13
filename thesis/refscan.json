@@ -1,0 +1,7 @@
+{
+  "bib": "references.bib",
+  "sections": "chapters",
+  "main_tex": "main.tex",
+  "literature": "literature/en",
+  "software_keys": ["calderon2026repository"]
+}

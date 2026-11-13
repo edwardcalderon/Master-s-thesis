@@ -10,3 +10,12 @@ This is the public entry point for the master thesis. The project is intentional
 - `data/` marks where raw and processed datasets belong without committing private or heavyweight files.
 
 The research question, population, variables, and final contribution should be added here as the thesis stabilizes. Until then, the scaffold keeps the public architecture honest without inventing findings.
+
+English is the primary project language. The public app supports English and Spanish,
+and every final thesis PDF release includes a complete Spanish translation. Internal
+documentation and notebooks may remain English-only; see the [language policy](language-policy.md),
+[paired PDF build instructions](reproducibility.md), and the [deterministic CEX/DEX MVP](../experiments/cex_dex_mvp/README.md).
+
+---
+
+[Español](es/index.md)

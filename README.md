@@ -1,24 +1,40 @@
 # Master Thesis Lab
 
-An open, reproducible research workspace for a master thesis. The repository keeps the public narrative, executable notebooks, data boundaries, and LaTeX source in one versioned monorepo.
+An open, reproducible research workspace for a master thesis. English is the primary language for the project, website, and documentation. Every thesis release includes a required Spanish translation of the manuscript PDF.
+
+The public web app, project documentation, notebooks, changelog, and release history have English and Spanish editions. The app opens in English and lets readers switch languages at any time. [Read this project overview in Spanish](README.es.md).
 
 The public experience is inspired by the useful parts of [GeoAuPredict](https://github.com/edwardcalderon/GeoAuPredict): a clear research overview, a notebook explorer, a docs surface, and an artifact-oriented GitHub Pages deployment. Application-specific gold-prediction code and heavyweight services are intentionally left out until the thesis needs them.
 
-## 📋 Latest Changes (v0.1.1)
+## 📋 Latest Changes (v0.1.2)
+
+### Added
+
+- English/Spanish public app, documentation, notebook, and thesis surfaces with English as the primary language.
+- Local refscan pre-submission checks for both thesis editions, plus a labeled evaluation fixture.
+- Reproducible deterministic and paired stochastic CEX/DEX MVP runners with a held-out H1c diagnostic.
 
 ### Changed
 
-- Reframed the public thesis site as an academic reading room with light and dark themes.
-- Added persistent reading mode with a reduced-distraction, narrow-measure layout.
-- Corrected versioning package discovery to synchronize the explicit workspace manifests before release validation.
+- Updated the bilingual manuscript to v0.3.1 with traceable MVP results, the author-approved four-role taxonomy, and explicit limits on the 3-of-8 H1c result.
+- Preserved manuscript source snapshots v0.2.0 and v0.3.0; the older preliminary numerical claims remain unverified.
+
+For full version history, see [CHANGELOG.md](./CHANGELOG.md) and [GitHub releases](https://github.com/edwardcalderon/Master-s-thesis/releases).
+
+# Changelog
+
+All notable changes to this research workspace are documented here. Releases follow semantic versioning and are prepared with `@edcalderon/versioning`.
 
 For full version history, see [CHANGELOG.md](./CHANGELOG.md) and [GitHub releases](https://github.com/edwardcalderon/Master-s-thesis/releases)
 
-## Preliminary manuscript - 29 Oct 2026
+## Earlier preliminary manuscript — 29 Oct 2026
 
-The current review draft is mechanism-first: it studies CEX/DEX price tracking, bounded arbitrage and liquidity fragility through a discrete reduced map and a synthetic agent-based prototype.
+This earlier mechanism-first draft studied CEX/DEX price tracking, bounded arbitrage, and liquidity fragility. It has been revised; the active bilingual manuscript is v0.3.1.
 
-- [LaTeX manuscript](thesis/preprint/manuscrito_cex_dex_revision_direccion_2026-10-29.tex)
+- [Current English manuscript](thesis/main.tex)
+- [Current Spanish translation](thesis/es/main.tex)
+- [Current reproducible MVP](experiments/cex_dex_mvp/README.md)
+- [Archived LaTeX manuscript](thesis/preprint/manuscrito_cex_dex_revision_direccion_2026-10-29.tex)
 - [Compilation instructions](thesis/preprint/README.md)
 - [Preliminary CPMM simulation](experiments/cex_dex_preliminary/cex_dex_preliminary.py)
 - [Methods and limitations](experiments/cex_dex_preliminary/PRELIMINARY_ANALYSIS_2026-10-29.md)
@@ -33,13 +49,15 @@ The E0-E3 outputs are synthetic mechanism checks, not empirical market validatio
 ├── apps/web/             # Vite + React public landing page and artifact viewer
 ├── packages/content/     # Typed thesis, notebook, and documentation metadata
 ├── packages/ui/          # Shared visual tokens for future apps
-├── docs/                 # Public research notes and reproducibility documentation
-├── notebooks/            # Small, linkable Jupyter notebooks
-├── thesis/               # LaTeX source and PDF build instructions
+├── docs/                 # Public research notes and Spanish companions in docs/es/
+├── notebooks/            # Linkable Jupyter notebooks and Spanish companions in notebooks/es/
+├── thesis/               # English LaTeX manuscript and PDF build instructions
+│   └── es/                # Required Spanish translation source
 ├── data/                 # Raw/processed boundaries; large data stays out of git
 ├── .github/workflows/    # GitHub Pages build and deploy
 ├── VERSION               # Single public release version
-└── VERSION_HISTORY.json  # Human-readable release ledger
+├── VERSION_HISTORY.json  # English release ledger
+└── VERSION_HISTORY.es.json # Spanish release ledger
 ```
 
 ## Local development
@@ -61,21 +79,31 @@ pnpm docs:build
 
 ## Thesis PDF
 
-The LaTeX source lives in [`thesis/main.tex`](thesis/main.tex). Build it locally with:
+The English primary source lives in [`thesis/main.tex`](thesis/main.tex), and its required Spanish translation is in [`thesis/es/`](thesis/es/). Build both PDFs locally with:
 
 ```bash
 cd thesis
 make pdf
 ```
 
-The web viewer is ready for `public/thesis/master-thesis.pdf` when a generated artifact is available. PDF binaries are ignored by default so the source remains the canonical artifact; remove that ignore rule if the final thesis PDF should be committed for archival release.
+`make pdf` builds both `thesis/main.pdf` (English) and `thesis/es/main.pdf` (Spanish). The Pages workflow publishes both beside the source; an English-only build is incomplete. PDF binaries are ignored by default so the two language sources remain canonical.
+
+## Language policy
+
+- English (`en`) is the primary language for the project overview, site, and documentation.
+- The web app, documentation, notebooks, changelog, and release ledger have Spanish companions; the app defaults to English and remembers the reader's choice.
+- The thesis is authored in English first and must ship with a Spanish (`es`) translation for every manuscript revision.
+- The English and Spanish PDFs use the same manuscript revision and are built and published together. The site opens English by default and exposes both versions.
+- Run `pnpm language:check` to check app translation structure, paired documentation/notebooks, release history, and manuscript revision parity. CI runs this check and compiles both PDFs.
+
+See [`docs/language-policy.md`](docs/language-policy.md) for the source and publishing rules.
 
 ## Version tracking
 
-This repository uses [`@edcalderon/versioning`](https://www.npmjs.com/package/@edcalderon/versioning) as the source of truth for semantic versions, workspace synchronization, changelog maintenance, the README Maintainer extension, and secret checks. The small local synchronizer projects that package version into thesis-specific artifacts: `VERSION`, `VERSION_HISTORY.json`, the public site metadata, the LaTeX version macro, and the release block below.
+[`@edcalderon/versioning`](https://www.npmjs.com/package/@edcalderon/versioning) handles workspace SemVer bumps and the English changelog. The repository synchronizer projects the version into `VERSION`, both release histories, both app locale files, both LaTeX workspace-version macros, and the release blocks in both READMEs. `pnpm readme:update` copies the populated English and Spanish changelog entries into their matching README summaries. A separate manuscript-revision macro keeps the thesis editions paired.
 
 <!-- versioning:release:start -->
-**Current release:** [`v0.1.1`](https://github.com/edwardcalderon/Master-s-thesis/releases/tag/v0.1.1)
+**Current release:** [`v0.1.2`](https://github.com/edwardcalderon/Master-s-thesis/releases/tag/v0.1.2)
 **Tracker:** [GitHub releases](https://github.com/edwardcalderon/Master-s-thesis/releases) · synchronized with `@edcalderon/versioning`
 <!-- versioning:release:end -->
 
@@ -83,12 +111,12 @@ The site footer reads the same tracked version and links directly to its GitHub 
 
 ```bash
 pnpm version:validate  # validates @edcalderon/versioning plus thesis artifacts
-pnpm readme:update     # refreshes “Latest Changes” from CHANGELOG.md
+pnpm readme:update     # syncs both README summaries from their changelogs
 pnpm secrets:check     # scans staged changes through the versioning secrets extension
 pnpm release:patch     # prepares the next patch, synchronizes, and verifies it
 ```
 
-`pnpm release:patch` deliberately does not commit or tag: it runs the package's README Maintainer extension, synchronizes the release tracker, and then verifies the workspace. Review the generated package, changelog, README, and thesis changes before making the release commit and `vX.Y.Z` tag. Husky runs the secret scan and version integrity check before each commit.
+`pnpm release:patch` deliberately does not commit or tag. It bumps the workspace version, synchronizes package and thesis metadata, refreshes both README summaries, and runs `release:verify`. Keep the English and Spanish changelog entries for the new version populated before running it. Review the changes, then create the release commit and `vX.Y.Z` tag. Husky checks staged files for secrets and validates version integrity before each commit.
 
 ## GitHub Pages
 

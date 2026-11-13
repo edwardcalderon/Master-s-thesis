@@ -1,0 +1,111 @@
+\section{Market model and observables}
+
+Let $p_t^C>0$ denote the external CEX price and $p_t^D>0$ the marginal AMM price.
+In a constant-product pool without swap fees, $x_ty_t=k_t$ and $p_t^D=y_t/x_t$. The
+logarithmic tracking error is
+
+\begin{equation}
+  e_t=\log\left(\frac{p_t^D}{p_t^C}\right), \qquad
+  D_t=(|e_t|-\gamma_t)_+,
+\end{equation}
+
+where $\gamma_t\geq 0$ is an operational no-arbitrage band whose costs, direction, and
+dependence on trade size must be justified. The set
+$E_\gamma=\{e:|e|\leq\gamma\}$ is not the same as the point equilibrium $e=0$. For a
+sale of $q>0$ units of asset $x$ in an ideal AMM without fees:
+
+\begin{equation}
+  p^{D\prime}=\frac{p^D}{(1+q/x)^2}, \qquad
+  \Delta\log p^D=-2\log(1+q/x).
+\end{equation}
+
+If an LP withdraws a proportion of the reserves, leaving $rx$ and $ry$ for $0<r<1$,
+the immediate marginal price does not change; the impact of the same sale does
+increase. Rules for LP additions and withdrawals and for fees distinguish
+transactions that preserve $xy=k$ from those that change $k$.
+
+\subsection{Full model}
+
+\begin{equation}
+  S_{t+1}=F(S_t,\xi_t,J_t;\theta),
+\end{equation}
+
+where the state includes prices, reserves, inventories, accounts, policy memory, and
+liquidity variables; $\xi_t$ denotes random innovations, $J_t$ experimental shocks,
+and $\theta$ the parameters. Primary metrics include excess error, sustained recovery
+time, maximum response, depth, slippage, cascade frequency, and sensitivity to random
+seeds. The CEX remains exogenous; the model will not claim bidirectional contagion.
+
+\section{A traceable reduced map and local criteria}
+
+\subsection{Why the initial ODE is replaced}
+
+The earlier draft proposed an ODE with hyperbolic functions and Lyapunov/ISS
+arguments before a simulator existed to connect its states and coefficients to swaps,
+arbitrage capacity, or LP rules. That formulation is premature: the ABM runs in
+discrete ticks and events, and an ODE is not valid simply because it is mathematically
+convenient \cite{roubal2010linearization}. This version replaces it as the manuscript's
+core with a discrete map whose semantics match the simulator's update order.
+
+\subsection{Discrete price-tracking map}
+
+Define signed excess relative to the no-arbitrage band as
+
+\begin{equation}
+  d_t=\operatorname{sgn}(e_t)(|e_t|-\gamma)_+.
+\end{equation}
+
+Let $z_t$ be net buying pressure in the DEX, positive when it raises $p_t^D$, and let
+$u_t$ be the displacement induced by the CEX reference. A candidate local
+approximation, to be tested against ABM data rather than imposed on it, is
+
+\begin{align}
+  d_{t+1}&=(1-\alpha)d_t+\beta z_t+u_t+\varepsilon_t,\\
+  z_{t+1}&=-\chi d_t+\rho z_t+\eta_t.
+\end{align}
+
+Here $\alpha\geq0$ represents effective arbitrage correction, $\beta>0$ the local
+impact of buying pressure, $\chi\geq0$ corrective feedback toward the band, and
+$\rho$ the persistence of pressure. These are parameters of a local approximation,
+not universal market constants.
+
+Without inputs or noise, the linearization is
+
+\begin{equation}
+  \begin{pmatrix} d_{t+1}\\ z_{t+1} \end{pmatrix}
+  =A\begin{pmatrix} d_t\\ z_t \end{pmatrix},\qquad
+  A=\begin{pmatrix}1-\alpha&\beta\\-\chi&\rho\end{pmatrix}.
+\end{equation}
+
+For this $2\times2$ map, local Schur stability requires the roots of $A$ to lie
+inside the unit circle; equivalently,
+
+\begin{equation}
+  1-\det(A)>0,\qquad
+  1-\operatorname{tr}(A)+\det(A)>0,\qquad
+  1+\operatorname{tr}(A)+\det(A)>0.
+\end{equation}
+
+These inequalities are diagnostic criteria for the reduced map. They do not prove
+stability of an ABM with noise, saturation, capital limits, liquidity changes, or
+additional agents.
+
+\subsection{Operating regimes and a bounded use of multiple models}
+
+Medina et al. \cite{medina2009multimodelos} describe nonlinear dynamics using local
+linear models associated with operating points. This thesis does not adopt their fault
+diagnosis component or attempt to identify a real financial system. The reference is
+used narrowly to document CEX scenarios with explicit operating regions---normal
+reference, shock, and recovery---each with declared perturbation and execution
+parameters. This separation supports sensitivity analysis without claiming that the
+regimes are empirical estimates or adding a new agent class.
+
+\subsection{Exact mechanics anchoring the map}
+
+The discrete form is linked to the AMM by a verifiable identity. If the DEX receives
+a sale of $q>0$ units of $x$, then
+$\Delta\log p^D=-2\log(1+q/x)$. An arbitrageur acting when $|e|>\gamma$ attempts to
+bring the price back to the band, but its tradable reserve fraction is capacity
+limited. Therefore, $\alpha$ is not postulated as an abstract gain: it is estimated or
+diagnosed from the observed contraction of excess $d_t$ per tick. Liquidity enters
+directly because the same absolute sale increases $q/x$ when an LP withdraws reserves.

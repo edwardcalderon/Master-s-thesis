@@ -1,0 +1,67 @@
+\section{Introduction}
+
+Decentralized exchanges based on automated market makers (AMMs) and centralized
+exchanges (CEXs) represent complementary price-formation mechanisms. Their
+interaction through arbitrage and differences in liquidity makes it possible to study
+price tracking and responses to shocks. The intended contribution is not a general
+theory of market stability, but a set of mechanisms that can be verified in a
+simulator: how much correction comes from arbitrage, how it changes under limited
+capacity, and how liquidity depth changes the impact of a fixed-size sale. The reduced
+model is subordinate to this computational evidence and is not presented as an
+automatic equivalent of a real market.
+
+\section{Problem, research question, and hypotheses}
+
+\subsection{Scientific problem}
+
+For the proposed minimal model, it is not yet sufficiently determined under which
+combinations of arbitrage capacity, liquidity depth, execution frictions, and agent
+behavior price tracking is achieved, a discrepancy persists, or a disturbance is
+amplified. A simulation that only plots these effects does not by itself explain the
+conditions that produce them.
+
+\subsection{Main research question}
+
+Under what conditions of arbitrage, liquidity, and heterogeneous behavior does a
+simplified hybrid CEX/DEX market reduce or maintain bounded tracking error, and to
+what extent does a reduced discrete map describe the regimes observed in a stochastic
+multi-agent microworld?
+
+\subsection{Working hypotheses}
+
+Price tracking depends on the balance between corrective feedback (arbitrage) and
+potentially amplifying mechanisms (trading pressure and adaptive liquidity). Variation
+in these mechanisms produces behavior regions that can be distinguished with
+experimental metrics; the reduced map serves as a local diagnostic and must fail
+explicitly when its assumptions are no longer reasonable.
+
+\begin{description}[style=nextline]
+  \item[H1a.] Under specified assumptions about capacity, latency, and costs,
+    arbitrage reduces discrepancies after an isolated disturbance.
+  \item[H1b.] Proportional liquidity withdrawal increases the impact of a subsequent
+    fixed-size trade; certain adaptive LP rules amplify shocks compared with a static
+    liquidity counterfactual.
+  \item[H1c.] A discrete map estimated or diagnosed around an operating region can
+    partially classify error contraction or persistence in the ABM; disagreements are
+    outcomes that delimit its validity.
+\end{description}
+
+\section{Objectives}
+
+\textbf{General objective.} Develop and evaluate a computational framework for
+analyzing CEX/DEX price tracking and liquidity fragility by combining a traceable
+reduced dynamic map with heterogeneous-agent simulation.
+
+\begin{enumerate}
+  \item Specify the state, AMM transaction mechanics, arbitrage, and provisional
+    representative-agent policies using the ODD protocol \cite{grimm2020odd}.
+  \item Construct a reduced discrete map with a no-arbitrage band and variables
+    observable in the ABM; evaluate local contraction and linearized stability only in
+    regions where those criteria apply.
+  \item Implement and verify a reproducible simulator with explicit reserves,
+    inventories, costs, and event ordering.
+  \item Design factorial or sensitivity experiments for shocks, arbitrage intensity,
+    depth, and LP response.
+  \item Compare theoretical and simulated results, including disagreement regions,
+    statistical robustness, and limits to extrapolation.
+\end{enumerate}

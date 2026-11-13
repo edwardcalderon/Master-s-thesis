@@ -1,0 +1,35 @@
+\section{Scope, risks, and exit criteria}
+
+In scope: constant-product AMM, external CEX price, four agents, a traceable local
+discrete map, E0--E3, reproducibility, synthetic experiments, and limited comparison
+with market facts.
+
+Out of scope: profitable forecasting, operational exchanges, full limit-order-book
+replicas, blockchain consensus, advanced MEV, lending, bridges, reinforcement
+learning, and general guarantees across all markets. For now, it is also out of scope
+to claim empirical validity for the map based only on preliminary simulations. The
+main risk is that the reduced map may not approximate the ABM outside a local region.
+Mitigation: separate selection from confirmation, record configurations, compare
+ablations, and report disagreement as a result. Other risks include overparameterization,
+seed dependence, assumptions of unlimited liquidity, confusion between local and
+global stability, and calibration bias.
+
+\section{Discussion and limits to inference}
+
+The analysis must distinguish three levels: mechanical properties derived from the
+ideal AMM, local diagnostics from the reduced map, and patterns from a stochastic
+discrete ABM that remain subject to validation. The map's Schur condition and
+preliminary contraction do not guarantee stability in real markets or replace
+evaluation with public data. The research must report the regimes in which the
+approximation reduces error well and those in which it fails because of saturation,
+capital limits, persistent shocks, or liquidity changes.
+
+\section{Conclusions and future work}
+
+The project is framed as a mechanism-centered experimental framework for price
+tracking, bounded arbitrage, and liquidity fragility. Preliminary simulations show
+that the prototype reproduces the expected comparative directions for E0--E3 and
+allow a generic ODE to be replaced with a discrete map whose variables are observable.
+The decisive phase remains: specify ex ante criteria, run separate sensitivity and
+confirmation analyses, and evaluate external validity with a bounded set of public
+data. None of the current results demonstrates usefulness in a real market.

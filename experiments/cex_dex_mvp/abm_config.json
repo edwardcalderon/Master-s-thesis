@@ -1,0 +1,39 @@
+{
+  "model_version": "0.4.0",
+  "initial_reserve_x": 10000.0,
+  "initial_reserve_y": 10000.0,
+  "initial_cex_price": 1.0,
+  "shock_log_returns": [-0.1, 0.1],
+  "shock_tick": 1,
+  "horizon_ticks": 20,
+  "no_arbitrage_band_log": 0.003,
+  "sustained_band_ticks": 2,
+  "arbitrage_capacity_fractions": {
+    "off": 0.0,
+    "low": 0.005,
+    "high": 0.03
+  },
+  "wallet_inventory_multiple_of_initial_reserves": 2.0,
+  "arbitrage_inventory_multiple_of_initial_reserves": 5.0,
+  "noise_trader": {
+    "activity_probability": 0.7,
+    "order_fraction_of_initial_reserve": 0.004
+  },
+  "trend_panic_trader": {
+    "trend_log_return_threshold": 0.001,
+    "trend_order_fraction_of_initial_reserve": 0.006,
+    "panic_dex_log_return_threshold": -0.015,
+    "panic_sell_fraction_of_initial_reserve": 0.02,
+    "panic_max_orders_per_run": 1
+  },
+  "liquidity_provider": {
+    "adaptive_lp_trigger_log_error": 0.02,
+    "remaining_reserve_fraction": 0.55
+  },
+  "replication": {
+    "minimum_seed_count": 50,
+    "seed_batch_size": 50,
+    "maximum_seed_count": 500,
+    "target_95pct_half_width_peak_error": 0.005
+  }
+}

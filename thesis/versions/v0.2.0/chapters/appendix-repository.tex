@@ -1,0 +1,30 @@
+\section{Reproducibility log for the preliminary simulations}
+
+The results in Table 1 and Figure 1 are generated with a constant-product prototype,
+an exogenous CEX reference, bounded arbitrage, and an optional adaptive liquidity
+withdrawal rule. The public code, metrics summary, figure, and methodological report
+are located at the paths listed in the architecture section. One hundred seeds per
+variant were run for this check. E0--E2 are mechanical comparisons without intentional
+noise; E3 includes innovations, trend, and forced selling. The repeated E0--E2
+numerical values must not be mistaken for statistical independence.
+
+The reproducible starting point is:
+
+\begin{quote}
+\texttt{python3 experiments/cex\_dex\_preliminary/cex\_dex\_preliminary.py}\\
+\texttt{--output output/preliminary\_simulations --seeds 100}
+\end{quote}
+
+Minimum artifacts to retain are the configuration file or equivalent parameters,
+seeds, interpreter version, \texttt{preliminary\_summary.csv}, trajectories where
+applicable, and the reproduced figure. A future replication should treat current
+simulations as mechanism selection; confirmation configurations and any empirical
+dataset must be separated before reporting conclusive metrics.
+
+\subsection*{Code and data availability}
+
+The public research repository is at
+\href{https://github.com/edwardcalderon/Master-s-thesis}{Master-s-thesis}. This version
+includes the code, figure, results summary, and preliminary simulation report at the
+paths cited in the architecture section. Current results are synthetic and are not
+presented as empirical validation.

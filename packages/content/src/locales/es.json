@@ -1,0 +1,90 @@
+{
+  "thesis": {
+    "shortTitle": "Laboratorio de tesis",
+    "eyebrow": "Espacio de investigación abierta · 2026",
+    "title": "Una tesis para leer, ejecutar y cuestionar.",
+    "description": "Un espacio público de investigación para una tesis de maestría reproducible. La pregunta, el método, la evidencia y el argumento final quedan disponibles para su revisión.",
+    "version": "0.1.2",
+    "state": "Fundación",
+    "location": "Colombia · laboratorio distribuido",
+    "license": "CC BY-NC 4.0 · fuentes disponibles"
+  },
+  "notebooks": [
+    {
+      "id": "00",
+      "title": "Recorrido del proyecto",
+      "kind": "Orientación",
+      "description": "La ruta más corta por la pregunta de investigación, el repositorio y los artefactos públicos.",
+      "runtime": "Python 3.12",
+      "status": "Listo",
+      "href": "./notebooks/es/00-project-tour.ipynb"
+    },
+    {
+      "id": "01",
+      "title": "Plantilla de reproducibilidad",
+      "kind": "Métodos",
+      "description": "Un punto de partida para cargar datos, declarar supuestos y registrar resultados.",
+      "runtime": "Python · pandas",
+      "status": "Plantilla",
+      "href": "./notebooks/es/01-reproducibility-template.ipynb"
+    },
+    {
+      "id": "02",
+      "title": "Cuaderno de evidencia",
+      "kind": "Análisis",
+      "description": "Reservado para el primer resultado estable: una afirmación, una figura y una fuente trazable.",
+      "runtime": "Por definir",
+      "status": "Planificado",
+      "href": "./notebooks/es/02-evidence-notebook.ipynb"
+    }
+  ],
+  "docs": [
+    {
+      "label": "Resumen de investigación",
+      "meta": "Empieza aquí",
+      "href": "./docs/es/index.md"
+    },
+    {
+      "label": "Método y supuestos",
+      "meta": "Cómo leer el trabajo",
+      "href": "./docs/es/methodology.md"
+    },
+    {
+      "label": "Protocolo de reproducibilidad",
+      "meta": "Repetir el análisis",
+      "href": "./docs/es/reproducibility.md"
+    },
+    {
+      "label": "Nota de arquitectura",
+      "meta": "Por qué el repositorio está organizado así",
+      "href": "./docs/es/architecture.md"
+    },
+    {
+      "label": "Política de idiomas",
+      "meta": "Ediciones en inglés y español",
+      "href": "./docs/es/language-policy.md"
+    },
+    {
+      "label": "Plan de implementación del MVP",
+      "meta": "Hoja de ruta de los experimentos CEX/DEX",
+      "href": "./docs/es/mvp-plan.md"
+    }
+  ],
+  "layers": [
+    {
+      "index": "01",
+      "label": "Narrativa",
+      "detail": "Pregunta, contexto y aporte"
+    },
+    {
+      "index": "02",
+      "label": "Evidencia",
+      "detail": "Datos, cuadernos, figuras y registros"
+    },
+    {
+      "index": "03",
+      "label": "Artefacto",
+      "detail": "Fuente LaTeX, PDF y versión"
+    }
+  ]
+}

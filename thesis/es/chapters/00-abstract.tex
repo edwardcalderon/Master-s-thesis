@@ -1,0 +1,20 @@
+\section{Resumen}
+
+Los mercados cripto híbridos combinan mecanismos centralizados de negociación con
+creadores automáticos de mercado descentralizados (AMM). El arbitraje puede reducir
+discrepancias entre precios, mientras que las restricciones de ejecución, las
+decisiones heterogéneas y los cambios endógenos de liquidez pueden modificar la
+dinámica de ajuste. Esta tesis propone un marco de dos niveles: (i) un mapa discreto
+reducido con variables observables en el simulador y (ii) un micromundo estocástico con
+referencia CEX externa, AMM de producto constante y cuatro roles representativos aprobados por el autor. El MVP reproducible contiene comprobaciones mecánicas deterministas y
+un modelo de selección emparejado de 300 semillas. En los escenarios configurados, una
+mayor capacidad de arbitraje reduce el error máximo de seguimiento, mientras que el
+efecto del LP adaptativo cambia según la dirección del shock. Con semillas y magnitudes
+de shock reservadas, la etiqueta de estabilidad de Schur del mapa estimado coincide con
+el resultado mayoritario de contracción en solo 3 de 8 grupos. Estos resultados
+sintéticos de selección no validan el modelo frente a mercados reales ni convierten los
+coeficientes del mapa en parámetros empíricos. Aún se requiere revisar el diseño de
+agentes y ejecutar experimentos confirmatorios más amplios.
+
+\textbf{Palabras clave:} seguimiento CEX/DEX; AMM; arbitraje; liquidez adaptativa;
+simulación multiagente; mapa discreto; reproducibilidad.

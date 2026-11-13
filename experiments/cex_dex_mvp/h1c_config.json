@@ -1,0 +1,11 @@
+{
+  "analysis_version": "0.1.0",
+  "confirmation_shock_log_returns": [-0.05, 0.05],
+  "confirmation_seed_start": 1000,
+  "confirmation_seed_count": 300,
+  "early_error_window_ticks": [1, 5],
+  "late_error_window_ticks": [16, 20],
+  "majority_contraction_threshold": 0.5,
+  "map_schur_stability_threshold": 1.0,
+  "normal_approximation_z": 1.96
+}

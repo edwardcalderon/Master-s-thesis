@@ -1,0 +1,195 @@
+\section{Diseño experimental y falsación}
+
+El diseño utilizará pares de semillas comunes cuando sean compatibles, barridos
+reducidos, análisis de sensibilidad con intervalo de incertidumbre y preregistro de
+criterios de clasificación. El número de réplicas se fijará mediante convergencia y
+precisión del estimador, no solo mediante una regla universal de treinta. Para evitar
+sesgo por exploración, las configuraciones de confirmación estarán separadas de las
+de selección.
+
+\begin{table}[!ht]
+\centering
+\small
+\begin{tabularx}{\textwidth}{@{}c p{4.2cm} X@{}}
+\toprule
+\textbf{ID} & \textbf{Intervención controlada} & \textbf{Contrafactual y pregunta} \\
+\midrule
+E0 & Referencia constante, LP fijo, arbitraje activado/desactivado & Verificar existencia
+  y naturaleza de un régimen de seguimiento. \\
+E1 & Shock exógeno del precio CEX; variar capacidad, costes y retardo & Medir error, cota,
+  tiempo de retorno sostenido y resiliencia. \\
+E2 & LP estático contra LP adaptativo sensible a volatilidad & Distinguir impacto mecánico
+  de menor profundidad de la realimentación endógena. \\
+E3 & Presión de ventas y reacciones heterogéneas, mismo shock externo & Identificar
+  amplificación, persistencia y límites de la aproximación analítica. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Resultados trazables del MVP: selección, no confirmación}
+
+El borrador del 29 de octubre informó una tabla preliminar y una estimación escalar de
+un mapa local, pero la ruta de código citada
+\texttt{experiments/cex\_dex\_preliminary/} y sus resultados sin procesar no están en
+esta copia. Por tanto, esos valores no se presentan como hallazgos reproducidos. La
+instantánea bilingüe \texttt{thesis/versions/v0.2.0/} los conserva como afirmaciones
+históricas del borrador. Los resultados siguientes proceden de un MVP versionado por
+separado y no reproducen aquella tabla. Todas las ejecuciones son sintéticas y no usan
+datos de mercado.
+
+\subsubsection{Comprobaciones mecánicas deterministas}
+
+La ejecución \texttt{cex-dex-mvp-f183520b90aa} usa el modelo determinista 0.3.0. E0--E2
+son comprobaciones mecánicas sin flujo aleatorio. E3 es un caso de selección de una
+política con diez ventas fijas; no es una prueba general del comportamiento del LP
+adaptativo.
+
+\begin{table}[!ht]
+\centering
+\scriptsize
+\caption{Resultados deterministas del MVP. Error de seguimiento:
+$|\log(p^D/p^C)|$; retorno significa dos ticks consecutivos dentro de la banda.}
+\begin{tabularx}{\textwidth}{@{}c >{\raggedright\arraybackslash}p{3.5cm} >{\raggedright\arraybackslash}p{5.1cm} X@{}}
+\toprule
+\textbf{Escenario} & \textbf{Comparación} & \textbf{Resultado observado} &
+\textbf{Alcance} \\
+\midrule
+E0 & Capacidad 0 / 0.03 por tick & Error máximo 0.10000/0.04088; retorno sostenido
+  no observado/en tick 2 & Un shock CEX positivo, horizonte de 20 ticks. \\
+E1 & Capacidad 0.005 / 0.03 por tick & Error máximo 0.09002/0.04088; retorno en
+  ticks 10/2 & Un shock; la capacidad es el mecanismo variado. \\
+E2 & Reservas completas / 45\% restante & Impacto de una venta fija de 500 unidades:
+  0.09758/0.21072 unidades logarítmicas & Arbitraje desactivado; el retiro proporcional
+  previo a la venta no cambia el precio marginal. \\
+E3 & LP estático / adaptativo de una activación & Error máximo 0.08049/0.18249; retorno
+  en tick 6 / no observado en el horizonte de 10 ticks & Shock +0.1, diez ventas de
+  200 unidades, umbral 0.02, 55\% de reservas restantes. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+El barrido determinista contiene 144 filas de parámetros. En sus 16 configuraciones
+emparejadas de política E3, la regla adaptativa retiró liquidez en todos los casos; el
+error máximo superó al contrafactual estático en 12 y no cambió en cuatro. Es una
+cuadrícula de selección, no una muestra independiente ni un resultado confirmatorio.
+
+\subsubsection{ABM estocástico de selección}
+
+El modelo estocástico 0.4.0 implementa la taxonomía de cuatro roles aprobada por el autor:
+arbitrajista acotado, trader de ruido, trader de tendencia/pánico y LP. La ejecución
+\texttt{cex-dex-abm-a99f9be866b2} contiene 300 semillas emparejadas. Para los seis
+contrastes configurados se alcanzó la meta de semiancho de 0.005 unidades de error
+máximo en el intervalo normal aproximado del 95\%. El mismo calendario de ruido
+pre-generado se comparte entre las condiciones emparejadas.
+
+\begin{table}[!ht]
+\centering
+\scriptsize
+\caption{Contrastes estocásticos emparejados de selección (300 semillas). Diferencia:
+primera condición menos segunda; intervalos normales aproximados del 95\%.}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{3cm} r X@{}}
+\toprule
+\textbf{Shock} & \textbf{Contraste} & \textbf{Diferencia del error máximo} &
+\textbf{Intervalo aproximado del 95\%} \\
+\midrule
+$+0.1$ & Arbitraje alto menos nulo & $-0.10690$ & $[-0.11176,-0.10204]$ \\
+$+0.1$ & LP adaptativo menos estático & $+0.00529$ & $[+0.00426,+0.00632]$ \\
+$-0.1$ & LP adaptativo menos estático & Aproximadamente $0$ & Error máximo; diferencia
+  del error excedente acumulado $+0.00456$, intervalo $[+0.00359,+0.00553]$. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+En este modelo configurado, el contraste adaptativo/estático cambia según la dirección
+del shock. Son estimaciones condicionales al modelo para reglas y parámetros elegidos
+por el investigador. La taxonomía aprobada se representa mediante políticas simplificadas elegidas por el
+investigador y no equivale al diseño completo de agentes heterogéneos; los intervalos
+no representan incertidumbre por estructura del modelo o selección de parámetros.
+
+\subsubsection{Diagnóstico reservado para H1c}
+
+La ejecución \texttt{cex-dex-h1c-43e446f04adf} ajusta cuatro mapas por condición a
+48.000 transiciones de selección con shocks $\pm0.1$ y después los aplica sin reajuste
+a 300 semillas nuevas y shocks $\pm0.05$. Las cuatro matrices ajustadas fueron
+estables de Schur. La regla basada en Schur predijo contracción en los ocho grupos de
+condición y shock; sin embargo, solo en tres grupos la mayoría de las trayectorias
+contrajo: la concordancia fue $3/8$ ($37.5\%$). El RMSE medio de un paso fue 0.01837
+para el exceso con signo $d$ y 0.00840 para la presión normalizada $z$; el $R^2$ de
+selección de la ecuación de $z$ fue cercano a cero en todas las condiciones. Por tanto,
+este mapa es un clasificador débil en el modelo representativo actual. La muestra
+reservada cambia semillas y magnitud del shock, pero no evalúa nuevas reglas de agentes,
+niveles de capacidad, regímenes de comisiones ni datos de mercado.
+
+La evidencia actual solo respalda una afirmación mecánica acotada: en estas
+configuraciones CPMM exactas, los límites de capacidad cambian la velocidad de
+corrección y las reservas menores aumentan el impacto de una venta fija. No establece
+un efecto general del comportamiento LP adaptativo, no confirma H1c, no calibra un
+parámetro de mercado ni valida hipótesis externamente. H1a y H1b deben probarse en las
+regiones de operación acordadas y con el diseño de agentes revisado; el desacuerdo
+actual de H1c se conserva como limitación y no se oculta tras los resultados de
+selección.
+
+\section{Playground reproducible y transferencia tecnológica}
+
+\subsection{Arquitectura}
+
+El prototipo actual está implementado en Python con su biblioteca estándar. Su ejecutor
+determinista modela una referencia CEX exógena, un CPMM de dos reservas, una banda logarítmica
+de no arbitraje, arbitraje limitado por capacidad, comparaciones de profundidad con venta
+fija y una regla LP de retiro único. Un ejecutor estocástico separado añade traders de
+ruido y tendencia/pánico con carteras finitas, un arbitrajista acotado y condiciones LP
+estáticas/adaptativas. Usa un calendario pre-generado de órdenes compartido en los
+contrastes emparejados y sigue siendo un modelo de selección con agentes representativos,
+no la población heterogénea completa del diseño de investigación. Los shocks, parámetros
+de política, tiempos de eventos y horizontes se configuran explícitamente. Las salidas
+incluyen configuraciones, trayectorias, resúmenes, metadatos y sumas de verificación de
+artefactos.
+
+\subsection{Referencia canónica de implementación}
+
+La referencia pública y versionada de la arquitectura es el repositorio
+\textit{Master-s-thesis} \cite{calderon2026repository}. El manuscrito bilingüe
+compilable está en \texttt{thesis/}; el MVP determinista y estocástico, sus
+configuraciones y scripts de análisis están en \texttt{experiments/cex\_dex\_mvp}.
+Cada ejecución registra configuración, sumas de verificación del código y artefactos,
+y semillas. Los resultados locales se pueden regenerar con los comandos de la bitácora
+de reproducibilidad. Ninguna rama, URL ni resultado sintético se interpreta como
+evidencia empírica de mercado.
+
+\subsection{Contratos de reproducción}
+
+\begin{enumerate}
+  \item Las configuraciones JSON versionadas especifican parámetros del modelo y
+    unidades económicas. El MVP usa solo la biblioteca estándar de Python (Python 3.10
+    o superior).
+  \item El comando de invariantes comprueba reservas positivas, ambas direcciones de
+    swap CPMM, preservación del precio tras retiros proporcionales, dirección y capacidad
+    del arbitraje, trayectorias externas y calendarios de ruido emparejados, y conservación
+    estocástica de activos. Actualmente cubre 2.654 estados deterministas y una selección
+    estocástica de prueba de 504 estados. Faltan pruebas más amplias basadas en
+    propiedades y su integración continua.
+  \item Los comandos estables para la ejecución determinista, las comprobaciones, el
+    barrido, la selección estocástica y el análisis H1c están en la bitácora de
+    reproducibilidad. Las configuraciones y protocolos versionados definen el contraste
+    y el contrato de salida.
+  \item Los metadatos registran ID de ejecución, versión del modelo o análisis, hashes
+    de configuración y código fuente, entorno, semillas y sumas de verificación de los
+    artefactos generados. Las salidas más grandes se conservan localmente fuera de Git y
+    pueden regenerarse con los comandos documentados.
+  \item Los resultados siguen siendo sintéticos. Un conjunto acotado de datos públicos
+    con licencia, procedencia, timestamps y scripts de ingestión es trabajo futuro, al
+    igual que la validación contra registros de ejecución on-chain o de exchanges.
+\end{enumerate}
+
+\subsection{Relación con software de mercado abierto}
+
+El mercado teórico básico seguirá la mecánica CPMM compatible con un AMM tipo
+Uniswap v2 \cite{adams2020uniswap,angeris2020cfmm}; no se extrapolará sin pruebas a
+posiciones concentradas de Uniswap v3/v4. Se propone verificar swaps contra contratos
+de referencia desplegados localmente con Foundry/Anvil y librerías Web3, bajo
+configuración controlada y sin dinero real. Para la referencia CEX se podrán utilizar
+series públicas obtenidas con adaptadores de mercado como CCXT o API pública del
+exchange, verificando licencias, identidad del par, latencia, spreads y timestamp. Un
+segundo nivel, opcional, consiste en replay de eventos on-chain indexados (p. ej.
+registros de swaps y Sync de pools compatibles) para validar la magnitud del error de
+ejecución. No se requiere correr nodos mainnet, MEV ni trading real.

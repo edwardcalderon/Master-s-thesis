@@ -1,0 +1,39 @@
+\section{Scope, risks, and exit criteria}
+
+In scope: constant-product AMM, external CEX price, provisional representative agent
+roles, a traceable local discrete map, E0--E3, reproducibility, synthetic experiments,
+and limited comparison with market facts.
+
+Out of scope: profitable forecasting, operational exchanges, full limit-order-book
+replicas, blockchain consensus, advanced MEV, lending, bridges, reinforcement
+learning, and general guarantees across all markets. The present MVP does not establish
+empirical validity for the map. In its first held-out check, its Schur label matched the
+majority contraction outcome in only 3 of 8 groups. The main risk is that the reduced
+map may not approximate the ABM outside a local region. Mitigation: review agent rules,
+separate model selection from confirmation, record configurations, compare ablations,
+and report disagreement as a result. Other risks include overparameterization, seed
+dependence, simplified liquidity, confusion between local and global stability, and
+calibration bias.
+
+\section{Discussion and limits to inference}
+
+The analysis must distinguish three levels: mechanical properties derived from the
+ideal AMM, local diagnostics from the reduced map, and patterns from a stochastic
+discrete ABM that remain subject to validation. The present map classified only 3 of 8
+held-out majority outcomes correctly under a narrow change in seed and shock size; its
+Schur condition does not guarantee stability in the ABM or in real markets. Nor does
+the selection run replace evaluation with public data. Further work must report the
+regimes in which the approximation reduces error and those in which it fails because
+of saturation, capital limits, persistent shocks, or liquidity changes.
+
+\section{Conclusions and future work}
+
+The project now has a reproducible deterministic mechanism runner, a paired
+stochastic selection model, and a held-out reduced-map diagnostic. The deterministic
+checks show that arbitrage capacity changes correction speed and lower reserves
+increase fixed-sale impact in the configured CPMM. The stochastic comparison shows
+that the adaptive-LP effect depends on shock direction. The first H1c holdout agrees in
+only 3 of 8 majority-outcome groups, so the current map is not a reliable classifier.
+The next phase is to finalize the agent roles, broaden the operating regions, preregister
+confirmation criteria, and evaluate against a bounded public dataset. None of the
+current results demonstrates usefulness in a real market.

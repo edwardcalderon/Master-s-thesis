@@ -1,0 +1,166 @@
+\documentclass[12pt,oneside,letterpaper]{report}
+
+% Master Thesis Lab -- v0.1.0
+% This draft develops the approved first-delivery proposal into a thesis manuscript.
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,english]{babel}
+\usepackage{csquotes}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[letterpaper,margin=2.7cm]{geometry}
+\usepackage{setspace}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{hyperref}
+
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,fit}
+\setstretch{1.18}
+\setlength{\parskip}{0.35em}
+\setlength{\parindent}{0pt}
+\renewcommand{\arraystretch}{1.18}
+\setlist{leftmargin=*,itemsep=0.25em,topsep=0.4em}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=blue,
+  pdftitle={Infraestructura experimental multi-agente para ecosistemas financieros CEX/DEX},
+  pdfauthor={Edward Calderón Aristizábal},
+  pdfsubject={Borrador de tesis de maestría v0.1.0}
+}
+
+\newcommand{\tituloTesis}{Infraestructura experimental multi-agente para la simulación y el análisis de ecosistemas financieros descentralizados híbridos CEX/DEX}
+\newcommand{\autorTesis}{Edward Calderón Aristizábal}
+\newcommand{\programaTesis}{Maestría en Ingeniería -- Ingeniería de Sistemas e Informática}
+\newcommand{\universidadTesis}{Universidad Nacional de Colombia -- Facultad de Minas}
+\newcommand{\versionTesis}{v0.1.1}
+\newcommand{\fechaTesis}{Octubre de 2026}
+
+\begin{document}
+\selectlanguage{spanish}
+
+\begin{titlepage}
+  \centering
+  \vspace*{2.0cm}
+  {\Large \universidadTesis\par}
+  \vspace{2.2cm}
+  {\Large \textsc{Borrador de tesis de maestría}\par}
+  \vspace{0.8cm}
+  {\Huge\bfseries \tituloTesis\par}
+  \vspace{1.1cm}
+  {\large Sistemas complejos, simulación basada en agentes y microestructura de mercados digitales\par}
+  \vfill
+  {\Large \autorTesis\par}
+  \vspace{0.45cm}
+  {\large \programaTesis\par}
+  \vspace{0.45cm}
+  {\large Director/a: por definir\par}
+  \vfill
+  {\large Medellín, Colombia\par}
+  {\large \fechaTesis\par}
+  \vspace{0.35cm}
+  {\small Documento de diseño y protocolo experimental -- \versionTesis\par}
+\end{titlepage}
+
+\pagenumbering{roman}
+\input{chapters/00-abstract}
+\tableofcontents
+\clearpage
+\pagenumbering{arabic}
+
+\chapter{Introducción, problema y objetivos}
+\input{chapters/01-introduction}
+
+\chapter{Marco conceptual y estado del arte}
+\input{chapters/02-method}
+
+\chapter{Diseño metodológico y protocolo experimental}
+\input{chapters/03-evidence}
+
+\chapter{Estado de la versión, límites y hoja de ruta}
+\input{chapters/04-conclusion}
+
+\appendix
+\chapter{Estructura reproducible del proyecto}
+\input{chapters/appendix-repository}
+
+\clearpage
+\addcontentsline{toc}{chapter}{Referencias}
+\begin{thebibliography}{99}
+
+\bibitem{nakamoto2008bitcoin}
+S. Nakamoto, ``Bitcoin: A Peer-to-Peer Electronic Cash System,'' 2008. [Online]. Available: \url{https://bitcoin.org/bitcoin.pdf}
+
+\bibitem{buterin2014ethereum}
+V. Buterin, ``A Next-Generation Smart Contract and Decentralized Application Platform,'' 2014. [Online]. Available: \url{https://ethereum.org/en/whitepaper/}
+
+\bibitem{wood2014ethereum}
+G. Wood, ``Ethereum: A Secure Decentralised Generalised Transaction Ledger,'' Ethereum Yellow Paper, 2014. [Online]. Available: \url{https://ethereum.github.io/yellowpaper/paper.pdf}
+
+\bibitem{schar2021defi}
+F. Schär, ``Decentralized Finance: On Blockchain- and Smart Contract-Based Financial Markets,'' \textit{Federal Reserve Bank of St. Louis Review}, vol. 103, no. 2, pp. 153--174, 2021.
+
+\bibitem{werner2021sok}
+S. M. Werner, D. Perez, L. Gudgeon, A. Klages-Mundt, D. Harz, and W. J. Knottenbelt, ``SoK: Decentralized Finance (DeFi),'' arXiv:2101.08778, 2021.
+
+\bibitem{angeris2020uniswap}
+G. Angeris, H.-T. Kao, R. Chiang, C. Noyes, and T. Chitra, ``An Analysis of Uniswap Markets,'' arXiv:1911.03380, 2020.
+
+\bibitem{holland1995hidden}
+J. H. Holland, \textit{Hidden Order: How Adaptation Builds Complexity}. Addison-Wesley, 1995.
+
+\bibitem{barabasi2016network}
+A.-L. Barabási, \textit{Network Science}. Cambridge University Press, 2016.
+
+\bibitem{wooldridge2009multiagent}
+M. Wooldridge, \textit{An Introduction to MultiAgent Systems}, 2nd ed. Wiley, 2009.
+
+\bibitem{karpe2020marl}
+M. Karpe, J. Fang, Z. Ma, and C. Wang, ``Multi-Agent Reinforcement Learning in a Realistic Limit Order Book Market Simulation,'' in \textit{Proceedings of the First ACM International Conference on AI in Finance}, 2020.
+
+\bibitem{mascioli2024pymarketsim}
+C. Mascioli, A. Gu, Y. Wang, M. Chakraborty, and M. P. Wellman, ``A Financial Market Simulation Environment for Trading Agents Using Deep Reinforcement Learning,'' in \textit{Proceedings of the 5th ACM International Conference on AI in Finance}, 2024.
+
+\bibitem{fischer2018deep}
+T. Fischer and C. Krauss, ``Deep Learning with Long Short-Term Memory Networks for Financial Market Predictions,'' \textit{European Journal of Operational Research}, vol. 270, no. 2, pp. 654--669, 2018.
+
+\bibitem{vaswani2017attention}
+A. Vaswani et al., ``Attention Is All You Need,'' in \textit{Advances in Neural Information Processing Systems}, 2017.
+
+\bibitem{das2024timesfm}
+A. Das, W. Kong, R. Sen, and Y. Zhou, ``A Decoder-Only Foundation Model for Time-Series Forecasting,'' arXiv:2310.10688, 2024.
+
+\bibitem{gencay2002wavelets}
+R. Gençay, F. Selçuk, and B. Whitcher, \textit{An Introduction to Wavelets and Other Filtering Methods in Finance and Economics}. Academic Press, 2002.
+
+\bibitem{materwala2024mev}
+H. Materwala, S. M. Naik, A. Taha, T. A. Abed, and D. Svetinovic, ``Maximal Extractable Value in Decentralized Finance: Taxonomy, Detection, and Mitigation,'' arXiv:2411.03327, 2024.
+
+\bibitem{capponi2023defi}
+A. Capponi, G. Iyengar, and J. Sethuraman, ``Decentralized Finance: Protocols, Risks, and Governance,'' arXiv:2312.01018, 2023.
+
+\bibitem{iosco2023crypto}
+International Organization of Securities Commissions, ``Policy Recommendations for Crypto and Digital Asset Markets,'' 2023. [Online]. Available: \url{https://www.iosco.org/library/pubdocs/pdf/IOSCOPD747.pdf}
+
+\bibitem{iosco2023defi}
+International Organization of Securities Commissions, ``Policy Recommendations for Decentralized Finance,'' 2023. [Online]. Available: \url{https://www.iosco.org/library/pubdocs/pdf/IOSCOPD754.pdf}
+
+\bibitem{esma2025mica}
+European Securities and Markets Authority, ``Markets in Crypto-Assets Regulation (MiCA),'' 2025. [Online]. Available: \url{https://www.esma.europa.eu/esmas-activities/digital-finance-and-innovation/markets-crypto-assets-regulation-mica}
+
+\bibitem{banrep2018criptoactivos}
+Banco de la República de Colombia, ``Criptoactivos,'' Documento Técnico, 2018. [Online]. Available: \url{https://www.banrep.gov.co/es/publicaciones-investigacion/documento-tecnico-criptoactivos}
+
+\end{thebibliography}
+\end{document}

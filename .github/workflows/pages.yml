@@ -38,13 +38,22 @@ jobs:
       - name: Check version ledger
         run: pnpm version:check
 
+      - name: Check English and Spanish project parity
+        run: pnpm language:check
+
       - name: Build public app
         run: pnpm build
 
-      - name: Compile thesis PDF
+      - name: Compile English primary thesis PDF
         uses: xu-cheng/latex-action@v4
         with:
           root_file: main.tex
+          working_directory: thesis
+
+      - name: Compile required Spanish thesis translation
+        uses: xu-cheng/latex-action@v4
+        with:
+          root_file: es/main.tex
           working_directory: thesis
 
       - name: Copy research assets into Pages artifact
@@ -53,7 +62,11 @@ jobs:
           cp -R notebooks apps/web/dist/notebooks
           cp -R thesis apps/web/dist/thesis
           cp thesis/main.pdf apps/web/dist/thesis/master-thesis.pdf
+          cp thesis/es/main.pdf apps/web/dist/thesis/master-thesis.es.pdf
           cp README.md apps/web/dist/README.md
+          cp README.es.md apps/web/dist/README.es.md
+          cp VERSION_HISTORY.json apps/web/dist/VERSION_HISTORY.json
+          cp VERSION_HISTORY.es.json apps/web/dist/VERSION_HISTORY.es.json
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

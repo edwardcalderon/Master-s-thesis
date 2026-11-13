@@ -1,0 +1,93 @@
+\section{Enfoque de investigación}
+
+La investigación tiene un enfoque aplicado y experimental. El producto principal no es una estrategia de trading, sino una infraestructura que permita formular, ejecutar y comparar experimentos de manera reproducible. Cada escenario debe declarar sus datos, parámetros, versión de código, semilla aleatoria, supuestos de ejecución y métricas de salida.
+
+La implementación se organiza de manera incremental. La primera iteración se concentra en un conjunto pequeño de fuentes y agentes; las ampliaciones solo se incorporan después de validar que el comportamiento básico puede repetirse y auditarse. Esta decisión reduce el riesgo de construir una plataforma extensa con resultados imposibles de interpretar.
+
+\section{Arquitectura experimental propuesta}
+
+La arquitectura se divide en cinco capas. La separación no obliga a desplegar todos los servicios desde la primera versión; describe responsabilidades para que los componentes puedan sustituirse sin romper la trazabilidad del experimento.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  node distance=0.8cm,
+  box/.style={draw, rounded corners=2pt, minimum height=0.95cm, minimum width=3.2cm, align=center, font=\small, fill=gray!8},
+  arrow/.style={-{Latex[length=2.5mm]}, thick}
+]
+\node[box] (sources) {Fuentes CEX, DEX y on-chain};
+\node[box, below=of sources] (data) {Ingesta, validación y versionado de datos};
+\node[box, below=of data] (features) {Variables de mercado, protocolo y multi-resolución};
+\node[box, below=of features] (simulation) {Simulador multi-agente y escenarios de estrés};
+\node[box, below=of simulation] (evaluation) {Métricas, notebooks, artefactos y manuscrito};
+\draw[arrow] (sources) -- (data);
+\draw[arrow] (data) -- (features);
+\draw[arrow] (features) -- (simulation);
+\draw[arrow] (simulation) -- (evaluation);
+\end{tikzpicture}
+\caption{Capas de la infraestructura experimental.}
+\label{fig:arquitectura-experimental}
+\end{figure}
+
+\subsection{Datos y procedencia}
+
+Los datos se conservarán en tres zonas: \texttt{raw} para las descargas o eventos originales, \texttt{processed} para transformaciones verificables y \texttt{derived} para features, métricas o resultados. Cada conjunto debe registrar fuente, fecha de adquisición, intervalo temporal, esquema, tratamiento de datos faltantes y checksum cuando sea posible. Los datos restringidos o las credenciales no se versionarán en el repositorio público.
+
+Las variables candidatas incluyen OHLCV, trades, spread, profundidad, funding, open interest, swaps, reservas de pools, TVL, gas, eventos de liquidación y medidas de latencia. La selección final se basará en disponibilidad, calidad y pertinencia para cada escenario, no en la cantidad de variables recolectadas.
+
+\subsection{Escenarios}
+
+Los escenarios se formularán como intervenciones controladas sobre el entorno. Cada uno tendrá un estado inicial, una perturbación, una ventana de simulación y un conjunto de hipótesis observables. La Tabla \ref{tab:scenarios} propone el conjunto inicial.
+
+\begin{table}[H]
+\centering
+\caption{Escenarios iniciales de evaluación.}
+\label{tab:scenarios}
+\begin{tabularx}{\textwidth}{p{3.7cm}X}
+\toprule
+\textbf{Escenario} & \textbf{Pregunta operacional} \\
+\midrule
+Shock de precio & ¿Cómo cambian spread, liquidez y exposición ante una perturbación exógena? \\
+Deterioro de liquidez AMM & ¿Cómo varían slippage y price impact cuando se retira liquidez? \\
+Arbitraje con latencia & ¿Cuándo deja de ser viable una ruta CEX/DEX después de costos y demora? \\
+Aumento de costos on-chain & ¿Cómo afecta un incremento de gas la ejecución y las oportunidades de arbitraje? \\
+Cascada de liquidación & ¿Qué condiciones amplifican ventas, reducción de colateral y deterioro de liquidez? \\
+Competencia por prioridad & ¿Cómo cambia la calidad de ejecución con un agente estratégico simplificado? \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Protocolo de evaluación}
+
+La evaluación combinará cuatro controles:
+
+\begin{enumerate}
+  \item \textbf{Baselines explícitos.} Cada modelo o política compleja se comparará con una regla simple, por ejemplo buy-and-hold, una estrategia de umbral o un agente sin adaptación.
+  \item \textbf{Separación temporal.} Los datos de calibración y evaluación se separarán cronológicamente. No se usarán observaciones futuras para construir variables históricas.
+  \item \textbf{Sensibilidad y semillas.} Los escenarios se ejecutarán con múltiples semillas y variaciones de parámetros para identificar conclusiones frágiles.
+  \item \textbf{Trazabilidad.} Cada ejecución producirá configuración, versión de código, fecha, hash de datos, métricas y referencia al notebook o script correspondiente.
+\end{enumerate}
+
+\begin{longtable}{p{4.2cm}p{10.0cm}}
+\caption{Familias de métricas propuestas.}\\
+\toprule
+\textbf{Categoría} & \textbf{Métricas} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Categoría} & \textbf{Métricas} \\
+\midrule
+\endhead
+Microestructura & Spread, profundidad, slippage, price impact, fill rate y latencia. \\
+DEX/on-chain & Gas, reservas, liquidez, transacciones fallidas, demora de confirmación y exposición a prioridad de ejecución. \\
+Sistema complejo & Propagación de perturbaciones, centralidad, sensibilidad, tamaño de cascada y recuperación de liquidez. \\
+Modelos & Error fuera de muestra, estabilidad entre ventanas, calibración y comparación frente a baseline. \\
+Computacionales & Tiempo de ejecución, uso de memoria, throughput, reproducibilidad y completitud de artefactos. \\
+\bottomrule
+\end{longtable}
+
+\section{Criterios de reproducibilidad}
+
+Un experimento será considerado reproducible si un tercero puede identificar el commit del repositorio, reconstruir el entorno, obtener o sustituir los datos conforme a una guía documentada, ejecutar el notebook o script y verificar las métricas reportadas. La web pública y el repositorio no reemplazan el manuscrito: funcionan como un índice de artefactos que conecta la tesis con sus datos, código y experimentos.
+
+La política de versiones será única para manuscrito, notebooks y sitio. La versión \versionTesis{} identifica este protocolo de diseño; las versiones posteriores deberán registrar cambios de hipótesis, fuentes, métodos, resultados o conclusiones.

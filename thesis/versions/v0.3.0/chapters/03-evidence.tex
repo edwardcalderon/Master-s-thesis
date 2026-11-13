@@ -1,0 +1,184 @@
+\section{Experimental design and falsification}
+
+The design will use common random seed pairs where compatible, reduced parameter
+sweeps, sensitivity analysis with uncertainty intervals, and preregistered
+classification criteria. The number of replications will be set from convergence and
+estimator precision, not from a universal rule of thirty. To avoid selection bias,
+confirmation configurations will be kept separate from those used for model selection.
+
+\begin{table}[!ht]
+\centering
+\small
+\begin{tabularx}{\textwidth}{@{}c p{4.2cm} X@{}}
+\toprule
+\textbf{ID} & \textbf{Controlled intervention} & \textbf{Counterfactual and question} \\
+\midrule
+E0 & Constant reference, fixed LP, arbitrage on/off & Verify the existence and nature
+  of a tracking regime. \\
+E1 & Exogenous CEX price shock; vary capacity, costs, and delay & Measure error, bound,
+  sustained return time, and resilience. \\
+E2 & Static LP versus volatility-sensitive adaptive LP & Distinguish the mechanical
+  impact of lower depth from endogenous feedback. \\
+E3 & Heterogeneous selling pressure and reactions, same external shock & Identify
+  amplification, persistence, and limits of the analytical approximation. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Traceable MVP results: selection evidence, not confirmation}
+
+The October 29 draft reported a preliminary table and a scalar local-map estimate, but
+its cited source directory \texttt{experiments/cex\_dex\_preliminary/} and raw outputs
+are absent from this checkout. Those values are therefore not treated as reproduced
+findings. The bilingual source snapshot \texttt{thesis/versions/v0.2.0/} preserves
+them as historical draft claims. The results below come from the separately versioned
+MVP and do not reproduce that earlier table. All runs are synthetic and use no market
+data.
+
+\subsubsection{Deterministic mechanism checks}
+
+Run \texttt{cex-dex-mvp-f183520b90aa} uses deterministic model 0.3.0. E0--E2 are
+mechanism checks without random flow. E3 is one policy-selection case with ten fixed
+sales; it is not a general test of adaptive LP behavior.
+
+\begin{table}[!ht]
+\centering
+\scriptsize
+\caption{Deterministic MVP results. Tracking error is $|\log(p^D/p^C)|$; return means
+two consecutive ticks inside the configured band.}
+\begin{tabularx}{\textwidth}{@{}c >{\raggedright\arraybackslash}p{3.5cm} >{\raggedright\arraybackslash}p{5.1cm} X@{}}
+\toprule
+\textbf{Scenario} & \textbf{Comparison} & \textbf{Observed result} &
+\textbf{Scope} \\
+\midrule
+E0 & Capacity 0 / 0.03 per tick & Peak error 0.10000/0.04088; sustained return not
+  observed/by tick 2 & One positive CEX shock, 20-tick horizon. \\
+E1 & Capacity 0.005 / 0.03 per tick & Peak error 0.09002/0.04088; return at ticks
+  10/2 & One shock; capacity is the varied mechanism. \\
+E2 & Full / 45\% remaining reserves & Impact of a fixed 500-unit sale is
+  0.09758/0.21072 log units & Arbitrage disabled; marginal price is unchanged by
+  proportional withdrawal before the sale. \\
+E3 & Static / one-shot adaptive LP & Peak error 0.08049/0.18249; return at tick 6 /
+  not within the 10-tick horizon & Shock +0.1, ten 200-unit sales, threshold 0.02,
+  55\% reserves remaining. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The deterministic sweep contains 144 parameter rows. In its 16 paired E3 policy
+settings, the adaptive rule withdrew in every case; peak error exceeded its static
+counterfactual in 12 and was unchanged in four. This is a selected grid, not an
+independent sample or a confirmation result.
+
+\subsubsection{Stochastic selection ABM}
+
+Stochastic model 0.4.0 uses four provisional representative roles: bounded
+arbitrageur, noise trader, trend/panic trader, and LP. Run
+\texttt{cex-dex-abm-a99f9be866b2} contains 300 paired seeds. The approximate 95\%
+normal-interval half-width target of 0.005 peak-error units was met for all six
+configured contrasts. The same pre-generated noise schedule is shared across paired
+conditions.
+
+\begin{table}[!ht]
+\centering
+\scriptsize
+\caption{Selected paired stochastic contrasts (300 seeds). Differences are first
+condition minus second; intervals are approximate 95\% normal intervals.}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{3cm} r X@{}}
+\toprule
+\textbf{Shock} & \textbf{Contrast} & \textbf{Peak-error difference} &
+\textbf{Approximate 95\% interval} \\
+\midrule
+$+0.1$ & High minus zero arbitrage capacity & $-0.10690$ & $[-0.11176,-0.10204]$ \\
+$+0.1$ & Adaptive minus static LP & $+0.00529$ & $[+0.00426,+0.00632]$ \\
+$-0.1$ & Adaptive minus static LP & Approximately $0$ & Peak error; cumulative excess
+  error difference $+0.00456$, interval $[+0.00359,+0.00553]$. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The adaptive/static contrast changes with shock direction in this configured model.
+These are model-conditional selection estimates for researcher-chosen rules and
+parameters. The four roles are a provisional reduced population, not the full
+heterogeneous-agent design, and the intervals do not address uncertainty over model
+structure or parameter selection.
+
+\subsubsection{Held-out diagnostic for H1c}
+
+Run \texttt{cex-dex-h1c-43e446f04adf} fits four condition-specific maps to 48,000
+selection transitions at shocks $\pm0.1$, then applies them without refitting to 300
+new seeds and shocks $\pm0.05$. All four fitted matrices were Schur-stable. The
+Schur-based rule predicted contraction in all eight condition/shock groups, while
+only three groups had a majority of contracting trajectories: agreement was $3/8$
+($37.5\%$). Mean one-step RMSE was 0.01837 for signed excess $d$ and 0.00840 for
+normalized pressure $z$; the selection $R^2$ for the $z$ equation was near zero across
+conditions. Thus this map is a weak classifier in this representative model. The
+holdout varies seeds and shock magnitude only; it does not test new agent rules,
+capacity levels, fee regimes, or market data.
+
+The current evidence supports only a narrow mechanical statement: in these exact
+CPMM configurations, capacity limits alter correction speed and lower reserves
+increase fixed-sale impact. It does not establish a general effect of adaptive LP
+behavior, confirm H1c, calibrate a market parameter, or validate any hypothesis
+externally. H1a and H1b remain to be tested across the agreed operating regions with
+the reviewed agent design; H1c's present disagreement is retained as a limitation,
+not hidden by the selection results.
+
+\section{Reproducible playground and technology transfer}
+
+\subsection{Architecture}
+
+The current prototype is implemented in standard-library Python. Its deterministic
+runner models an exogenous CEX reference, a two-reserve CPMM, a log no-arbitrage band,
+capacity-limited arbitrage, fixed-sale depth comparisons, and a one-shot LP withdrawal
+rule. A separate stochastic selection runner adds finite-wallet noise and trend/panic
+traders, a bounded arbitrageur, and static/adaptive LP conditions. It uses a shared
+pre-generated order schedule for paired comparisons and remains a representative-agent
+selection model, not the full heterogeneous population in the research design. Shocks,
+policy parameters, event timing, and horizons are configured explicitly. Run outputs
+include configurations, trajectories, summaries, metadata, and artifact checksums.
+
+\subsection{Canonical implementation reference}
+
+The public, versioned architecture reference is the \textit{Master-s-thesis}
+repository \cite{calderon2026repository}. The bilingual compilable manuscript is in
+\texttt{thesis/}; the deterministic and stochastic MVP, configurations, and analysis
+scripts are in \texttt{experiments/cex\_dex\_mvp}. Each run records its configuration,
+source checksums, seeds, and artifact checksums. Local outputs can be regenerated with
+the commands in the reproducibility log. No branch, URL, or synthetic result is
+interpreted as empirical market evidence.
+
+\subsection{Reproduction contracts}
+
+\begin{enumerate}
+  \item Versioned JSON configurations specify model parameters and economic units.
+    The MVP uses only the Python standard library (Python 3.10 or newer).
+  \item The invariant command checks positive reserves, both CPMM swap directions,
+    proportional-withdrawal price preservation, arbitrage direction and capacity,
+    paired external paths and noise schedules, and stochastic asset conservation.
+    It currently covers 2,654 deterministic states and a 504-state stochastic smoke
+    selection. Broader property-based and continuous-integration checks remain work.
+  \item Stable commands for the deterministic run, checks, sweep, stochastic selection,
+    and H1c analysis are listed in the reproducibility log. The tracked configurations
+    and protocols define the comparison and output contracts.
+  \item Run metadata records the run ID, model or analysis version, configuration and
+    source hashes, runtime, seed set, and generated-artifact checksums. Larger generated
+    outputs are kept outside Git locally and can be recreated with the documented
+    commands.
+  \item Results remain synthetic. A bounded public-market dataset with a documented
+    license, provenance, timestamps, and ingestion scripts is future work, as is
+    validation against on-chain or exchange execution records.
+\end{enumerate}
+
+\subsection{Relationship to open market software}
+
+The theoretical market will use CPMM mechanics compatible with a Uniswap v2-style AMM
+\cite{adams2020uniswap,angeris2020cfmm}; it will not be extrapolated to concentrated
+liquidity positions in Uniswap v3/v4 without testing. Swaps are proposed to be checked
+against locally deployed reference contracts using Foundry/Anvil and Web3 libraries,
+under controlled configuration and without real funds. For the CEX reference, public
+series may be obtained through market adapters such as CCXT or a public exchange API,
+after checking licenses, pair identity, latency, spreads, and timestamps. An optional
+second level is replay of indexed on-chain events (for example, compatible pool Swap
+and Sync records) to validate execution-error magnitudes. Running mainnet nodes,
+advanced MEV, or live trading is not required.

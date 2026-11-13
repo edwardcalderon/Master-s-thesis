@@ -1,0 +1,29 @@
+{
+  "model_version": "0.3.0",
+  "initial_reserve_x": 10000.0,
+  "initial_reserve_y": 10000.0,
+  "initial_cex_price": 1.0,
+  "shock_log_return": 0.1,
+  "shock_tick": 1,
+  "horizon_ticks": 20,
+  "execution_delay_ticks": 0,
+  "no_arbitrage_band_log": 0.003,
+  "sustained_band_ticks": 2,
+  "capacity_fractions": {
+    "off": 0.0,
+    "low": 0.005,
+    "high": 0.03
+  },
+  "fixed_sale_x": 500.0,
+  "lp_remaining_reserve_fraction": 0.45,
+  "e3": {
+    "shock_log_return": 0.1,
+    "shock_tick": 1,
+    "horizon_ticks": 10,
+    "fixed_x_sale_per_tick": 200.0,
+    "adaptive_lp_trigger_log_error": 0.02,
+    "lp_remaining_reserve_fraction": 0.55,
+    "arbitrage_capacity_fraction": 0.03,
+    "arbitrage_execution_delay_ticks": 0
+  }
+}

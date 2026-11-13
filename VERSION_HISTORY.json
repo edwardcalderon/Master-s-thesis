@@ -10,5 +10,11 @@
     "date": "2026-10-15",
     "status": "release",
     "summary": "Synchronized release v0.1.1 with @edcalderon/versioning."
+  },
+  {
+    "version": "0.1.2",
+    "date": "2026-11-12",
+    "status": "release",
+    "summary": "Synchronized release v0.1.2 with @edcalderon/versioning."
   }
 ]

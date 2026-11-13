@@ -9,3 +9,7 @@ The method note is the place to separate what is observed from what is assumed. 
 5. the limitations that remain after the analysis.
 
 The first public release keeps this page as a living template. Replace the checklist with the approved methodology once the research design is finalized.
+
+---
+
+[Español](es/methodology.md)

@@ -6,6 +6,8 @@ dist-docs/
 .vite/
 *.tsbuildinfo
 .DS_Store
+__pycache__/
+*.py[cod]
 
 # Local data and generated thesis artifacts
 data/raw/*
@@ -25,3 +27,12 @@ thesis/*.run.xml
 thesis/*.synctex.gz
 thesis/*.toc
 thesis/*.pdf
+thesis/es/*.bbl
+thesis/es/*.blg
+thesis/es/*.aux
+thesis/es/*.log
+thesis/es/*.out
+thesis/es/*.pdf
+thesis/literature/
+experiments/cex_dex_mvp/output/
+experiments/refscan_evaluation/literature/

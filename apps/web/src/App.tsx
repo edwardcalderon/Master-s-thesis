@@ -1,8 +1,12 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { docs, layers, notebooks, release, thesis } from "@tesis/content";
+import { contentByLocale, release, type Locale } from "@tesis/content";
+import englishMessages from "./locales/en.json";
+import spanishMessages from "./locales/es.json";
 
 type IconName = "arrow" | "book" | "check" | "code" | "download" | "external" | "file" | "github" | "moon" | "play" | "sun";
 type Theme = "light" | "dark";
+
+const messages = { en: englishMessages, es: spanishMessages } satisfies Record<Locale, typeof englishMessages>;
 
 function Icon({ name, size = 18 }: { name: IconName; size?: number }) {
   const common = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.7, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true };
@@ -41,6 +45,11 @@ function SectionHeading({ index, kicker, title, children }: { index: string; kic
   </div>;
 }
 
+function initialLocale(): Locale {
+  if (typeof window === "undefined") return "en";
+  return window.localStorage.getItem("thesis-language") === "es" ? "es" : "en";
+}
+
 function initialTheme(): Theme {
   if (typeof window === "undefined") return "light";
   const savedTheme = window.localStorage.getItem("thesis-theme");
@@ -49,8 +58,13 @@ function initialTheme(): Theme {
 }
 
 function App() {
+  const [locale, setLocale] = useState<Locale>(initialLocale);
+  const copy = messages[locale];
+  const content = contentByLocale[locale];
   const [pdfOpen, setPdfOpen] = useState(false);
   const [pdfAvailable, setPdfAvailable] = useState(false);
+  const [pdfSpanishAvailable, setPdfSpanishAvailable] = useState(false);
+  const [pdfLanguage, setPdfLanguage] = useState<Locale>("en");
   const [copied, setCopied] = useState(false);
   const [theme, setTheme] = useState<Theme>(initialTheme);
   const [readingMode, setReadingMode] = useState(() => typeof window !== "undefined" && window.localStorage.getItem("thesis-reading-mode") === "on");
@@ -59,7 +73,17 @@ function App() {
     fetch("./thesis/master-thesis.pdf", { method: "HEAD" })
       .then((response) => setPdfAvailable(response.ok))
       .catch(() => setPdfAvailable(false));
+    fetch("./thesis/master-thesis.es.pdf", { method: "HEAD" })
+      .then((response) => setPdfSpanishAvailable(response.ok))
+      .catch(() => setPdfSpanishAvailable(false));
   }, []);
+
+  useEffect(() => {
+    window.localStorage.setItem("thesis-language", locale);
+    document.documentElement.lang = locale;
+    document.title = copy.seo.title;
+    document.querySelector('meta[name="description"]')?.setAttribute("content", copy.seo.description);
+  }, [copy.seo.description, copy.seo.title, locale]);
 
   useEffect(() => {
     window.localStorage.setItem("thesis-theme", theme);
@@ -78,139 +102,161 @@ function App() {
   };
 
   const nextTheme = theme === "light" ? "dark" : "light";
-  const readingLabel = readingMode ? "Exit reading mode" : "Enter reading mode";
+  const readingLabel = readingMode ? copy.header.exitReading : copy.header.enterReading;
+  const selectedPdfAvailable = pdfLanguage === "en" ? pdfAvailable : pdfSpanishAvailable;
+  const selectedPdfUrl = pdfLanguage === "en" ? "./thesis/master-thesis.pdf" : "./thesis/master-thesis.es.pdf";
+  const pdfStatus = pdfAvailable && pdfSpanishAvailable
+    ? copy.pdf.available
+    : pdfAvailable
+      ? copy.pdf.missing
+      : copy.pdf.pending;
+  const openNotebookLabel = (title: string) => `${copy.notebook.open}: ${title}`;
 
   return <div className="site-shell" data-theme={theme} data-reading={readingMode ? "on" : "off"}>
     <header className="topbar page-pad">
-      <a className="brand" href="#top" aria-label="Master Thesis Lab home">
+      <a className="brand" href="#top" aria-label={copy.header.home}>
         <span className="brand-mark">MT</span>
-        <span className="brand-copy"><strong>Master Thesis</strong><small>research edition · {release.tag}</small></span>
+        <span className="brand-copy"><strong>{content.thesis.shortTitle}</strong><small>{copy.header.subtitle} · {release.tag}</small></span>
       </a>
-      <nav className="topnav" aria-label="Primary navigation">
-        <a href="#research">Overview</a>
-        <a href="#notebooks">Notebooks</a>
-        <a href="#docs">Notes</a>
-        <a href="#pdf">Manuscript</a>
+      <nav className="topnav" aria-label={copy.header.navigation}>
+        <a href="#research">{copy.header.overview}</a>
+        <a href="#notebooks">{copy.header.notebooks}</a>
+        <a href="#docs">{copy.header.notes}</a>
+        <a href="#pdf">{copy.header.manuscript}</a>
       </nav>
       <div className="header-actions">
+        <div className="locale-switch" role="group" aria-label={copy.language.label}>
+          <button className={locale === "en" ? "locale-option is-selected" : "locale-option"} type="button" onClick={() => setLocale("en")} aria-pressed={locale === "en"} lang="en">{copy.language.english}</button>
+          <button className={locale === "es" ? "locale-option is-selected" : "locale-option"} type="button" onClick={() => setLocale("es")} aria-pressed={locale === "es"} lang="es">{copy.language.spanish}</button>
+        </div>
         <button className="utility-button" type="button" onClick={() => setReadingMode((value) => !value)} aria-pressed={readingMode} title={readingLabel}>
-          <Icon name="book" size={16} /><span>{readingMode ? "Reading on" : "Reading"}</span>
+          <Icon name="book" size={16} /><span>{readingMode ? copy.header.readingOn : copy.header.reading}</span>
         </button>
-        <button className="theme-button" type="button" onClick={() => setTheme(nextTheme)} aria-label={`Use ${nextTheme} theme`} title={`Use ${nextTheme} theme`}>
+        <button className="theme-button" type="button" onClick={() => setTheme(nextTheme)} aria-label={theme === "light" ? copy.header.useDark : copy.header.useLight} title={theme === "light" ? copy.header.useDark : copy.header.useLight}>
           <Icon name={theme === "light" ? "moon" : "sun"} size={17} />
         </button>
-        <a className="repository-link" href="https://github.com/edwardcalderon/Master-s-thesis" target="_blank" rel="noreferrer" aria-label="Open repository"><Icon name="github" size={17} /></a>
+        <a className="repository-link" href="https://github.com/edwardcalderon/Master-s-thesis" target="_blank" rel="noreferrer" aria-label={copy.header.openRepository}><Icon name="github" size={17} /></a>
       </div>
     </header>
 
     <main id="top">
       <section className="hero page-pad">
         <div className="hero-copy">
-          <p className="hero-kicker"><span className="status-dot" />{thesis.eyebrow}</p>
-          <h1>{thesis.title}</h1>
-          <p className="hero-lede">{thesis.description}</p>
+          <p className="hero-kicker"><span className="status-dot" />{content.thesis.eyebrow}</p>
+          <h1>{content.thesis.title}</h1>
+          <p className="hero-lede">{content.thesis.description}</p>
           <div className="hero-actions">
-            <a className="button button-primary" href="#research">Begin with the overview <Icon name="arrow" size={16} /></a>
-            <a className="button button-quiet" href="#pdf">Read the manuscript <Icon name="book" size={16} /></a>
+            <a className="button button-primary" href="#research">{copy.hero.begin} <Icon name="arrow" size={16} /></a>
+            <a className="button button-quiet" href="#pdf">{copy.hero.read} <Icon name="book" size={16} /></a>
           </div>
         </div>
-        <aside className="hero-note" aria-label="Thesis record">
-          <p className="note-heading">Thesis record</p>
+        <aside className="hero-note" aria-label={copy.hero.record}>
+          <p className="note-heading">{copy.hero.record}</p>
           <dl>
-            <div><dt>Version</dt><dd className="mono">{release.tag}</dd></div>
-            <div><dt>Status</dt><dd>{thesis.state}</dd></div>
-            <div><dt>Method</dt><dd>Simulation &amp; reproducible evidence</dd></div>
-            <div><dt>Access</dt><dd>Public research workspace</dd></div>
+            <div><dt>{copy.hero.version}</dt><dd className="mono">{release.tag}</dd></div>
+            <div><dt>{copy.hero.status}</dt><dd>{content.thesis.state}</dd></div>
+            <div><dt>{copy.hero.method}</dt><dd>{copy.hero.methodValue}</dd></div>
+            <div><dt>{copy.hero.access}</dt><dd>{copy.hero.accessValue}</dd></div>
           </dl>
-          <a className="quiet-link" href={release.trackerUrl} target="_blank" rel="noreferrer">View release record <Icon name="external" size={14} /></a>
+          <a className="quiet-link" href={release.trackerUrl} target="_blank" rel="noreferrer">{copy.hero.release} <Icon name="external" size={14} /></a>
         </aside>
       </section>
 
-      <section className="manifest-strip page-pad" aria-label="Project manifest">
-        <div className="manifest-item"><span>Research state</span><strong><i className="status-dot" />{thesis.state}</strong></div>
-        <div className="manifest-item"><span>Current version</span><strong className="mono">{release.tag}</strong></div>
-        <div className="manifest-item"><span>Research layers</span><strong className="mono">03 / 03</strong></div>
-        <div className="manifest-item"><span>License</span><strong>{thesis.license}</strong></div>
+      <section className="manifest-strip page-pad" aria-label={copy.hero.manifest}>
+        <div className="manifest-item"><span>{copy.hero.researchState}</span><strong><i className="status-dot" />{content.thesis.state}</strong></div>
+        <div className="manifest-item"><span>{copy.hero.currentVersion}</span><strong className="mono">{release.tag}</strong></div>
+        <div className="manifest-item"><span>{copy.hero.researchLayers}</span><strong className="mono">03 / 03</strong></div>
+        <div className="manifest-item"><span>{copy.hero.license}</span><strong>{content.thesis.license}</strong></div>
       </section>
 
       <section id="research" className="research-section page-pad">
-        <SectionHeading index="01" kicker="Research overview" title="Start with the question.">The repository follows the way a thesis is examined: question, method, evidence, and argument—each available as a separate, inspectable artifact.</SectionHeading>
+        <SectionHeading index="01" kicker={copy.research.kicker} title={copy.research.title}>{copy.research.intro}</SectionHeading>
         <div className="research-grid">
           <article className="research-card">
-            <Label>01 · Narrative</Label>
-            <h3>Research brief</h3>
-            <p>Context, research question, contribution, and the boundaries of the present version.</p>
-            <ArrowLink href="#docs">Read the brief</ArrowLink>
+            <Label>{copy.research.narrative}</Label>
+            <h3>{copy.research.brief}</h3>
+            <p>{copy.research.briefText}</p>
+            <ArrowLink href="#docs">{copy.research.readBrief}</ArrowLink>
           </article>
           <article className="research-card">
-            <Label>02 · Evidence</Label>
-            <h3>Executable evidence</h3>
-            <p>Notebooks turn an analytical claim into traceable inputs, assumptions, and outputs.</p>
-            <ArrowLink href="#notebooks">Open notebooks</ArrowLink>
+            <Label>{copy.research.evidence}</Label>
+            <h3>{copy.research.executable}</h3>
+            <p>{copy.research.evidenceText}</p>
+            <ArrowLink href="#notebooks">{copy.research.openNotebooks}</ArrowLink>
           </article>
           <article className="research-card">
-            <Label>03 · Manuscript</Label>
-            <h3>Thesis artifact</h3>
-            <p>LaTeX source, compiled PDF, release record, and methods remain connected.</p>
-            <ArrowLink href="#pdf">Open the manuscript</ArrowLink>
+            <Label>{copy.research.artifact}</Label>
+            <h3>{copy.research.thesisArtifact}</h3>
+            <p>{copy.research.artifactText}</p>
+            <ArrowLink href="#pdf">{copy.research.openManuscript}</ArrowLink>
           </article>
         </div>
       </section>
 
       <section id="notebooks" className="notebooks-section page-pad">
-        <SectionHeading index="02" kicker="Notebook explorer" title="Evidence that can be revisited.">Each notebook has one purpose, a readable scope, and a route back to the chapter it informs.</SectionHeading>
-        <div className="notebook-toolbar"><span className="mono">NOTEBOOKS / {String(notebooks.length).padStart(2, "0")}</span><a className="quiet-link" href="https://github.com/edwardcalderon/Master-s-thesis/tree/main/notebooks" target="_blank" rel="noreferrer">Browse source <Icon name="external" size={14} /></a></div>
+        <SectionHeading index="02" kicker={copy.notebook.kicker} title={copy.notebook.title}>{copy.notebook.intro}</SectionHeading>
+        <div className="notebook-toolbar"><span className="mono">{copy.notebook.count} {String(content.notebooks.length).padStart(2, "0")}</span><a className="quiet-link" href="https://github.com/edwardcalderon/Master-s-thesis/tree/main/notebooks" target="_blank" rel="noreferrer">{copy.notebook.browse} <Icon name="external" size={14} /></a></div>
         <div className="notebook-list">
-          {notebooks.map((notebook) => <article className="notebook-row" key={notebook.id}>
+          {content.notebooks.map((notebook) => <article className="notebook-row" key={notebook.id}>
             <span className="notebook-index">{notebook.id}</span>
             <div className="notebook-main"><div className="notebook-title-line"><h3>{notebook.title}</h3><Label>{notebook.status}</Label></div><p>{notebook.description}</p><div className="notebook-meta"><span>{notebook.kind}</span><span>{notebook.runtime}</span></div></div>
-            <a className="notebook-open" href={notebook.href} aria-label={`Open ${notebook.title}`}><Icon name="arrow" size={16} /></a>
+            <a className="notebook-open" href={notebook.href} aria-label={openNotebookLabel(notebook.title)}><Icon name="arrow" size={16} /></a>
           </article>)}
         </div>
       </section>
 
       <section id="docs" className="docs-section page-pad">
-        <SectionHeading index="03" kicker="Documentation" title="Notes around the result.">The surrounding documentation names assumptions, explains the reproduction path, and records the current limits of the work.</SectionHeading>
+        <SectionHeading index="03" kicker={copy.docs.kicker} title={copy.docs.title}>{copy.docs.intro}</SectionHeading>
         <div className="docs-layout">
           <div className="docs-list">
-            {docs.map((doc, index) => <a className="doc-row" href={doc.href} key={doc.label}><span className="doc-index">{String(index + 1).padStart(2, "0")}</span><span className="doc-label"><strong>{doc.label}</strong><small>{doc.meta}</small></span><Icon name="arrow" size={16} /></a>)}
+            {content.docs.map((doc, index) => <a className="doc-row" href={doc.href} key={doc.label}><span className="doc-index">{String(index + 1).padStart(2, "0")}</span><span className="doc-label"><strong>{doc.label}</strong><small>{doc.meta}</small></span><Icon name="arrow" size={16} /></a>)}
           </div>
           <aside className="architecture-card">
-            <p className="note-heading">Repository map</p>
-            <div className="tree-line tree-root"><span>master-thesis</span><small>research workspace</small></div>
-            <div className="tree-line"><strong>apps/web</strong><small>public reading surface</small></div>
-            <div className="tree-line"><strong>packages/content</strong><small>versioned metadata</small></div>
-            <div className="tree-line"><strong>notebooks</strong><small>executable evidence</small></div>
-            <div className="tree-line"><strong>thesis</strong><small>LaTeX manuscript</small></div>
-            <div className="tree-line"><strong>docs</strong><small>methods and protocol</small></div>
+            <p className="note-heading">{copy.docs.map}</p>
+            <div className="tree-line tree-root"><span>master-thesis</span><small>{copy.docs.workspace}</small></div>
+            <div className="tree-line"><strong>apps/web</strong><small>{copy.docs.web}</small></div>
+            <div className="tree-line"><strong>packages/content</strong><small>{copy.docs.content}</small></div>
+            <div className="tree-line"><strong>notebooks</strong><small>{copy.docs.notebooks}</small></div>
+            <div className="tree-line"><strong>thesis</strong><small>{copy.docs.thesis}</small></div>
+            <div className="tree-line"><strong>docs</strong><small>{copy.docs.docs}</small></div>
           </aside>
         </div>
-        <div className="layer-ribbon">{layers.map((layer) => <div className="layer" key={layer.index}><span className="mono">{layer.index}</span><strong>{layer.label}</strong><small>{layer.detail}</small></div>)}</div>
+        <div className="layer-ribbon">{content.layers.map((layer) => <div className="layer" key={layer.index}><span className="mono">{layer.index}</span><strong>{layer.label}</strong><small>{layer.detail}</small></div>)}</div>
       </section>
 
       <section id="pdf" className="pdf-section page-pad">
         <div className="pdf-copy">
-          <p className="eyebrow">04 · Manuscript</p>
-          <h2>Read the thesis in context.</h2>
-          <p>The public manuscript is published with its source and release record. The viewer appears here when the PDF artifact is available.</p>
-          <div className="pdf-actions"><button className="button button-primary" type="button" onClick={() => setPdfOpen((value) => !value)}><Icon name="book" size={16} />{pdfOpen ? "Close viewer" : "Open viewer"}</button><a className="button button-quiet" href="./thesis/main.tex" download><Icon name="download" size={16} /> LaTeX source</a></div>
-          <p className="pdf-meta"><span className="mono">THESIS / {release.tag}</span><span>{pdfAvailable ? "PDF artifact available" : "PDF artifact pending build"}</span></p>
+          <p className="eyebrow">{copy.pdf.kicker}</p>
+          <h2>{copy.pdf.title}</h2>
+          <p>{copy.pdf.intro}</p>
+          <div className="pdf-language-switch" role="group" aria-label={copy.pdf.languageGroup}>
+            <button className={pdfLanguage === "en" ? "language-option is-selected" : "language-option"} type="button" onClick={() => setPdfLanguage("en")} aria-pressed={pdfLanguage === "en"} disabled={!pdfAvailable} title={pdfAvailable ? copy.pdf.primary : copy.pdf.downloadUnavailable}>{copy.pdf.primary}</button>
+            <button className={pdfLanguage === "es" ? "language-option is-selected" : "language-option"} type="button" onClick={() => setPdfLanguage("es")} aria-pressed={pdfLanguage === "es"} disabled={!pdfSpanishAvailable} title={pdfSpanishAvailable ? copy.pdf.openSpanish : copy.pdf.missingSpanish}>{copy.pdf.translation}</button>
+          </div>
+          <div className="pdf-actions">
+            <button className="button button-primary" type="button" onClick={() => setPdfOpen((value) => !value)}><Icon name="book" size={16} />{pdfOpen ? copy.pdf.closeViewer : copy.pdf.openViewer}</button>
+            <a className="button button-quiet" href={pdfAvailable ? "./thesis/master-thesis.pdf" : undefined} aria-disabled={!pdfAvailable} title={pdfAvailable ? copy.pdf.englishPdf : copy.pdf.downloadUnavailable} onClick={(event) => { if (!pdfAvailable) event.preventDefault(); }} download><Icon name="download" size={16} /> {copy.pdf.englishPdf}</a>
+            <a className="button button-quiet" href={pdfSpanishAvailable ? "./thesis/master-thesis.es.pdf" : undefined} aria-disabled={!pdfSpanishAvailable} title={pdfSpanishAvailable ? copy.pdf.translation : copy.pdf.missingSpanish} onClick={(event) => { if (!pdfSpanishAvailable) event.preventDefault(); }} download><Icon name="download" size={16} /> {copy.pdf.spanishPdf}</a>
+            <a className="button button-quiet" href="./thesis/main.tex" download><Icon name="download" size={16} /> {copy.pdf.englishSource}</a>
+            <a className="button button-quiet" href="./thesis/es/main.tex" download><Icon name="download" size={16} /> {copy.pdf.spanishSource}</a>
+          </div>
+          <p className="pdf-meta"><span className="mono">{copy.pdf.artifactLabel} / {release.tag}</span><span>{pdfStatus}</span></p>
         </div>
-        <div className={`pdf-frame${pdfOpen ? " pdf-frame-open" : ""}`}>
-          <div className="pdf-window-bar"><span className="mono">master-thesis.pdf</span><span>{pdfOpen ? "reader" : "source ready"}</span></div>
-          <div className={`pdf-page${pdfAvailable && pdfOpen ? " pdf-page-live" : ""}`}>
-            {pdfAvailable && pdfOpen ? <iframe className="pdf-embed" src="./thesis/master-thesis.pdf#view=FitH" title="Compiled master thesis" /> : <><p className="pdf-page-label">MASTER THESIS · {release.tag}</p><h3>A reproducible research object</h3><p>{pdfOpen ? "The compiled thesis will appear here once the approved PDF is built and published with the site." : "Open the viewer to inspect the published manuscript when it is available."}</p><span className="pdf-page-number">01</span></>}
+        <div className={"pdf-frame" + (pdfOpen ? " pdf-frame-open" : "")}>
+          <div className="pdf-window-bar"><span className="mono">{pdfLanguage === "en" ? "master-thesis.pdf · EN" : "master-thesis.es.pdf · ES"}</span><span>{pdfOpen ? copy.pdf.reader : copy.pdf.sourceReady}</span></div>
+          <div className={"pdf-page" + (selectedPdfAvailable && pdfOpen ? " pdf-page-live" : "")}>
+            {selectedPdfAvailable && pdfOpen ? <iframe className="pdf-embed" src={selectedPdfUrl + "#view=FitH"} title={pdfLanguage === "en" ? copy.pdf.englishPdfTitle : copy.pdf.spanishPdfTitle} /> : <><p className="pdf-page-label">{copy.pdf.pageLabel} · {release.tag}</p><h3>{copy.pdf.placeholderTitle}</h3><p>{pdfOpen ? (pdfLanguage === "es" ? copy.pdf.spanishPending : copy.pdf.englishPending) : copy.pdf.closedHint}</p><span className="pdf-page-number">01</span></>}
           </div>
         </div>
       </section>
 
       <section className="closing-section page-pad">
-        <div><p className="eyebrow">A living record</p><h2>Question first. Evidence next.</h2><p>Clone the workspace, inspect the assumptions, and follow the artifact trail.</p></div>
-        <div className="clone-card"><span className="mono">Repository</span><code>git clone .../Master-s-thesis.git</code><button type="button" onClick={copyCloneCommand}>{copied ? <><Icon name="check" size={15} />Copied</> : <><Icon name="code" size={15} />Copy clone command</>}</button></div>
+        <div><p className="eyebrow">{copy.closing.eyebrow}</p><h2>{copy.closing.title}</h2><p>{copy.closing.text}</p></div>
+        <div className="clone-card"><span className="mono">{copy.closing.repository}</span><code>git clone .../Master-s-thesis.git</code><button type="button" onClick={copyCloneCommand}>{copied ? <><Icon name="check" size={15} />{copy.closing.copied}</> : <><Icon name="code" size={15} />{copy.closing.copyCommand}</>}</button></div>
       </section>
     </main>
 
-    <footer className="footer page-pad"><span>© {new Date().getFullYear()} Master Thesis Lab</span><span>Open research · reproducible by default</span><div className="footer-links"><a href={release.trackerUrl} target="_blank" rel="noreferrer"><span className="mono">{release.tag}</span> Release record <Icon name="external" size={14} /></a><a href="https://github.com/edwardcalderon/Master-s-thesis" target="_blank" rel="noreferrer">Repository <Icon name="external" size={14} /></a></div></footer>
+    <footer className="footer page-pad"><span>© {new Date().getFullYear()} {copy.footer.copyright}</span><span>{copy.footer.tagline}</span><div className="footer-links"><a href={release.trackerUrl} target="_blank" rel="noreferrer"><span className="mono">{release.tag}</span> {copy.footer.release} <Icon name="external" size={14} /></a><a href="https://github.com/edwardcalderon/Master-s-thesis" target="_blank" rel="noreferrer">{copy.footer.repository} <Icon name="external" size={14} /></a></div></footer>
   </div>;
 }
 

@@ -1,0 +1,71 @@
+\section{Ecosistemas CEX/DEX como sistemas complejos}
+
+Un sistema complejo adaptativo está compuesto por agentes heterogéneos que interactúan localmente y generan patrones globales no triviales \cite{holland1995hidden}. Esta perspectiva es apropiada para los mercados CEX/DEX porque la liquidez, el precio y el riesgo no dependen de una autoridad única ni de una regla estática. Las decisiones de los participantes se acoplan a reglas de protocolo, mecanismos de ejecución, costos de transacción y expectativas sobre otros agentes.
+
+La teoría de redes también aporta una representación útil. Los nodos pueden corresponder a mercados, pools, tokens, contratos, protocolos o cuentas agregadas; las aristas pueden representar flujos, dependencia de colateral, rutas de arbitraje o exposición compartida. La centralidad y la conectividad ayudan a formular preguntas sobre concentración y contagio \cite{barabasi2016network}. Sin embargo, la red debe tratarse como una simplificación del sistema: la tesis no infiere causalidad únicamente a partir de conectividad observada.
+
+\section{Microestructura híbrida}
+
+Los CEX normalmente usan libros de órdenes, motores de emparejamiento y APIs operadas por una entidad centralizada. Sus variables de interés incluyen spread bid--ask, profundidad, latencia, tarifas maker/taker, fill rate y riesgo de contraparte. Los DEX, por contraste, ejecutan reglas en contratos inteligentes y suelen depender de pools de liquidez o AMM. Allí cobran relevancia el slippage, el price impact, el gas, la congestión de red, la latencia de confirmación, la fragmentación de liquidez y los riesgos de contrato.
+
+Un AMM de producto constante puede representarse de forma básica como:
+
+\begin{equation}
+  x \cdot y = k,
+\end{equation}
+
+donde $x$ e $y$ son las reservas de dos activos y $k$ es una constante. Una operación modifica la proporción de reservas y, por tanto, el precio implícito. Esta formulación es útil para el simulador inicial, aunque no pretende representar toda la variedad de AMM concentrados o mecanismos de rango de liquidez. El análisis de Uniswap muestra por qué el tamaño relativo de una operación frente a la liquidez condiciona sus costos de ejecución \cite{angeris2020uniswap}.
+
+\begin{table}[H]
+\centering
+\caption{Dimensiones mínimas para contrastar CEX y DEX en el experimento.}
+\begin{tabularx}{\textwidth}{p{3cm}XX}
+\toprule
+\textbf{Dimensión} & \textbf{CEX} & \textbf{DEX/AMM} \\
+\midrule
+Ejecución & Libro de órdenes y emparejamiento. & Swap contra reservas y transacción on-chain. \\
+Costos & Tarifas, spread y posible impacto de mercado. & Gas, slippage, price impact y posible MEV. \\
+Liquidez & Profundidad visible del libro. & Reservas del pool y rango de liquidez. \\
+Riesgo operativo & Custodia, disponibilidad de API y contraparte. & Contrato inteligente, oráculo, congestión y confirmación. \\
+Observabilidad & Datos de trades y libro según venue. & Eventos y estados on-chain verificables. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Agentes y simulación}
+
+La simulación basada en agentes permite estudiar cómo reglas locales producen patrones agregados \cite{wooldridge2009multiagent}. El modelo inicial no intenta imitar a todos los participantes del mercado. En su lugar, define agentes con responsabilidades mínimas, observables y parametrizables. Cada agente $i$ tiene un estado $s_i(t)$, observa el estado del entorno $E(t)$ y ejecuta una acción conforme a una política $\pi_i$:
+
+\begin{equation}
+  a_i(t)=\pi_i\left(s_i(t),E(t),\theta_i\right),
+\end{equation}
+
+donde $\theta_i$ reúne parámetros como tolerancia al riesgo, inventario, latencia o umbrales de liquidación. Estudios recientes de simulación de libros de órdenes y mercados financieros respaldan la utilidad de este enfoque para investigar políticas de agentes, siempre que los resultados se interpreten dentro de los supuestos del entorno \cite{karpe2020marl,mascioli2024pymarketsim}.
+
+\begin{table}[H]
+\centering
+\caption{Agentes mínimos y función experimental.}
+\begin{tabularx}{\textwidth}{p{3.6cm}X}
+\toprule
+\textbf{Agente} & \textbf{Función experimental} \\
+\midrule
+Trader direccional & Introduce demanda u oferta exógena según una regla transparente. \\
+Proveedor de liquidez & Aporta o retira liquidez bajo condiciones de inventario y riesgo. \\
+Arbitrajista CEX/DEX & Compara precios netos de costos y ejecuta rutas con latencia parametrizada. \\
+Liquidador & Activa liquidaciones simplificadas cuando el colateral cruza un umbral. \\
+Agente estratégico simplificado & Representa competencia por prioridad de ejecución o MEV sin afirmar fidelidad a una cadena específica. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Series temporales y representación multi-resolución}
+
+Las series financieras son no estacionarias y contienen señales a diferentes escalas. Las transformadas wavelet permiten describir componentes de alta, media y baja frecuencia mientras conservan información temporal \cite{gencay2002wavelets}. En esta tesis se usarán como una alternativa de ingeniería de características para detectar cambios de régimen y filtrar ruido, no como evidencia independiente de causalidad.
+
+Los modelos LSTM y Transformer pueden compararse con baselines estadísticos y de árboles de decisión para evaluar si una mayor complejidad aporta valor fuera de muestra \cite{fischer2018deep,vaswani2017attention}. El artículo de TimesFM incluido en la primera entrega muestra además una línea de investigación sobre modelos fundacionales de series temporales \cite{das2024timesfm}. En la presente tesis, un modelo de este tipo solo se considerará como benchmark opcional, después de establecer una línea base reproducible y de verificar sus condiciones de licencia, cómputo y datos.
+
+\section{Riesgo de ejecución, integridad de mercado y contexto regulatorio}
+
+Maximum Extractable Value (MEV) describe el valor potencialmente extraíble al reordenar, incluir o excluir transacciones. Puede afectar la ejecución en DEX mediante fenómenos como frontrunning o sandwiching \cite{materwala2024mev}. En CEX también existen riesgos de integridad, incluyendo wash trading, spoofing, layering y conflictos de interés. La infraestructura propuesta modela estos riesgos como escenarios y costos de ejecución; no intenta atribuir comportamientos ilícitos a participantes reales.
+
+La composición de protocolos DeFi puede generar dependencias entre colateral, pools, oráculos y liquidaciones, lo que vuelve relevante el análisis de exposición sistémica \cite{capponi2023defi}. En paralelo, los marcos de IOSCO y MiCA ofrecen un contexto para discutir integridad de mercado, protección y gobernanza \cite{iosco2023crypto,iosco2023defi,esma2025mica}. En Colombia, el análisis se limita a una matriz de riesgos y trazabilidad; no constituye asesoría legal, tributaria ni financiera \cite{banrep2018criptoactivos}.

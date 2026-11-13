@@ -1,51 +1,67 @@
-\section{Contexto}
+\section{Introduction}
 
-Los mercados de criptoactivos y las finanzas descentralizadas han pasado de ser aplicaciones aisladas sobre blockchain a formar ecosistemas digitales interdependientes. En ellos conviven exchanges centralizados (CEX), exchanges descentralizados (DEX), Automated Market Makers (AMM), protocolos de préstamo, derivados perpetuos, bridges, oráculos, validadores, liquidadores, proveedores de liquidez y agentes automatizados. Bitcoin demostró la viabilidad de un libro mayor distribuido sin una autoridad central \cite{nakamoto2008bitcoin}; Ethereum extendió esa idea con contratos inteligentes programables \cite{buterin2014ethereum,wood2014ethereum}. Esa programabilidad permitió que el intercambio, el préstamo y la provisión de liquidez fueran componentes ejecutables de una infraestructura financiera abierta \cite{schar2021defi,werner2021sok}.
+Decentralized exchanges based on automated market makers (AMMs) and centralized
+exchanges (CEXs) represent complementary price-formation mechanisms. Their
+interaction through arbitrage and differences in liquidity makes it possible to study
+price tracking and responses to shocks. The intended contribution is not a general
+theory of market stability, but a set of mechanisms that can be verified in a
+simulator: how much correction comes from arbitrage, how it changes under limited
+capacity, and how liquidity depth changes the impact of a fixed-size sale. The reduced
+model is subordinate to this computational evidence and is not presented as an
+automatic equivalent of a real market.
 
-El interés de esta tesis no es recomendar estrategias de inversión ni construir un bot orientado a rentabilidad. El problema de investigación se sitúa en la ingeniería de sistemas: comprender cómo la interacción entre infraestructura computacional, reglas de protocolo, liquidez, latencia e incentivos económicos produce fenómenos que no pueden explicarse con una sola serie de precios. La ejecución de una orden, por ejemplo, depende del libro de órdenes o del pool de liquidez, de los costos, del tiempo de confirmación y de la estrategia de otros agentes. Por ello, el ecosistema CEX/DEX se aborda como un sistema complejo adaptativo, distribuido, no lineal y multi-agente.
+\section{Problem, research question, and hypotheses}
 
-\section{Planteamiento del problema}
+\subsection{Scientific problem}
 
-Una proporción importante de los estudios de mercados cripto se concentra en predicción de precios o en backtesting simplificado. Estas aproximaciones pueden ser útiles como baselines, pero resultan insuficientes cuando omiten spread, profundidad, slippage, tarifas, gas, latencia, liquidaciones, fragmentación de liquidez, riesgo de oráculo y Maximum Extractable Value (MEV). Un modelo puede mostrar buen desempeño histórico bajo supuestos de ejecución ideales y fallar cuando se enfrenta a un cambio de régimen o a un shock de liquidez.
+For the proposed minimal model, it is not yet sufficiently determined under which
+combinations of arbitrage capacity, liquidity depth, execution frictions, and agent
+behavior price tracking is achieved, a discrepancy persists, or a disturbance is
+amplified. A simulation that only plots these effects does not by itself explain the
+conditions that produce them.
 
-Existe además una brecha de reproducibilidad. Aunque los datos on-chain ofrecen trazabilidad y granularidad poco habituales en otros mercados, los experimentos suelen mezclar fuentes heterogéneas, transformaciones no documentadas y supuestos de ejecución implícitos. El resultado es difícil de auditar, repetir o extender. Esta situación es especialmente relevante en América Latina y Colombia, donde la adopción tecnológica avanza junto con una regulación heterogénea y una oferta todavía limitada de infraestructura académica para experimentar con estos sistemas.
+\subsection{Main research question}
 
-La tesis propone una infraestructura experimental que conecte cuatro capas: adquisición y trazabilidad de datos; representación de la microestructura CEX/DEX; simulación de agentes heterogéneos; y evaluación reproducible de escenarios. El alcance inicial privilegia un simulador controlado y datasets documentados, antes de incorporar componentes de alta complejidad como aprendizaje por refuerzo, streaming o ejecución en tiempo real.
+Under what conditions of arbitrage, liquidity, and heterogeneous behavior does a
+simplified hybrid CEX/DEX market reduce or maintain bounded tracking error, and to
+what extent does a reduced discrete map describe the regimes observed in a stochastic
+multi-agent microworld?
 
-\section{Pregunta de investigación}
+\subsection{Working hypotheses}
 
-\textbf{¿Cómo diseñar una infraestructura experimental multi-agente, reproducible y auditable para modelar, simular y analizar ecosistemas financieros descentralizados híbridos CEX/DEX como sistemas complejos adaptativos?}
+Price tracking depends on the balance between corrective feedback (arbitrage) and
+potentially amplifying mechanisms (trading pressure and adaptive liquidity). Variation
+in these mechanisms produces behavior regions that can be distinguished with
+experimental metrics; the reduced map serves as a local diagnostic and must fail
+explicitly when its assumptions are no longer reasonable.
 
-Esta pregunta se desarrolla mediante las siguientes preguntas específicas:
+\begin{description}[style=nextline]
+  \item[H1a.] Under specified assumptions about capacity, latency, and costs,
+    arbitrage reduces discrepancies after an isolated disturbance.
+  \item[H1b.] Proportional liquidity withdrawal increases the impact of a subsequent
+    fixed-size trade; certain adaptive LP rules amplify shocks compared with a static
+    liquidity counterfactual.
+  \item[H1c.] A discrete map estimated or diagnosed around an operating region can
+    partially classify error contraction or persistence in the ABM; disagreements are
+    outcomes that delimit its validity.
+\end{description}
+
+\section{Objectives}
+
+\textbf{General objective.} Develop and evaluate a computational framework for
+analyzing CEX/DEX price tracking and liquidity fragility by combining a traceable
+reduced dynamic map with heterogeneous-agent simulation.
 
 \begin{enumerate}
-  \item ¿Qué variables de mercado, microestructura, protocolo y ejecución son necesarias para representar un escenario CEX/DEX de manera trazable?
-  \item ¿Cómo modelar agentes heterogéneos --traders, proveedores de liquidez, arbitrajistas, liquidadores y agentes estratégicos simplificados-- sin confundir la simulación con una recomendación de inversión?
-  \item ¿Qué fenómenos emergentes pueden observarse bajo shocks controlados de precio, liquidez, gas, latencia o colateral?
-  \item ¿Qué valor aportan los modelos de series temporales y las representaciones multi-resolución como módulos de detección de régimen, frente a baselines transparentes?
-  \item ¿Cómo evaluar reproducibilidad, sensibilidad, desempeño computacional y coherencia de la simulación?
+  \item Specify the state, AMM transaction mechanics, arbitrage, and author-approved
+    four-role policies using the ODD protocol \cite{grimm2020odd}.
+  \item Construct a reduced discrete map with a no-arbitrage band and variables
+    observable in the ABM; evaluate local contraction and linearized stability only in
+    regions where those criteria apply.
+  \item Implement and verify a reproducible simulator with explicit reserves,
+    inventories, costs, and event ordering.
+  \item Design factorial or sensitivity experiments for shocks, arbitrage intensity,
+    depth, and LP response.
+  \item Compare theoretical and simulated results, including disagreement regions,
+    statistical robustness, and limits to extrapolation.
 \end{enumerate}
-
-\section{Objetivos}
-
-\subsection{Objetivo general}
-
-Diseñar e implementar una infraestructura experimental multi-agente para la simulación y el análisis de ecosistemas financieros descentralizados híbridos CEX/DEX como sistemas complejos adaptativos, con trazabilidad de datos, evaluación reproducible y validación por escenarios.
-
-\subsection{Objetivos específicos}
-
-\begin{enumerate}
-  \item Caracterizar la microestructura híbrida CEX/DEX y los agentes, eventos y dependencias relevantes para una representación experimental mínima.
-  \item Diseñar un modelo de datos reproducible para fuentes CEX, DEX y on-chain, con separación explícita entre datos crudos, procesados y derivados.
-  \item Implementar un simulador basado en agentes que incluya, al menos, traders, proveedores de liquidez, arbitrajistas y liquidadores simplificados.
-  \item Incorporar baselines estadísticos y de aprendizaje automático para analizar regímenes, volatilidad y señales multi-resolución, sin asumir capacidad predictiva fuera de muestra.
-  \item Evaluar escenarios de deterioro de liquidez, arbitraje con latencia, aumento de costos de ejecución, cascadas de liquidación y shocks exógenos.
-  \item Documentar una matriz de riesgos operativos, de integridad de mercado y regulatorios como contexto de diseño, no como asesoría legal, tributaria o financiera.
-  \item Publicar notebooks, documentación y artefactos de ejecución que permitan reproducir los experimentos del manuscrito.
-\end{enumerate}
-
-\section{Alcance de la versión 0.1.0}
-
-La versión \versionTesis{} es un borrador de diseño. Consolida el problema, el marco conceptual, la arquitectura propuesta y el protocolo de evaluación que guiará la implementación. No presenta resultados empíricos definitivos, no opera con dinero real y no afirma rentabilidad de ninguna estrategia. Los resultados, figuras y comparaciones finales se incorporarán solo después de contar con fuentes verificadas, código versionado y ejecuciones reproducibles.
-
-El primer incremento técnico se limita a un activo o par representativo, una fuente CEX, una fuente DEX u on-chain y un conjunto pequeño de escenarios controlados. Esta reducción de alcance busca asegurar que los supuestos sean inspeccionables antes de ampliar la plataforma.

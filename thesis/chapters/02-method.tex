@@ -1,71 +1,111 @@
-\section{Ecosistemas CEX/DEX como sistemas complejos}
+\section{Market model and observables}
 
-Un sistema complejo adaptativo está compuesto por agentes heterogéneos que interactúan localmente y generan patrones globales no triviales \cite{holland1995hidden}. Esta perspectiva es apropiada para los mercados CEX/DEX porque la liquidez, el precio y el riesgo no dependen de una autoridad única ni de una regla estática. Las decisiones de los participantes se acoplan a reglas de protocolo, mecanismos de ejecución, costos de transacción y expectativas sobre otros agentes.
-
-La teoría de redes también aporta una representación útil. Los nodos pueden corresponder a mercados, pools, tokens, contratos, protocolos o cuentas agregadas; las aristas pueden representar flujos, dependencia de colateral, rutas de arbitraje o exposición compartida. La centralidad y la conectividad ayudan a formular preguntas sobre concentración y contagio \cite{barabasi2016network}. Sin embargo, la red debe tratarse como una simplificación del sistema: la tesis no infiere causalidad únicamente a partir de conectividad observada.
-
-\section{Microestructura híbrida}
-
-Los CEX normalmente usan libros de órdenes, motores de emparejamiento y APIs operadas por una entidad centralizada. Sus variables de interés incluyen spread bid--ask, profundidad, latencia, tarifas maker/taker, fill rate y riesgo de contraparte. Los DEX, por contraste, ejecutan reglas en contratos inteligentes y suelen depender de pools de liquidez o AMM. Allí cobran relevancia el slippage, el price impact, el gas, la congestión de red, la latencia de confirmación, la fragmentación de liquidez y los riesgos de contrato.
-
-Un AMM de producto constante puede representarse de forma básica como:
+Let $p_t^C>0$ denote the external CEX price and $p_t^D>0$ the marginal AMM price.
+In a constant-product pool without swap fees, $x_ty_t=k_t$ and $p_t^D=y_t/x_t$. The
+logarithmic tracking error is
 
 \begin{equation}
-  x \cdot y = k,
+  e_t=\log\left(\frac{p_t^D}{p_t^C}\right), \qquad
+  D_t=(|e_t|-\gamma_t)_+,
 \end{equation}
 
-donde $x$ e $y$ son las reservas de dos activos y $k$ es una constante. Una operación modifica la proporción de reservas y, por tanto, el precio implícito. Esta formulación es útil para el simulador inicial, aunque no pretende representar toda la variedad de AMM concentrados o mecanismos de rango de liquidez. El análisis de Uniswap muestra por qué el tamaño relativo de una operación frente a la liquidez condiciona sus costos de ejecución \cite{angeris2020uniswap}.
-
-\begin{table}[H]
-\centering
-\caption{Dimensiones mínimas para contrastar CEX y DEX en el experimento.}
-\begin{tabularx}{\textwidth}{p{3cm}XX}
-\toprule
-\textbf{Dimensión} & \textbf{CEX} & \textbf{DEX/AMM} \\
-\midrule
-Ejecución & Libro de órdenes y emparejamiento. & Swap contra reservas y transacción on-chain. \\
-Costos & Tarifas, spread y posible impacto de mercado. & Gas, slippage, price impact y posible MEV. \\
-Liquidez & Profundidad visible del libro. & Reservas del pool y rango de liquidez. \\
-Riesgo operativo & Custodia, disponibilidad de API y contraparte. & Contrato inteligente, oráculo, congestión y confirmación. \\
-Observabilidad & Datos de trades y libro según venue. & Eventos y estados on-chain verificables. \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-\section{Agentes y simulación}
-
-La simulación basada en agentes permite estudiar cómo reglas locales producen patrones agregados \cite{wooldridge2009multiagent}. El modelo inicial no intenta imitar a todos los participantes del mercado. En su lugar, define agentes con responsabilidades mínimas, observables y parametrizables. Cada agente $i$ tiene un estado $s_i(t)$, observa el estado del entorno $E(t)$ y ejecuta una acción conforme a una política $\pi_i$:
+where $\gamma_t\geq 0$ is an operational no-arbitrage band whose costs, direction, and
+dependence on trade size must be justified. The set
+$E_\gamma=\{e:|e|\leq\gamma\}$ is not the same as the point equilibrium $e=0$. For a
+sale of $q>0$ units of asset $x$ in an ideal AMM without fees:
 
 \begin{equation}
-  a_i(t)=\pi_i\left(s_i(t),E(t),\theta_i\right),
+  p^{D\prime}=\frac{p^D}{(1+q/x)^2}, \qquad
+  \Delta\log p^D=-2\log(1+q/x).
 \end{equation}
 
-donde $\theta_i$ reúne parámetros como tolerancia al riesgo, inventario, latencia o umbrales de liquidación. Estudios recientes de simulación de libros de órdenes y mercados financieros respaldan la utilidad de este enfoque para investigar políticas de agentes, siempre que los resultados se interpreten dentro de los supuestos del entorno \cite{karpe2020marl,mascioli2024pymarketsim}.
+If an LP withdraws a proportion of the reserves, leaving $rx$ and $ry$ for $0<r<1$,
+the immediate marginal price does not change; the impact of the same sale does
+increase. Rules for LP additions and withdrawals and for fees distinguish
+transactions that preserve $xy=k$ from those that change $k$.
 
-\begin{table}[H]
-\centering
-\caption{Agentes mínimos y función experimental.}
-\begin{tabularx}{\textwidth}{p{3.6cm}X}
-\toprule
-\textbf{Agente} & \textbf{Función experimental} \\
-\midrule
-Trader direccional & Introduce demanda u oferta exógena según una regla transparente. \\
-Proveedor de liquidez & Aporta o retira liquidez bajo condiciones de inventario y riesgo. \\
-Arbitrajista CEX/DEX & Compara precios netos de costos y ejecuta rutas con latencia parametrizada. \\
-Liquidador & Activa liquidaciones simplificadas cuando el colateral cruza un umbral. \\
-Agente estratégico simplificado & Representa competencia por prioridad de ejecución o MEV sin afirmar fidelidad a una cadena específica. \\
-\bottomrule
-\end{tabularx}
-\end{table}
+\subsection{Full model}
 
-\section{Series temporales y representación multi-resolución}
+\begin{equation}
+  S_{t+1}=F(S_t,\xi_t,J_t;\theta),
+\end{equation}
 
-Las series financieras son no estacionarias y contienen señales a diferentes escalas. Las transformadas wavelet permiten describir componentes de alta, media y baja frecuencia mientras conservan información temporal \cite{gencay2002wavelets}. En esta tesis se usarán como una alternativa de ingeniería de características para detectar cambios de régimen y filtrar ruido, no como evidencia independiente de causalidad.
+where the state includes prices, reserves, inventories, accounts, policy memory, and
+liquidity variables; $\xi_t$ denotes random innovations, $J_t$ experimental shocks,
+and $\theta$ the parameters. Primary metrics include excess error, sustained recovery
+time, maximum response, depth, slippage, cascade frequency, and sensitivity to random
+seeds. The CEX remains exogenous; the model will not claim bidirectional contagion.
 
-Los modelos LSTM y Transformer pueden compararse con baselines estadísticos y de árboles de decisión para evaluar si una mayor complejidad aporta valor fuera de muestra \cite{fischer2018deep,vaswani2017attention}. El artículo de TimesFM incluido en la primera entrega muestra además una línea de investigación sobre modelos fundacionales de series temporales \cite{das2024timesfm}. En la presente tesis, un modelo de este tipo solo se considerará como benchmark opcional, después de establecer una línea base reproducible y de verificar sus condiciones de licencia, cómputo y datos.
+\section{A traceable reduced map and local criteria}
 
-\section{Riesgo de ejecución, integridad de mercado y contexto regulatorio}
+\subsection{Why the initial ODE is replaced}
 
-Maximum Extractable Value (MEV) describe el valor potencialmente extraíble al reordenar, incluir o excluir transacciones. Puede afectar la ejecución en DEX mediante fenómenos como frontrunning o sandwiching \cite{materwala2024mev}. En CEX también existen riesgos de integridad, incluyendo wash trading, spoofing, layering y conflictos de interés. La infraestructura propuesta modela estos riesgos como escenarios y costos de ejecución; no intenta atribuir comportamientos ilícitos a participantes reales.
+The earlier draft proposed an ODE with hyperbolic functions and Lyapunov/ISS
+arguments before a simulator existed to connect its states and coefficients to swaps,
+arbitrage capacity, or LP rules. That formulation is premature: the ABM runs in
+discrete ticks and events, and an ODE is not valid simply because it is mathematically
+convenient \cite{roubal2010linearization}. This version replaces it as the manuscript's
+core with a discrete map whose semantics match the simulator's update order.
 
-La composición de protocolos DeFi puede generar dependencias entre colateral, pools, oráculos y liquidaciones, lo que vuelve relevante el análisis de exposición sistémica \cite{capponi2023defi}. En paralelo, los marcos de IOSCO y MiCA ofrecen un contexto para discutir integridad de mercado, protección y gobernanza \cite{iosco2023crypto,iosco2023defi,esma2025mica}. En Colombia, el análisis se limita a una matriz de riesgos y trazabilidad; no constituye asesoría legal, tributaria ni financiera \cite{banrep2018criptoactivos}.
+\subsection{Discrete price-tracking map}
+
+Define signed excess relative to the no-arbitrage band as
+
+\begin{equation}
+  d_t=\operatorname{sgn}(e_t)(|e_t|-\gamma)_+.
+\end{equation}
+
+Let $z_t$ be net buying pressure in the DEX, positive when it raises $p_t^D$, and let
+$u_t$ be the displacement induced by the CEX reference. A candidate local
+approximation, to be tested against ABM data rather than imposed on it, is
+
+\begin{align}
+  d_{t+1}&=(1-\alpha)d_t+\beta z_t+u_t+\varepsilon_t,\\
+  z_{t+1}&=-\chi d_t+\rho z_t+\eta_t.
+\end{align}
+
+Here $\alpha\geq0$ represents effective arbitrage correction, $\beta>0$ the local
+impact of buying pressure, $\chi\geq0$ corrective feedback toward the band, and
+$\rho$ the persistence of pressure. These are parameters of a local approximation,
+not universal market constants.
+
+Without inputs or noise, the linearization is
+
+\begin{equation}
+  \begin{pmatrix} d_{t+1}\\ z_{t+1} \end{pmatrix}
+  =A\begin{pmatrix} d_t\\ z_t \end{pmatrix},\qquad
+  A=\begin{pmatrix}1-\alpha&\beta\\-\chi&\rho\end{pmatrix}.
+\end{equation}
+
+For this $2\times2$ map, local Schur stability requires the roots of $A$ to lie
+inside the unit circle; equivalently,
+
+\begin{equation}
+  1-\det(A)>0,\qquad
+  1-\operatorname{tr}(A)+\det(A)>0,\qquad
+  1+\operatorname{tr}(A)+\det(A)>0.
+\end{equation}
+
+These inequalities are diagnostic criteria for the reduced map. They do not prove
+stability of an ABM with noise, saturation, capital limits, liquidity changes, or
+additional agents.
+
+\subsection{Operating regimes and a bounded use of multiple models}
+
+Medina et al. \cite{medina2009multimodelos} describe nonlinear dynamics using local
+linear models associated with operating points. This thesis does not adopt their fault
+diagnosis component or attempt to identify a real financial system. The reference is
+used narrowly to document CEX scenarios with explicit operating regions---normal
+reference, shock, and recovery---each with declared perturbation and execution
+parameters. This separation supports sensitivity analysis without claiming that the
+regimes are empirical estimates or adding a new agent class.
+
+\subsection{Exact mechanics anchoring the map}
+
+The discrete form is linked to the AMM by a verifiable identity. If the DEX receives
+a sale of $q>0$ units of $x$, then
+$\Delta\log p^D=-2\log(1+q/x)$. An arbitrageur acting when $|e|>\gamma$ attempts to
+bring the price back to the band, but its tradable reserve fraction is capacity
+limited. Therefore, $\alpha$ is not postulated as an abstract gain: it is estimated or
+diagnosed from the observed contraction of excess $d_t$ per tick. Liquidity enters
+directly because the same absolute sale increases $q/x$ when an LP withdraws reserves.

@@ -1,93 +1,184 @@
-\section{Enfoque de investigación}
+\section{Experimental design and falsification}
 
-La investigación tiene un enfoque aplicado y experimental. El producto principal no es una estrategia de trading, sino una infraestructura que permita formular, ejecutar y comparar experimentos de manera reproducible. Cada escenario debe declarar sus datos, parámetros, versión de código, semilla aleatoria, supuestos de ejecución y métricas de salida.
+The design will use common random seed pairs where compatible, reduced parameter
+sweeps, sensitivity analysis with uncertainty intervals, and preregistered
+classification criteria. The number of replications will be set from convergence and
+estimator precision, not from a universal rule of thirty. To avoid selection bias,
+confirmation configurations will be kept separate from those used for model selection.
 
-La implementación se organiza de manera incremental. La primera iteración se concentra en un conjunto pequeño de fuentes y agentes; las ampliaciones solo se incorporan después de validar que el comportamiento básico puede repetirse y auditarse. Esta decisión reduce el riesgo de construir una plataforma extensa con resultados imposibles de interpretar.
-
-\section{Arquitectura experimental propuesta}
-
-La arquitectura se divide en cinco capas. La separación no obliga a desplegar todos los servicios desde la primera versión; describe responsabilidades para que los componentes puedan sustituirse sin romper la trazabilidad del experimento.
-
-\begin{figure}[H]
+\begin{table}[!ht]
 \centering
-\begin{tikzpicture}[
-  node distance=0.8cm,
-  box/.style={draw, rounded corners=2pt, minimum height=0.95cm, minimum width=3.2cm, align=center, font=\small, fill=gray!8},
-  arrow/.style={-{Latex[length=2.5mm]}, thick}
-]
-\node[box] (sources) {Fuentes CEX, DEX y on-chain};
-\node[box, below=of sources] (data) {Ingesta, validación y versionado de datos};
-\node[box, below=of data] (features) {Variables de mercado, protocolo y multi-resolución};
-\node[box, below=of features] (simulation) {Simulador multi-agente y escenarios de estrés};
-\node[box, below=of simulation] (evaluation) {Métricas, notebooks, artefactos y manuscrito};
-\draw[arrow] (sources) -- (data);
-\draw[arrow] (data) -- (features);
-\draw[arrow] (features) -- (simulation);
-\draw[arrow] (simulation) -- (evaluation);
-\end{tikzpicture}
-\caption{Capas de la infraestructura experimental.}
-\label{fig:arquitectura-experimental}
-\end{figure}
-
-\subsection{Datos y procedencia}
-
-Los datos se conservarán en tres zonas: \texttt{raw} para las descargas o eventos originales, \texttt{processed} para transformaciones verificables y \texttt{derived} para features, métricas o resultados. Cada conjunto debe registrar fuente, fecha de adquisición, intervalo temporal, esquema, tratamiento de datos faltantes y checksum cuando sea posible. Los datos restringidos o las credenciales no se versionarán en el repositorio público.
-
-Las variables candidatas incluyen OHLCV, trades, spread, profundidad, funding, open interest, swaps, reservas de pools, TVL, gas, eventos de liquidación y medidas de latencia. La selección final se basará en disponibilidad, calidad y pertinencia para cada escenario, no en la cantidad de variables recolectadas.
-
-\subsection{Escenarios}
-
-Los escenarios se formularán como intervenciones controladas sobre el entorno. Cada uno tendrá un estado inicial, una perturbación, una ventana de simulación y un conjunto de hipótesis observables. La Tabla \ref{tab:scenarios} propone el conjunto inicial.
-
-\begin{table}[H]
-\centering
-\caption{Escenarios iniciales de evaluación.}
-\label{tab:scenarios}
-\begin{tabularx}{\textwidth}{p{3.7cm}X}
+\small
+\begin{tabularx}{\textwidth}{@{}c p{4.2cm} X@{}}
 \toprule
-\textbf{Escenario} & \textbf{Pregunta operacional} \\
+\textbf{ID} & \textbf{Controlled intervention} & \textbf{Counterfactual and question} \\
 \midrule
-Shock de precio & ¿Cómo cambian spread, liquidez y exposición ante una perturbación exógena? \\
-Deterioro de liquidez AMM & ¿Cómo varían slippage y price impact cuando se retira liquidez? \\
-Arbitraje con latencia & ¿Cuándo deja de ser viable una ruta CEX/DEX después de costos y demora? \\
-Aumento de costos on-chain & ¿Cómo afecta un incremento de gas la ejecución y las oportunidades de arbitraje? \\
-Cascada de liquidación & ¿Qué condiciones amplifican ventas, reducción de colateral y deterioro de liquidez? \\
-Competencia por prioridad & ¿Cómo cambia la calidad de ejecución con un agente estratégico simplificado? \\
+E0 & Constant reference, fixed LP, arbitrage on/off & Verify the existence and nature
+  of a tracking regime. \\
+E1 & Exogenous CEX price shock; vary capacity, costs, and delay & Measure error, bound,
+  sustained return time, and resilience. \\
+E2 & Static LP versus volatility-sensitive adaptive LP & Distinguish the mechanical
+  impact of lower depth from endogenous feedback. \\
+E3 & Heterogeneous selling pressure and reactions, same external shock & Identify
+  amplification, persistence, and limits of the analytical approximation. \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-\section{Protocolo de evaluación}
+\subsection{Traceable MVP results: selection evidence, not confirmation}
 
-La evaluación combinará cuatro controles:
+The October 29 draft reported a preliminary table and a scalar local-map estimate, but
+its cited source directory \texttt{experiments/cex\_dex\_preliminary/} and raw outputs
+are absent from this checkout. Those values are therefore not treated as reproduced
+findings. The bilingual source snapshot \texttt{thesis/versions/v0.2.0/} preserves
+them as historical draft claims. The results below come from the separately versioned
+MVP and do not reproduce that earlier table. All runs are synthetic and use no market
+data.
+
+\subsubsection{Deterministic mechanism checks}
+
+Run \texttt{cex-dex-mvp-f183520b90aa} uses deterministic model 0.3.0. E0--E2 are
+mechanism checks without random flow. E3 is one policy-selection case with ten fixed
+sales; it is not a general test of adaptive LP behavior.
+
+\begin{table}[!ht]
+\centering
+\scriptsize
+\caption{Deterministic MVP results. Tracking error is $|\log(p^D/p^C)|$; return means
+two consecutive ticks inside the configured band.}
+\begin{tabularx}{\textwidth}{@{}c >{\raggedright\arraybackslash}p{3.5cm} >{\raggedright\arraybackslash}p{5.1cm} X@{}}
+\toprule
+\textbf{Scenario} & \textbf{Comparison} & \textbf{Observed result} &
+\textbf{Scope} \\
+\midrule
+E0 & Capacity 0 / 0.03 per tick & Peak error 0.10000/0.04088; sustained return not
+  observed/by tick 2 & One positive CEX shock, 20-tick horizon. \\
+E1 & Capacity 0.005 / 0.03 per tick & Peak error 0.09002/0.04088; return at ticks
+  10/2 & One shock; capacity is the varied mechanism. \\
+E2 & Full / 45\% remaining reserves & Impact of a fixed 500-unit sale is
+  0.09758/0.21072 log units & Arbitrage disabled; marginal price is unchanged by
+  proportional withdrawal before the sale. \\
+E3 & Static / one-shot adaptive LP & Peak error 0.08049/0.18249; return at tick 6 /
+  not within the 10-tick horizon & Shock +0.1, ten 200-unit sales, threshold 0.02,
+  55\% reserves remaining. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The deterministic sweep contains 144 parameter rows. In its 16 paired E3 policy
+settings, the adaptive rule withdrew in every case; peak error exceeded its static
+counterfactual in 12 and was unchanged in four. This is a selected grid, not an
+independent sample or a confirmation result.
+
+\subsubsection{Stochastic selection ABM}
+
+Stochastic model 0.4.0 implements the author-approved four-role taxonomy: bounded
+arbitrageur, noise trader, trend/panic trader, and LP. Run
+\texttt{cex-dex-abm-a99f9be866b2} contains 300 paired seeds. The approximate 95\%
+normal-interval half-width target of 0.005 peak-error units was met for all six
+configured contrasts. The same pre-generated noise schedule is shared across paired
+conditions.
+
+\begin{table}[!ht]
+\centering
+\scriptsize
+\caption{Selected paired stochastic contrasts (300 seeds). Differences are first
+condition minus second; intervals are approximate 95\% normal intervals.}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}p{3cm} r X@{}}
+\toprule
+\textbf{Shock} & \textbf{Contrast} & \textbf{Peak-error difference} &
+\textbf{Approximate 95\% interval} \\
+\midrule
+$+0.1$ & High minus zero arbitrage capacity & $-0.10690$ & $[-0.11176,-0.10204]$ \\
+$+0.1$ & Adaptive minus static LP & $+0.00529$ & $[+0.00426,+0.00632]$ \\
+$-0.1$ & Adaptive minus static LP & Approximately $0$ & Peak error; cumulative excess
+  error difference $+0.00456$, interval $[+0.00359,+0.00553]$. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The adaptive/static contrast changes with shock direction in this configured model.
+These are model-conditional selection estimates for researcher-chosen rules and
+parameters. The approved taxonomy is represented by simplified, researcher-selected policies
+rather than the full heterogeneous-agent design; the intervals do not address
+uncertainty over model structure or parameter selection.
+
+\subsubsection{Held-out diagnostic for H1c}
+
+Run \texttt{cex-dex-h1c-43e446f04adf} fits four condition-specific maps to 48,000
+selection transitions at shocks $\pm0.1$, then applies them without refitting to 300
+new seeds and shocks $\pm0.05$. All four fitted matrices were Schur-stable. The
+Schur-based rule predicted contraction in all eight condition/shock groups, while
+only three groups had a majority of contracting trajectories: agreement was $3/8$
+($37.5\%$). Mean one-step RMSE was 0.01837 for signed excess $d$ and 0.00840 for
+normalized pressure $z$; the selection $R^2$ for the $z$ equation was near zero across
+conditions. Thus this map is a weak classifier in this representative model. The
+holdout varies seeds and shock magnitude only; it does not test new agent rules,
+capacity levels, fee regimes, or market data.
+
+The current evidence supports only a narrow mechanical statement: in these exact
+CPMM configurations, capacity limits alter correction speed and lower reserves
+increase fixed-sale impact. It does not establish a general effect of adaptive LP
+behavior, confirm H1c, calibrate a market parameter, or validate any hypothesis
+externally. H1a and H1b remain to be tested across the agreed operating regions with
+the reviewed agent design; H1c's present disagreement is retained as a limitation,
+not hidden by the selection results.
+
+\section{Reproducible playground and technology transfer}
+
+\subsection{Architecture}
+
+The current prototype is implemented in standard-library Python. Its deterministic
+runner models an exogenous CEX reference, a two-reserve CPMM, a log no-arbitrage band,
+capacity-limited arbitrage, fixed-sale depth comparisons, and a one-shot LP withdrawal
+rule. A separate stochastic selection runner adds finite-wallet noise and trend/panic
+traders, a bounded arbitrageur, and static/adaptive LP conditions. It uses a shared
+pre-generated order schedule for paired comparisons and remains a representative-agent
+selection model, not the full heterogeneous population in the research design. Shocks,
+policy parameters, event timing, and horizons are configured explicitly. Run outputs
+include configurations, trajectories, summaries, metadata, and artifact checksums.
+
+\subsection{Canonical implementation reference}
+
+The public, versioned architecture reference is the \textit{Master-s-thesis}
+repository \cite{calderon2026repository}. The bilingual compilable manuscript is in
+\texttt{thesis/}; the deterministic and stochastic MVP, configurations, and analysis
+scripts are in \texttt{experiments/cex\_dex\_mvp}. Each run records its configuration,
+source checksums, seeds, and artifact checksums. Local outputs can be regenerated with
+the commands in the reproducibility log. No branch, URL, or synthetic result is
+interpreted as empirical market evidence.
+
+\subsection{Reproduction contracts}
 
 \begin{enumerate}
-  \item \textbf{Baselines explícitos.} Cada modelo o política compleja se comparará con una regla simple, por ejemplo buy-and-hold, una estrategia de umbral o un agente sin adaptación.
-  \item \textbf{Separación temporal.} Los datos de calibración y evaluación se separarán cronológicamente. No se usarán observaciones futuras para construir variables históricas.
-  \item \textbf{Sensibilidad y semillas.} Los escenarios se ejecutarán con múltiples semillas y variaciones de parámetros para identificar conclusiones frágiles.
-  \item \textbf{Trazabilidad.} Cada ejecución producirá configuración, versión de código, fecha, hash de datos, métricas y referencia al notebook o script correspondiente.
+  \item Versioned JSON configurations specify model parameters and economic units.
+    The MVP uses only the Python standard library (Python 3.10 or newer).
+  \item The invariant command checks positive reserves, both CPMM swap directions,
+    proportional-withdrawal price preservation, arbitrage direction and capacity,
+    paired external paths and noise schedules, and stochastic asset conservation.
+    It currently covers 2,654 deterministic states and a 504-state stochastic smoke
+    selection. Broader property-based and continuous-integration checks remain work.
+  \item Stable commands for the deterministic run, checks, sweep, stochastic selection,
+    and H1c analysis are listed in the reproducibility log. The tracked configurations
+    and protocols define the comparison and output contracts.
+  \item Run metadata records the run ID, model or analysis version, configuration and
+    source hashes, runtime, seed set, and generated-artifact checksums. Larger generated
+    outputs are kept outside Git locally and can be recreated with the documented
+    commands.
+  \item Results remain synthetic. A bounded public-market dataset with a documented
+    license, provenance, timestamps, and ingestion scripts is future work, as is
+    validation against on-chain or exchange execution records.
 \end{enumerate}
 
-\begin{longtable}{p{4.2cm}p{10.0cm}}
-\caption{Familias de métricas propuestas.}\\
-\toprule
-\textbf{Categoría} & \textbf{Métricas} \\
-\midrule
-\endfirsthead
-\toprule
-\textbf{Categoría} & \textbf{Métricas} \\
-\midrule
-\endhead
-Microestructura & Spread, profundidad, slippage, price impact, fill rate y latencia. \\
-DEX/on-chain & Gas, reservas, liquidez, transacciones fallidas, demora de confirmación y exposición a prioridad de ejecución. \\
-Sistema complejo & Propagación de perturbaciones, centralidad, sensibilidad, tamaño de cascada y recuperación de liquidez. \\
-Modelos & Error fuera de muestra, estabilidad entre ventanas, calibración y comparación frente a baseline. \\
-Computacionales & Tiempo de ejecución, uso de memoria, throughput, reproducibilidad y completitud de artefactos. \\
-\bottomrule
-\end{longtable}
+\subsection{Relationship to open market software}
 
-\section{Criterios de reproducibilidad}
-
-Un experimento será considerado reproducible si un tercero puede identificar el commit del repositorio, reconstruir el entorno, obtener o sustituir los datos conforme a una guía documentada, ejecutar el notebook o script y verificar las métricas reportadas. La web pública y el repositorio no reemplazan el manuscrito: funcionan como un índice de artefactos que conecta la tesis con sus datos, código y experimentos.
-
-La política de versiones será única para manuscrito, notebooks y sitio. La versión \versionTesis{} identifica este protocolo de diseño; las versiones posteriores deberán registrar cambios de hipótesis, fuentes, métodos, resultados o conclusiones.
+The theoretical market will use CPMM mechanics compatible with a Uniswap v2-style AMM
+\cite{adams2020uniswap,angeris2020cfmm}; it will not be extrapolated to concentrated
+liquidity positions in Uniswap v3/v4 without testing. Swaps are proposed to be checked
+against locally deployed reference contracts using Foundry/Anvil and Web3 libraries,
+under controlled configuration and without real funds. For the CEX reference, public
+series may be obtained through market adapters such as CCXT or a public exchange API,
+after checking licenses, pair identity, latency, spreads, and timestamps. An optional
+second level is replay of indexed on-chain events (for example, compatible pool Swap
+and Sync records) to validate execution-error magnitudes. Running mainnet nodes,
+advanced MEV, or live trading is not required.

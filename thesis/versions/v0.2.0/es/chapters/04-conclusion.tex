@@ -1,0 +1,35 @@
+\section{Alcance, riesgos y criterios de salida}
+
+Dentro del alcance: AMM constante, precio CEX externo, cuatro agentes, mapa discreto
+local trazable, E0--E3, reproducibilidad, experimentos sintéticos y comparación limitada
+con hechos de mercado.
+
+Fuera del alcance: predicción rentable, exchanges operativos, réplicas LOB completas,
+consenso blockchain, MEV avanzado, lending, bridges, aprendizaje por refuerzo y
+garantías generales sobre todos los mercados. También queda fuera, por ahora, afirmar
+validez empírica del mapa con base exclusiva en las simulaciones preliminares. Riesgo
+principal: que el mapa reducido no aproxime adecuadamente al ABM fuera de una región
+local. Mitigación: separar selección y confirmación, registrar configuraciones,
+contrastar ablaciones y reportar desacuerdos como resultado. Otros riesgos:
+sobreparametrización, dependencia de semillas, supuestos de liquidez ilimitada,
+confusión entre estabilidad local y global, y sesgo en calibración.
+
+\section{Discusión y límites de inferencia}
+
+El análisis debe distinguir tres niveles: propiedades mecánicas deducidas del AMM ideal,
+diagnóstico local del mapa reducido y patrones de un ABM discreto estocástico sujetos a
+validación. La condición de Schur del mapa y la contracción preliminar no constituyen
+garantías de estabilidad de mercados reales ni sustituyen una evaluación con datos
+públicos. La investigación deberá reportar los regímenes donde la aproximación reduzca
+bien el error y aquellos donde falle por saturación, límites de capital, choque
+persistente o cambios de liquidez.
+
+\section{Conclusiones y trabajo futuro}
+
+El proyecto queda planteado como un marco experimental centrado en mecanismos:
+seguimiento de precios, arbitraje limitado y fragilidad de liquidez. Las simulaciones
+preliminares verifican que el prototipo reproduce las direcciones comparativas
+esperadas para E0--E3 y permiten reemplazar una ODE genérica por un mapa discreto con
+variables observables. Falta la fase decisiva: especificar criterios ex ante, ejecutar
+sensibilidad y confirmación separadas, y evaluar la validez externa con datos públicos
+acotados. Ninguno de los resultados actuales demuestra utilidad en el mercado real.

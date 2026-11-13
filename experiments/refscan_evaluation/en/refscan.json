@@ -1,0 +1,6 @@
+{
+  "bib": "../references.bib",
+  "sections": "sections",
+  "main_tex": "main.tex",
+  "literature": "../literature/en"
+}

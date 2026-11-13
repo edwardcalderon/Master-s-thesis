@@ -1,0 +1,34 @@
+{
+  "projectPrimary": "en",
+  "internalWorkingLanguage": "en",
+  "requiredSecondary": [
+    "es"
+  ],
+  "requiredBilingualSurfaces": ["application", "finalManuscript"],
+  "application": {
+    "defaultLanguage": "en",
+    "supportedLanguages": ["en", "es"],
+    "translations": {
+      "en": {
+        "messages": "apps/web/src/locales/en.json",
+        "content": "packages/content/src/locales/en.json"
+      },
+      "es": {
+        "messages": "apps/web/src/locales/es.json",
+        "content": "packages/content/src/locales/es.json"
+      }
+    }
+  },
+  "manuscriptSources": {
+    "en": {
+      "role": "primary",
+      "source": "thesis/main.tex",
+      "pdf": "thesis/main.pdf"
+    },
+    "es": {
+      "role": "required-translation",
+      "source": "thesis/es/main.tex",
+      "pdf": "thesis/es/main.pdf"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+El repositorio de la tesis conserva una separación explícita entre el manuscrito y los artefactos que lo sustentan. La estructura inicial es:
+
+\begin{verbatim}
+Master-s-thesis/
+  thesis/              # Fuente LaTeX y PDF generado
+  notebooks/           # Exploración, validación y experimentos
+  data/raw/            # Datos originales; no se versionan datos restringidos
+  data/processed/      # Transformaciones trazables
+  src/                 # Código reusable que emerge de los notebooks
+  docs/                # Notas metodológicas y de reproducibilidad
+  apps/web/            # Sitio público y visor del artefacto
+  VERSION              # Versión común de los artefactos
+  VERSION_HISTORY.json # Registro de cambios
+\end{verbatim}
+
+Para construir el manuscrito se ejecuta \texttt{make pdf} desde el directorio \texttt{thesis/}. La integración de GitHub Pages compila el documento y publica el PDF junto con documentación y notebooks. Los datos, las credenciales y los resultados sensibles permanecen fuera del repositorio público.

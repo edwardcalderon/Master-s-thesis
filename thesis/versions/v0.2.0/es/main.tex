@@ -1,0 +1,82 @@
+\documentclass[10pt,a4paper]{article}
+
+% Manuscript synchronized with the direction-review draft dated 2026-10-29.
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+
+\setlength{\parskip}{0.25em}
+\setlength{\parindent}{0pt}
+\setlength{\headheight}{13pt}
+\setlength{\emergencystretch}{1em}
+\renewcommand{\arraystretch}{1.12}
+\setlist{leftmargin=*,itemsep=0.15em,topsep=0.25em}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=blue,
+  pdflang={es-CO},
+  pdftitle={Seguimiento de precios y fragilidad de liquidez en mercados cripto híbridos CEX/DEX},
+  pdfauthor={Edward Calderón},
+  pdfsubject={Borrador preliminar para revisión de dirección, 29 de octubre de 2026, manuscrito v0.2.0}
+}
+
+\newcommand{\languageCode}{es}
+\newcommand{\versionTesis}{v0.1.1}
+\newcommand{\revisionManuscrito}{v0.2.0}
+\renewcommand{\tablename}{Tabla}
+\renewcommand{\figurename}{Figura}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{CEX/DEX: seguimiento y liquidez}
+\fancyhead[R]{Revisión de dirección -- 29 oct. 2026}
+\fancyfoot[C]{\thepage}
+\fancypagestyle{plain}{%
+  \fancyhf{}
+  \fancyhead[L]{CEX/DEX: seguimiento y liquidez}
+  \fancyhead[R]{Revisión de dirección -- 29 oct. 2026}
+  \fancyfoot[C]{\thepage}
+}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries Seguimiento de precios y fragilidad de liquidez\\
+  en mercados cripto híbridos CEX/DEX\par}
+  \vspace{0.35em}
+  {\large Un marco experimental basado en agentes y un modelo dinámico reducido\par}
+  \vspace{0.35em}
+  {\normalsize Borrador preliminar para revisión de dirección\par}
+  \vspace{0.8em}
+  {\large Edward Calderón\par}
+  Universidad Nacional de Colombia, Facultad de Minas\\
+  Maestría en Ingeniería de Sistemas e Informática\\
+  29 de octubre de 2026\\
+  {\small Revisión de manuscrito: \revisionManuscrito}
+\end{center}
+
+\input{chapters/00-abstract}
+\input{chapters/01-introduction}
+\input{chapters/02-method}
+\input{chapters/03-evidence}
+\input{chapters/04-conclusion}
+
+\appendix
+\input{chapters/appendix-repository}
+
+\clearpage
+\renewcommand{\refname}{Referencias}
+\bibliographystyle{unsrt}
+\bibliography{../references}
+\end{document}

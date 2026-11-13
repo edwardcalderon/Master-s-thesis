@@ -1,0 +1,115 @@
+\section{Modelo de mercado y observables}
+
+Sean $p_t^C>0$ el precio externo CEX y $p_t^D>0$ el precio marginal del AMM. En una
+piscina de producto constante sin comisiones durante el swap, $x_ty_t=k_t$ y
+$p_t^D=y_t/x_t$. Se define el error logarítmico de seguimiento
+
+\begin{equation}
+  e_t=\log\left(\frac{p_t^D}{p_t^C}\right), \qquad
+  D_t=(|e_t|-\gamma_t)_+,
+\end{equation}
+
+donde $\gamma_t\geq 0$ representa una banda de no arbitraje operativa, cuyos costes,
+orientación y dependencia del tamaño de operación deben justificarse. El conjunto
+$E_\gamma=\{e:|e|\leq\gamma\}$ no es lo mismo que el equilibrio puntual $e=0$. Para
+una venta de $q>0$ unidades del activo $x$ en un AMM ideal sin comisiones:
+
+\begin{equation}
+  p^{D\prime}=\frac{p^D}{(1+q/x)^2}, \qquad
+  \Delta\log p^D=-2\log(1+q/x).
+\end{equation}
+
+Si un LP retira proporcionalmente las reservas dejando $rx$ y $ry$, con $0<r<1$, el
+precio marginal inmediato no cambia; el impacto de la misma venta sí aumenta. Las
+reglas para entradas y salidas de LP y comisiones distinguen transacciones que
+mantienen $xy=k$ de aquellas que modifican $k$.
+
+\subsection{Modelo completo}
+
+\begin{equation}
+  S_{t+1}=F(S_t,\xi_t,J_t;\theta),
+\end{equation}
+
+con estado que incluya precios, reservas, inventarios, cuentas, memoria requerida por
+políticas y variables de liquidez; $\xi_t$ son innovaciones aleatorias, $J_t$ shocks
+experimentales y $\theta$ parámetros. Las métricas principales son error excedente,
+recuperación sostenida, respuesta máxima, profundidad, slippage, frecuencia de
+cascadas y sensibilidad a semillas. El CEX permanece exógeno; no se afirmará contagio
+bidireccional.
+
+\section{Mapa reducido trazable y criterios locales}
+
+\subsection{Por qué se reemplaza la ODE inicial}
+
+El borrador anterior proponía una ODE con funciones hiperbólicas y argumentos de
+Lyapunov/ISS antes de contar con una simulación que conectara sus estados y
+coeficientes con swaps, capacidad de arbitraje o reglas de LP. Esa formulación es
+prematura: el ABM se ejecuta por ticks y eventos discretos, y una ODE no obtiene
+validez por ser matemáticamente conveniente \cite{roubal2010linearization}. En esta versión se reemplaza como
+núcleo del manuscrito por un mapa discreto cuya semántica coincide con el orden de
+actualización del simulador.
+
+\subsection{Mapa discreto de seguimiento}
+
+Se define el exceso con signo respecto de la banda de no arbitraje:
+
+\begin{equation}
+  d_t=\operatorname{sgn}(e_t)(|e_t|-\gamma)_+.
+\end{equation}
+
+Sea $z_t$ la presión neta de compra en el DEX, positiva cuando eleva $p_t^D$, y $u_t$
+el desplazamiento inducido por la referencia CEX. Una aproximación local candidata,
+que deberá contrastarse con datos del ABM y no imponerse sobre ellos, es
+
+\begin{align}
+  d_{t+1}&=(1-\alpha)d_t+\beta z_t+u_t+\varepsilon_t,\\
+  z_{t+1}&=-\chi d_t+\rho z_t+\eta_t.
+\end{align}
+
+Aquí $\alpha\geq0$ representa corrección efectiva de arbitraje, $\beta>0$ el impacto
+local de presión de compra, $\chi\geq0$ una realimentación correctiva hacia la banda y
+$\rho$ la persistencia de presión. Todos son parámetros de una aproximación local, no
+constantes universales de mercado.
+
+Sin entradas ni ruido, la linealización es
+
+\begin{equation}
+  \begin{pmatrix} d_{t+1}\\ z_{t+1} \end{pmatrix}
+  =A\begin{pmatrix} d_t\\ z_t \end{pmatrix},\qquad
+  A=\begin{pmatrix}1-\alpha&\beta\\-\chi&\rho\end{pmatrix}.
+\end{equation}
+
+Para este mapa $2\times2$, la estabilidad local de Schur requiere que las raíces de
+$A$ estén dentro del círculo unitario; equivalentemente,
+
+\begin{equation}
+  1-\det(A)>0,\qquad
+  1-\operatorname{tr}(A)+\det(A)>0,\qquad
+  1+\operatorname{tr}(A)+\det(A)>0.
+\end{equation}
+
+Estas desigualdades son un criterio diagnóstico del mapa reducido. No prueban
+estabilidad del ABM con ruido, saturaciones, límites de capital, cambios de liquidez o
+agentes adicionales.
+
+\subsection{Regímenes de operación y uso acotado de modelos múltiples}
+
+Medina et al. \cite{medina2009multimodelos} describen una dinámica no lineal mediante
+modelos lineales locales asociados a puntos de operación. Esta tesis no adopta su
+componente de diagnóstico de fallas ni intenta identificar un sistema financiero real.
+El antecedente se usa de manera acotada para documentar escenarios CEX con regiones
+operativas explícitas --referencia normal, shock y recuperación--, cada una con
+parámetros declarados de perturbación y ejecución. La separación permite evaluar
+sensibilidad sin afirmar que los regímenes sean una estimación empírica ni añadir una
+nueva clase de agente.
+
+\subsection{Mecánica exacta que ancla el mapa}
+
+La forma discreta se vincula al AMM mediante una identidad verificable. Si el DEX recibe
+una venta de $q>0$ unidades de $x$, entonces
+$\Delta\log p^D=-2\log(1+q/x)$. Un arbitrajista que actúa cuando $|e|>\gamma$ intenta
+llevar el precio a la banda, pero su fracción de reserva negociable está limitada por
+capacidad. Por tanto, $\alpha$ no se postula como una ganancia abstracta: se estima o
+se diagnostica a partir de la contracción observada del exceso $d_t$ por tick. La
+liquidez entra de manera directa porque la misma venta absoluta aumenta $q/x$ cuando
+el LP retira reservas.

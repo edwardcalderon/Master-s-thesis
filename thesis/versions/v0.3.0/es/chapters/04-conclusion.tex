@@ -1,0 +1,40 @@
+\section{Alcance, riesgos y criterios de salida}
+
+Dentro del alcance: AMM constante, precio CEX externo, roles representativos
+provisionales, mapa discreto local trazable, E0--E3, reproducibilidad, experimentos
+sintéticos y comparación limitada con hechos de mercado.
+
+Fuera del alcance: predicción rentable, exchanges operativos, réplicas LOB completas,
+consenso blockchain, MEV avanzado, lending, bridges, aprendizaje por refuerzo y
+garantías generales sobre todos los mercados. El MVP actual no establece validez
+empírica del mapa. En su primera comprobación reservada, la etiqueta de Schur coincidió
+con el resultado mayoritario de contracción en solo 3 de 8 grupos. Riesgo principal:
+que el mapa reducido no aproxime adecuadamente al ABM fuera de una región local.
+Mitigación: revisar las reglas de agentes, separar selección y confirmación, registrar
+configuraciones, contrastar ablaciones y reportar desacuerdos como resultado. Otros
+riesgos: sobreparametrización, dependencia de semillas, liquidez simplificada, confusión
+entre estabilidad local y global y sesgo en calibración.
+
+\section{Discusión y límites de inferencia}
+
+El análisis debe distinguir tres niveles: propiedades mecánicas deducidas del AMM ideal,
+diagnóstico local del mapa reducido y patrones de un ABM discreto estocástico sujetos a
+validación. El mapa actual clasificó correctamente solo 3 de 8 resultados mayoritarios
+reservados bajo un cambio acotado de semilla y magnitud del shock; su condición de Schur
+no garantiza estabilidad en el ABM ni en mercados reales. La ejecución de selección
+tampoco sustituye una evaluación con datos públicos. El trabajo futuro deberá informar
+los regímenes donde la aproximación reduzca el error y aquellos donde falle por
+saturación, límites de capital, shocks persistentes o cambios de liquidez.
+
+\section{Conclusiones y trabajo futuro}
+
+El proyecto cuenta ahora con un ejecutor determinista de mecanismos, un modelo
+estocástico de selección emparejada y un diagnóstico reservado del mapa reducido. Las
+comprobaciones deterministas muestran que la capacidad de arbitraje cambia la velocidad
+de corrección y que menos reservas aumentan el impacto de una venta fija en el CPMM
+configurado. La comparación estocástica muestra que el efecto del LP adaptativo depende
+de la dirección del shock. La primera prueba H1c coincide con solo 3 de 8 grupos de
+resultados mayoritarios, por lo que el mapa actual no es un clasificador fiable. La
+siguiente fase consiste en cerrar los roles de agentes, ampliar las regiones operativas,
+prerregistrar criterios confirmatorios y evaluar un conjunto público acotado. Ningún
+resultado actual demuestra utilidad en un mercado real.
