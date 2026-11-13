@@ -68,6 +68,8 @@ lightweight, versioned summaries before they are loaded.
   editions. The static and hydrated browser titles match the manuscript title.
 - Removed manuscript-source download controls and changed the Pages workflow to publish
   only the final English and Spanish PDFs in its thesis artifact directory.
+- Verified GitHub Pages run 43459607132: both PDFs compiled, the PDF-only artifact check
+  passed, the artifact uploaded, and deployment completed after Pages was enabled.
 - `pnpm --filter @tesis/web typecheck`, `pnpm --filter @tesis/web build`, and
   `pnpm language:check` pass. The latest web build reports 83.65 KB gzip for JS.
 
@@ -80,5 +82,3 @@ lightweight, versioned summaries before they are loaded.
   the full 50,400-row ABM trajectory file into the UI.
 - Add scenario share/export metadata and document exact reproduction steps.
 - Review client bundle size and use a Web Worker only if profiling demonstrates a need.
-- Verify the next main-branch publish after repository Pages was enabled for Actions;
-  the earlier workflow completed its build but failed before artifact upload.
