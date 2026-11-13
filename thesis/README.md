@@ -9,9 +9,11 @@ together.
 - English PDF: `main.pdf`
 - Spanish PDF: `es/main.pdf`
 
-The current manuscript revision is v0.3.2. The workspace release version is tracked
+The current manuscript revision is v0.4.0. The workspace release version is tracked
 separately by the root `VERSION` file and is synchronized into both LaTeX entry points.
-The v0.3.0 bilingual snapshot preserves the source before the author-approved role-taxonomy update. The v0.2.0 snapshot preserves the October 29 draft and its unverified preliminary values; v0.1.1 is also retained.
+The v0.3.1 snapshot preserves the bilingual source before this objective clarification;
+v0.3.0 preserves the prior role-taxonomy wording, v0.2.0 preserves the October 29 draft
+and its unverified preliminary values, and v0.1.1 is also retained.
 
 ## Build both PDFs
 

@@ -10,6 +10,7 @@ La experiencia pública toma como referencia algunos elementos útiles de [GeoAu
 
 - Se aclararon los resúmenes bilingües, la pregunta, los objetivos y los límites de la hipótesis del mapa reducido.
 - Se corrigieron la descripción del escenario de liquidez adaptativa y la referencia ODD.
+- Se registró la revisión sustantiva del manuscrito como v0.4.0 y se conservaron las instantáneas bilingües v0.3.1 y v0.4.0.
 
 Consulta el [historial completo](./CHANGELOG.es.md) y las [versiones de GitHub](https://github.com/edwardcalderon/Master-s-thesis/releases). [English version](./README.md).
 

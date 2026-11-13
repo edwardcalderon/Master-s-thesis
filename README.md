@@ -12,6 +12,7 @@ The public experience is inspired by the useful parts of [GeoAuPredict](https://
 
 - Clarified the bilingual abstracts, research question, objectives, and limits of the reduced-map hypothesis.
 - Corrected the adaptive liquidity scenario description and the ODD reference.
+- Recorded the substantive manuscript revision as v0.4.0 and preserved bilingual snapshots for v0.3.1 and v0.4.0.
 
 For full version history, see [CHANGELOG.md](./CHANGELOG.md) and [GitHub releases](https://github.com/edwardcalderon/Master-s-thesis/releases).
 
@@ -23,7 +24,7 @@ For full version history, see [CHANGELOG.md](./CHANGELOG.md) and [GitHub release
 
 ## Earlier preliminary manuscript — 29 Oct 2026
 
-This earlier mechanism-first draft studied CEX/DEX price tracking, bounded arbitrage, and liquidity fragility. It has been revised; the active bilingual manuscript is v0.3.1.
+This earlier mechanism-first draft studied CEX/DEX price tracking, bounded arbitrage, and liquidity fragility. It has been revised; the active bilingual manuscript is v0.4.0, and the v0.3.1 source is preserved in the version archive.
 
 - [Current English manuscript](thesis/main.tex)
 - [Current Spanish translation](thesis/es/main.tex)
