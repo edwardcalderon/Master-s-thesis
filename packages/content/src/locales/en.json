@@ -1,10 +1,10 @@
 {
   "thesis": {
     "shortTitle": "Master Thesis Lab",
-    "eyebrow": "Open research workspace · 2026",
-    "title": "A thesis built to be read, run, and questioned.",
-    "description": "A public-facing research workspace for a reproducible master thesis. The question, method, evidence, and final argument stay close enough to inspect.",
-    "version": "0.1.3",
+    "eyebrow": "CEX/DEX thesis · simulation lab",
+    "title": "Price Tracking and Liquidity Fragility in Hybrid CEX/DEX Crypto Markets",
+    "description": "An Agent-Based Experimental Framework and a Reduced-Order Dynamical Model.",
+    "version": "0.1.4",
     "state": "Foundation",
     "location": "Colombia · distributed lab",
     "license": "CC BY-NC 4.0 · source available"

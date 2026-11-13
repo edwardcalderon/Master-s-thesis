@@ -1,3 +1,15 @@
+## [0.1.4](https://github.com/edwardcalderon/Master-s-thesis/compare/v0.1.3...v0.1.4) (2026-11-13)
+
+### Added
+
+- Added a bilingual, client-side simulation playground for deterministic E0/E1 price tracking and E2 pool-depth comparisons, with bounded controls and copyable scenario data.
+- Added SIM-001 to track the static-hosted simulation work and THESIS-004 to audit generic future-work wording in the manuscript.
+
+### Changed
+
+- Updated the landing page to use the official English and Spanish thesis titles, put the playground directly below the title, and reduce introductory copy.
+- Improved narrow-screen layout so the live result chart is visible before its controls.
+
 # Changelog
 
 ## [0.1.3] - 2026-11-12

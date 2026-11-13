@@ -21,9 +21,9 @@ the reduced map on held-out configurations without concealing disagreement.
 
 ## Progress
 
-- Prepared manuscript revision v0.4.0 to make the existing simulation question,
+- Published manuscript revision v0.4.0 to make the existing simulation question,
   objectives, and held-out-map limits explicit in both languages. Archived the published
-  v0.3.1 source and the revised v0.4.0 source as bilingual snapshots.
+  v0.3.1 source and the v0.4.0 source as bilingual snapshots.
 - Archived the pre-reconciliation bilingual manuscript as the source snapshot
   `thesis/versions/v0.2.0/`; its former numeric table and local-map estimate remain
   preserved as historical claims because the original source and raw outputs are absent.
@@ -34,7 +34,8 @@ the reduced map on held-out configurations without concealing disagreement.
   prediction errors, and limits; the text explicitly labels the run a narrow diagnostic,
   not broad confirmation or empirical validation.
 - Revised both language editions and the reproducibility appendix. Language checks,
-  documentation build, and paired PDF compilation pass. The PDFs are eight pages each.
+  documentation build, and paired PDF compilation passed for v0.4.0. The English PDF is
+  eight pages and the Spanish PDF is nine pages.
 - The final `pnpm thesis:similarity` scan reports zero findings in both editions against
   four indexed source PDFs; two of six bibliography entries remain uncovered, so this
   is not exhaustive clearance. Network verification was skipped.

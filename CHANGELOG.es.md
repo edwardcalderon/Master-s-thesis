@@ -1,5 +1,17 @@
 # Registro de cambios
 
+## [0.1.4] - 2026-11-13
+
+### Añadido
+
+- Se añadió un laboratorio bilingüe de simulación en el navegador para el seguimiento de precios E0/E1 y la comparación de profundidad E2, con controles acotados y datos del escenario copiables.
+- Se añadieron SIM-001 para dar seguimiento a la simulación estática y THESIS-004 para auditar la redacción genérica de trabajo futuro.
+
+### Cambios
+
+- Se actualizó la página principal con los títulos oficiales de la tesis en inglés y español, se ubicó el laboratorio inmediatamente después del título y se redujo el texto introductorio.
+- Se mejoró la presentación en pantallas estrechas para mostrar los resultados de la simulación antes de sus controles.
+
 ## [0.1.3] - 2026-11-12
 
 ### Cambios

@@ -1,10 +1,10 @@
 {
   "thesis": {
     "shortTitle": "Laboratorio de tesis",
-    "eyebrow": "Espacio de investigación abierta · 2026",
-    "title": "Una tesis para leer, ejecutar y cuestionar.",
-    "description": "Un espacio público de investigación para una tesis de maestría reproducible. La pregunta, el método, la evidencia y el argumento final quedan disponibles para su revisión.",
-    "version": "0.1.3",
+    "eyebrow": "Tesis CEX/DEX · laboratorio de simulación",
+    "title": "Seguimiento de precios y fragilidad de liquidez en mercados cripto híbridos CEX/DEX",
+    "description": "Un marco experimental basado en agentes y un modelo dinámico reducido.",
+    "version": "0.1.4",
     "state": "Fundación",
     "location": "Colombia · laboratorio distribuido",
     "license": "CC BY-NC 4.0 · fuentes disponibles"

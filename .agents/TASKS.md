@@ -12,6 +12,8 @@ maintained in English.
 | CHECK-001 | edcalderon | — | **DONE** | [`tasks/done/CHECK-001/`](tasks/done/CHECK-001/TASK.md) | Integrate refscan as the first local pre-submission checker for the thesis. | One command scans both LaTeX editions against the locally available cited-source PDFs and writes separate reviewable reports; BibTeX conversion preserves citations; outputs are advisory and ignored by Git. Current coverage gaps are listed in the generated tracker. | None. |
 | THESIS-003 | edcalderon | — | **IN PROGRESS** | [`tasks/in-progress/THESIS-003/`](tasks/in-progress/THESIS-003/TASK.md) | Reconcile manuscript claims with reproducible outputs and evaluate H1c on held-out configurations. | Active manuscript evidence traces to versioned runs; held-out disagreements and limits are explicit in both editions. | THESIS-001 model review and broader confirmation conditions. |
 | DATA-001 | edcalderon | — | **TODO** | [`tasks/todo/DATA-001/`](tasks/todo/DATA-001/TASK.md) | Add a bounded empirical validation path after the synthetic MVP. | Data source, licensing, pair identity, timestamps, ingestion, and external-validity limits are documented and reproducible. | Synthetic mechanics and reproduction contract are stable. |
+| SIM-001 | edcalderon | — | **IN PROGRESS** | [`tasks/in-progress/SIM-001/`](tasks/in-progress/SIM-001/TASK.md) | Build a reproducible browser-side simulation playground for inspecting the thesis mechanisms and hypotheses. | Static-hosted UI reproduces bounded deterministic E0/E1/E2 scenarios from versioned model inputs; labels synthetic outputs and exposes parameters, metrics, and assumptions in English and Spanish. | THESIS-001 model contract; later E3 and stochastic summaries require traceable, bounded inputs. |
+| THESIS-004 | edcalderon | — | **TODO** | [`tasks/todo/THESIS-004/`](tasks/todo/THESIS-004/TASK.md) | Replace generic pending-work language in the final manuscript with precise, findings-led statements. | Audit both language editions; replace vague future-work promises with claims grounded in available findings and specific evidence limits; maintain factual parity. | THESIS-003 evidence reconciliation and the latest versioned experiment outputs. |
 
 ## Current work note
 
@@ -33,12 +35,16 @@ byte-for-byte.
 The author approved the four-role taxonomy: arbitrageur, noise trader, trend/panic
 trader as one policy, and LP with static/adaptive conditions. The current policy rules
 remain simplified selection assumptions. Manuscript v0.3.1 carries this taxonomy;
-release PR #2 prepares v0.4.0 to clarify the operational question and objectives while
-preserving v0.3.1 and earlier snapshots. The v0.2.0 snapshot preserves the old table
-and scalar map estimate as unverified claims. THESIS-003 is broadening held-out
+release v0.1.3 publishes v0.4.0 with the clarified operational question and objectives,
+while preserving v0.3.1 and earlier snapshots. The v0.2.0 snapshot preserves the old
+table and scalar map estimate as unverified claims. THESIS-003 is broadening held-out
 conditions.
 
 CHECK-001 and LANG-001 are complete. The latest CHECK-001 scan for v0.3.1 found zero
 matches in both editions against four local source PDFs; two bibliography entries remain
 coverage gaps, and network verification was skipped. LANG-001 passed language checks,
 builds, and interactive bilingual UI QA. DATA-001 remains queued in `tasks/todo/`.
+THESIS-004 is queued to audit generic future-work phrasing in the final manuscript.
+SIM-001's deterministic E0/E1/E2 browser slice now builds; E3 and compact stochastic/H1c
+views remain. The existing Pages workflow previously stopped because repository Pages
+was not enabled, so deployment still needs that repository setting.

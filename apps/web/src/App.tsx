@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { contentByLocale, release, type Locale } from "@tesis/content";
 import englishMessages from "./locales/en.json";
 import spanishMessages from "./locales/es.json";
+import Playground from "./features/playground/Playground";
 
 type IconName = "arrow" | "book" | "check" | "code" | "download" | "external" | "file" | "github" | "moon" | "play" | "sun";
 type Theme = "light" | "dark";
@@ -120,6 +121,7 @@ function App() {
       </a>
       <nav className="topnav" aria-label={copy.header.navigation}>
         <a href="#research">{copy.header.overview}</a>
+        <a href="#lab">{copy.header.lab}</a>
         <a href="#notebooks">{copy.header.notebooks}</a>
         <a href="#docs">{copy.header.notes}</a>
         <a href="#pdf">{copy.header.manuscript}</a>
@@ -140,37 +142,21 @@ function App() {
     </header>
 
     <main id="top">
-      <section className="hero page-pad">
+      <section className="hero hero-compact page-pad">
         <div className="hero-copy">
           <p className="hero-kicker"><span className="status-dot" />{content.thesis.eyebrow}</p>
           <h1>{content.thesis.title}</h1>
-          <p className="hero-lede">{content.thesis.description}</p>
           <div className="hero-actions">
-            <a className="button button-primary" href="#research">{copy.hero.begin} <Icon name="arrow" size={16} /></a>
+            <a className="button button-primary" href="#lab">{copy.hero.begin} <Icon name="play" size={15} /></a>
             <a className="button button-quiet" href="#pdf">{copy.hero.read} <Icon name="book" size={16} /></a>
           </div>
         </div>
-        <aside className="hero-note" aria-label={copy.hero.record}>
-          <p className="note-heading">{copy.hero.record}</p>
-          <dl>
-            <div><dt>{copy.hero.version}</dt><dd className="mono">{release.tag}</dd></div>
-            <div><dt>{copy.hero.status}</dt><dd>{content.thesis.state}</dd></div>
-            <div><dt>{copy.hero.method}</dt><dd>{copy.hero.methodValue}</dd></div>
-            <div><dt>{copy.hero.access}</dt><dd>{copy.hero.accessValue}</dd></div>
-          </dl>
-          <a className="quiet-link" href={release.trackerUrl} target="_blank" rel="noreferrer">{copy.hero.release} <Icon name="external" size={14} /></a>
-        </aside>
       </section>
 
-      <section className="manifest-strip page-pad" aria-label={copy.hero.manifest}>
-        <div className="manifest-item"><span>{copy.hero.researchState}</span><strong><i className="status-dot" />{content.thesis.state}</strong></div>
-        <div className="manifest-item"><span>{copy.hero.currentVersion}</span><strong className="mono">{release.tag}</strong></div>
-        <div className="manifest-item"><span>{copy.hero.researchLayers}</span><strong className="mono">03 / 03</strong></div>
-        <div className="manifest-item"><span>{copy.hero.license}</span><strong>{content.thesis.license}</strong></div>
-      </section>
+      <Playground locale={locale} copy={copy.playground} />
 
       <section id="research" className="research-section page-pad">
-        <SectionHeading index="01" kicker={copy.research.kicker} title={copy.research.title}>{copy.research.intro}</SectionHeading>
+        <SectionHeading index="02" kicker={copy.research.kicker} title={copy.research.title}>{copy.research.intro}</SectionHeading>
         <div className="research-grid">
           <article className="research-card">
             <Label>{copy.research.narrative}</Label>
@@ -194,7 +180,7 @@ function App() {
       </section>
 
       <section id="notebooks" className="notebooks-section page-pad">
-        <SectionHeading index="02" kicker={copy.notebook.kicker} title={copy.notebook.title}>{copy.notebook.intro}</SectionHeading>
+        <SectionHeading index="03" kicker={copy.notebook.kicker} title={copy.notebook.title}>{copy.notebook.intro}</SectionHeading>
         <div className="notebook-toolbar"><span className="mono">{copy.notebook.count} {String(content.notebooks.length).padStart(2, "0")}</span><a className="quiet-link" href="https://github.com/edwardcalderon/Master-s-thesis/tree/main/notebooks" target="_blank" rel="noreferrer">{copy.notebook.browse} <Icon name="external" size={14} /></a></div>
         <div className="notebook-list">
           {content.notebooks.map((notebook) => <article className="notebook-row" key={notebook.id}>
@@ -206,7 +192,7 @@ function App() {
       </section>
 
       <section id="docs" className="docs-section page-pad">
-        <SectionHeading index="03" kicker={copy.docs.kicker} title={copy.docs.title}>{copy.docs.intro}</SectionHeading>
+        <SectionHeading index="04" kicker={copy.docs.kicker} title={copy.docs.title}>{copy.docs.intro}</SectionHeading>
         <div className="docs-layout">
           <div className="docs-list">
             {content.docs.map((doc, index) => <a className="doc-row" href={doc.href} key={doc.label}><span className="doc-index">{String(index + 1).padStart(2, "0")}</span><span className="doc-label"><strong>{doc.label}</strong><small>{doc.meta}</small></span><Icon name="arrow" size={16} /></a>)}
