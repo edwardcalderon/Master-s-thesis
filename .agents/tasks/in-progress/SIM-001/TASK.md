@@ -59,10 +59,9 @@ lightweight, versioned summaries before they are loaded.
 - Connected both scenarios to the bilingual UI, with local JSON scenario copy, explicit
   synthetic-scope language, responsive layout, and an inline SVG chart. No plotting
   dependency, API call, or server compute is required for these scenarios.
-- Updated the landing hero to use the exact English and Spanish thesis titles, removed
-  the metadata-heavy hero panel, and moved the playground immediately below the title.
-  The default chart now appears in the initial mobile viewport; E0/E1 and E2 tabs were
-  reviewed in both languages with PinchTab.
+- Updated the landing hero to use the exact English and Spanish thesis titles and removed
+  the metadata-heavy hero panel. The manuscript abstract now leads the content below the
+  title, followed by the playground; E0/E1 and E2 tabs were reviewed in both languages.
 - Added the manuscript's exact English and Spanish abstracts and keyword lists to the
   site, with language checks that compare the title and abstract against both LaTeX
   editions. The static and hydrated browser titles match the manuscript title.

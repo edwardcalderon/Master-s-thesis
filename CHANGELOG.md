@@ -1,3 +1,9 @@
+## [0.1.6](https://github.com/edwardcalderon/Master-s-thesis/compare/v0.1.5...v0.1.6) (2026-11-13)
+
+### Changed
+
+- Reordered the landing page so the manuscript abstract appears before the simulation playground, with matching navigation and section numbering.
+
 ## [0.1.5](https://github.com/edwardcalderon/Master-s-thesis/compare/v0.1.4...v0.1.5) (2026-11-13)
 
 ### Added

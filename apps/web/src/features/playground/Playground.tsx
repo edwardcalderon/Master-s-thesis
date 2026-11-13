@@ -156,7 +156,7 @@ export default function Playground({ locale, copy }: Props) {
 
   return <section id="lab" className="playground-section page-pad">
     <div className="section-heading">
-      <span className="section-index">01</span>
+      <span className="section-index">02</span>
       <div>
         <p className="eyebrow">{copy.kicker}</p>
         <h2>{copy.title}</h2>

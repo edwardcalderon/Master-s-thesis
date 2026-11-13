@@ -4,17 +4,11 @@ Un espacio de investigación abierto y reproducible para una tesis de maestría.
 
 La experiencia pública toma como referencia algunos elementos útiles de [GeoAuPredict](https://github.com/edwardcalderon/GeoAuPredict): una presentación clara de la investigación, un explorador de cuadernos, una superficie de documentación y una publicación orientada a artefactos mediante GitHub Pages. El código específico para predicción de oro y los servicios pesados se dejan fuera hasta que la tesis los necesite.
 
-## 📋 Últimos cambios (v0.1.5)
-
-### Añadido
-
-- Se añadieron al sitio los resúmenes y las palabras clave exactos de los manuscritos en inglés y español.
-- Se añadieron verificaciones para mantener sincronizados el título web y los resúmenes con ambas ediciones del manuscrito.
+## 📋 Últimos cambios (v0.1.6)
 
 ### Cambios
 
-- El artefacto de Pages publica únicamente los PDF finales en inglés y español.
-- Se eliminaron las descargas directas de las fuentes LaTeX de la sección del manuscrito.
+- Se reordenó la página principal para mostrar el resumen del manuscrito antes del laboratorio de simulación, con navegación y numeración de secciones acordes.
 
 Consulta el [historial completo](./CHANGELOG.es.md) y las [versiones de GitHub](https://github.com/edwardcalderon/Master-s-thesis/releases). [English version](./README.md).
 
@@ -81,7 +75,7 @@ Consulta la [política de idiomas](docs/es/language-policy.md) para conocer las 
 [`@edcalderon/versioning`](https://www.npmjs.com/package/@edcalderon/versioning) gestiona los incrementos SemVer del espacio de trabajo y el changelog en inglés. El sincronizador del repositorio proyecta la versión en `VERSION`, ambos historiales, los dos archivos de idioma de la aplicación, las dos macros LaTeX de versión y los bloques de versión de ambos README. `pnpm readme:update` copia las entradas completas en inglés y español del changelog a los resúmenes correspondientes del README. Una macro distinta identifica la revisión del manuscrito y mantiene vinculadas las dos ediciones.
 
 <!-- versioning:release:start -->
-**Versión actual:** [`v0.1.5`](https://github.com/edwardcalderon/Master-s-thesis/releases/tag/v0.1.5)
+**Versión actual:** [`v0.1.6`](https://github.com/edwardcalderon/Master-s-thesis/releases/tag/v0.1.6)
 **Registro:** [Versiones de GitHub](https://github.com/edwardcalderon/Master-s-thesis/releases) · sincronizado con `@edcalderon/versioning`
 <!-- versioning:release:end -->
 

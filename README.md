@@ -6,17 +6,11 @@ The public web app, project documentation, notebooks, changelog, and release his
 
 The public experience is inspired by the useful parts of [GeoAuPredict](https://github.com/edwardcalderon/GeoAuPredict): a clear research overview, a notebook explorer, a docs surface, and an artifact-oriented GitHub Pages deployment. Application-specific gold-prediction code and heavyweight services are intentionally left out until the thesis needs them.
 
-## 📋 Latest Changes (v0.1.5)
-
-### Added
-
-- Added the exact English and Spanish manuscript abstracts and keywords to the website.
-- Added checks that keep the web page title and abstract synchronized with both manuscript editions.
+## 📋 Latest Changes (v0.1.6)
 
 ### Changed
 
-- Updated the Pages artifact to publish only the final English and Spanish PDFs.
-- Removed direct LaTeX-source downloads from the manuscript section.
+- Reordered the landing page so the manuscript abstract appears before the simulation playground, with matching navigation and section numbering.
 
 For full version history, see [CHANGELOG.md](./CHANGELOG.md) and [GitHub releases](https://github.com/edwardcalderon/Master-s-thesis/releases).
 
@@ -100,7 +94,7 @@ See [`docs/language-policy.md`](docs/language-policy.md) for the source and publ
 [`@edcalderon/versioning`](https://www.npmjs.com/package/@edcalderon/versioning) handles workspace SemVer bumps and the English changelog. The repository synchronizer projects the version into `VERSION`, both release histories, both app locale files, both LaTeX workspace-version macros, and the release blocks in both READMEs. `pnpm readme:update` copies the populated English and Spanish changelog entries into their matching README summaries. A separate manuscript-revision macro keeps the thesis editions paired.
 
 <!-- versioning:release:start -->
-**Current release:** [`v0.1.5`](https://github.com/edwardcalderon/Master-s-thesis/releases/tag/v0.1.5)
+**Current release:** [`v0.1.6`](https://github.com/edwardcalderon/Master-s-thesis/releases/tag/v0.1.6)
 **Tracker:** [GitHub releases](https://github.com/edwardcalderon/Master-s-thesis/releases) · synchronized with `@edcalderon/versioning`
 <!-- versioning:release:end -->
 

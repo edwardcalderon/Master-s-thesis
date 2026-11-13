@@ -1,5 +1,11 @@
 # Registro de cambios
 
+## [0.1.6] - 2026-11-13
+
+### Cambios
+
+- Se reordenó la página principal para mostrar el resumen del manuscrito antes del laboratorio de simulación, con navegación y numeración de secciones acordes.
+
 ## [0.1.5] - 2026-11-13
 
 ### Añadido

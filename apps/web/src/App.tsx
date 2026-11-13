@@ -120,9 +120,9 @@ function App() {
         <span className="brand-copy"><strong>{content.thesis.shortTitle}</strong><small>{copy.header.subtitle} · {release.tag}</small></span>
       </a>
       <nav className="topnav" aria-label={copy.header.navigation}>
-        <a href="#research">{copy.header.overview}</a>
-        <a href="#lab">{copy.header.lab}</a>
         <a href="#abstract">{copy.header.abstract}</a>
+        <a href="#lab">{copy.header.lab}</a>
+        <a href="#research">{copy.header.overview}</a>
         <a href="#notebooks">{copy.header.notebooks}</a>
         <a href="#docs">{copy.header.notes}</a>
         <a href="#pdf">{copy.header.manuscript}</a>
@@ -154,15 +154,15 @@ function App() {
         </div>
       </section>
 
-      <Playground locale={locale} copy={copy.playground} />
-
       <section id="abstract" className="abstract-section page-pad">
-        <SectionHeading index="02" kicker={copy.abstract.kicker} title={content.thesis.abstract.heading} />
+        <SectionHeading index="01" kicker={copy.abstract.kicker} title={content.thesis.abstract.heading} />
         <div className="abstract-copy">
           {content.thesis.abstract.paragraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
           <p className="abstract-keywords"><span className="mono">{copy.abstract.keywords}:</span> {content.thesis.abstract.keywords.join("; ")}</p>
         </div>
       </section>
+
+      <Playground locale={locale} copy={copy.playground} />
 
       <section id="research" className="research-section page-pad">
         <SectionHeading index="03" kicker={copy.research.kicker} title={copy.research.title}>{copy.research.intro}</SectionHeading>
