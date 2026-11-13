@@ -14,14 +14,15 @@ Solo dos superficies del proyecto deben estar disponibles en inglés y español:
 1. **La interfaz de la aplicación web y su contenido dirigido a usuarios.** El inglés
    es el idioma predeterminado; se puede seleccionar español en la interfaz. Ambos
    archivos de idioma deben contener las mismas claves y estructura de contenido.
-2. **El manuscrito final de la tesis.** La fuente en inglés es la principal y cada
-   revisión final debe incluir una fuente y un PDF completos en español. Ambos PDF
-   comparten la misma revisión del manuscrito y se compilan y publican juntos.
+2. **Los PDF finales de la tesis.** Cada revisión final en inglés tiene una traducción
+   completa al español. Ambos PDF comparten la misma revisión del manuscrito, se compilan
+   juntos y se publican juntos. Los archivos TeX son insumos de compilación y no se
+   copian a Pages.
 
-| Función | Fuente LaTeX | PDF generado |
-| --- | --- | --- |
-| Inglés principal | `thesis/main.tex` y `thesis/chapters/` | `thesis/main.pdf` |
-| Traducción obligatoria al español | `thesis/es/main.tex` y `thesis/es/chapters/` | `thesis/es/main.pdf` |
+| Función | Artefacto público en Pages |
+| --- | --- |
+| Inglés principal | `thesis/master-thesis.pdf` |
+| Traducción obligatoria al español | `thesis/master-thesis.es.pdf` |
 
 La revisión del manuscrito es distinta de la versión del espacio de trabajo. La
 comprobación de idioma exige los locales de la aplicación y la coincidencia del idioma,

@@ -8,7 +8,7 @@ packages/content  → versioned English/Spanish content consumed by the web app
 packages/ui       → shared visual tokens
 docs              → Markdown research context
 notebooks         → executable evidence
-thesis            → English LaTeX source, required Spanish translation, paired PDFs
+thesis            → paired final PDFs in Pages; TeX build inputs are excluded
 docs/es           → Spanish companions for public research documentation
 notebooks/es      → Spanish notebook copies with matching code and outputs
 data              → explicit raw/processed boundaries

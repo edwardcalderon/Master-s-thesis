@@ -4,7 +4,23 @@
     "eyebrow": "CEX/DEX thesis · simulation lab",
     "title": "Price Tracking and Liquidity Fragility in Hybrid CEX/DEX Crypto Markets",
     "description": "An Agent-Based Experimental Framework and a Reduced-Order Dynamical Model.",
-    "version": "0.1.4",
+    "abstract": {
+      "heading": "Abstract",
+      "paragraphs": [
+        "In cryptocurrency markets, the same asset can trade on a centralized exchange (CEX) and a decentralized exchange (DEX) that uses an automated market maker (AMM). Trades, limited arbitrage capacity, and changes in liquidity can produce price discrepancies between them. This thesis develops a computational framework and conducts controlled simulation experiments to investigate how arbitrage and adaptive liquidity affect price tracking and the response to shocks.",
+        "The framework combines a reduced discrete-time map with a stochastic agent-based market model containing an exogenous CEX reference, a constant-product AMM, and four representative roles. The reproducible prototype includes deterministic mechanism checks and paired experiments using 300 seeds for model selection. In the configured scenarios, higher arbitrage capacity reduces peak tracking error, while the effect of adaptive liquidity provision depends on the direction of the shock. On held-out seeds and shock magnitudes, the estimated map's Schur-stability classification agrees with the majority contraction outcome in only three of eight groups. These synthetic results do not validate the model against real markets or establish its coefficients as empirical parameters. Further review of agent design and broader confirmation experiments are needed to identify the conditions under which the reduced map is informative."
+      ],
+      "keywords": [
+        "CEX/DEX price tracking",
+        "AMM",
+        "arbitrage",
+        "adaptive liquidity",
+        "multi-agent simulation",
+        "discrete map",
+        "reproducibility"
+      ]
+    },
+    "version": "0.1.5",
     "state": "Foundation",
     "location": "Colombia · distributed lab",
     "license": "CC BY-NC 4.0 · source available"
@@ -84,7 +100,7 @@
     {
       "index": "03",
       "label": "Artifact",
-      "detail": "LaTeX source, PDF, release"
+      "detail": "Paired final PDFs, evidence, release"
     }
   ]
 }

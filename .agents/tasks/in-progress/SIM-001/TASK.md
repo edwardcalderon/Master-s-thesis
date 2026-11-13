@@ -63,8 +63,13 @@ lightweight, versioned summaries before they are loaded.
   the metadata-heavy hero panel, and moved the playground immediately below the title.
   The default chart now appears in the initial mobile viewport; E0/E1 and E2 tabs were
   reviewed in both languages with PinchTab.
+- Added the manuscript's exact English and Spanish abstracts and keyword lists to the
+  site, with language checks that compare the title and abstract against both LaTeX
+  editions. The static and hydrated browser titles match the manuscript title.
+- Removed manuscript-source download controls and changed the Pages workflow to publish
+  only the final English and Spanish PDFs in its thesis artifact directory.
 - `pnpm --filter @tesis/web typecheck`, `pnpm --filter @tesis/web build`, and
-  `pnpm language:check` pass. The latest release build reports 82.33 KB gzip for JS.
+  `pnpm language:check` pass. The latest web build reports 83.65 KB gzip for JS.
 
 ## Remaining work
 
@@ -75,5 +80,5 @@ lightweight, versioned summaries before they are loaded.
   the full 50,400-row ABM trajectory file into the UI.
 - Add scenario share/export metadata and document exact reproduction steps.
 - Review client bundle size and use a Web Worker only if profiling demonstrates a need.
-- Confirm repository GitHub Pages is enabled before expecting the new build to publish;
-  the previous Pages workflow stopped at Configure Pages after its build completed.
+- Verify the next main-branch publish after repository Pages was enabled for Actions;
+  the earlier workflow completed its build but failed before artifact upload.

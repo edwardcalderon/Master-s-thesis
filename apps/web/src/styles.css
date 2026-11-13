@@ -245,3 +245,10 @@ h1 { font: 500 clamp(3.1rem, 6.8vw, 6rem)/.98 var(--display); letter-spacing: -.
   .playground-results { order: 1; }
   .playground-controls { order: 2; }
 }
+
+.abstract-section { border-bottom: 1px solid var(--line); padding-bottom: clamp(3.5rem, 7vw, 6.5rem); padding-top: clamp(3.5rem, 7vw, 6.5rem); }
+.abstract-copy { margin: 2rem 0 0 62px; max-width: 850px; }
+.abstract-copy > p { color: var(--muted); font: 400 1rem/1.8 var(--display); margin-bottom: 1.1rem; }
+.abstract-copy .abstract-keywords { border-top: 1px solid var(--line); font: 400 .75rem/1.65 var(--sans); margin: 1.5rem 0 0; padding-top: .9rem; }
+.abstract-keywords .mono { color: var(--accent); font-size: .58rem; margin-right: .35rem; }
+@media (max-width: 600px) { .abstract-copy { margin-left: 36px; margin-top: 1.35rem; }.abstract-copy > p { font-size: .9rem; line-height: 1.7; } }

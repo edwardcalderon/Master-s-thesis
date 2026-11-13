@@ -122,6 +122,7 @@ function App() {
       <nav className="topnav" aria-label={copy.header.navigation}>
         <a href="#research">{copy.header.overview}</a>
         <a href="#lab">{copy.header.lab}</a>
+        <a href="#abstract">{copy.header.abstract}</a>
         <a href="#notebooks">{copy.header.notebooks}</a>
         <a href="#docs">{copy.header.notes}</a>
         <a href="#pdf">{copy.header.manuscript}</a>
@@ -155,8 +156,16 @@ function App() {
 
       <Playground locale={locale} copy={copy.playground} />
 
+      <section id="abstract" className="abstract-section page-pad">
+        <SectionHeading index="02" kicker={copy.abstract.kicker} title={content.thesis.abstract.heading} />
+        <div className="abstract-copy">
+          {content.thesis.abstract.paragraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+          <p className="abstract-keywords"><span className="mono">{copy.abstract.keywords}:</span> {content.thesis.abstract.keywords.join("; ")}</p>
+        </div>
+      </section>
+
       <section id="research" className="research-section page-pad">
-        <SectionHeading index="02" kicker={copy.research.kicker} title={copy.research.title}>{copy.research.intro}</SectionHeading>
+        <SectionHeading index="03" kicker={copy.research.kicker} title={copy.research.title}>{copy.research.intro}</SectionHeading>
         <div className="research-grid">
           <article className="research-card">
             <Label>{copy.research.narrative}</Label>
@@ -180,7 +189,7 @@ function App() {
       </section>
 
       <section id="notebooks" className="notebooks-section page-pad">
-        <SectionHeading index="03" kicker={copy.notebook.kicker} title={copy.notebook.title}>{copy.notebook.intro}</SectionHeading>
+        <SectionHeading index="04" kicker={copy.notebook.kicker} title={copy.notebook.title}>{copy.notebook.intro}</SectionHeading>
         <div className="notebook-toolbar"><span className="mono">{copy.notebook.count} {String(content.notebooks.length).padStart(2, "0")}</span><a className="quiet-link" href="https://github.com/edwardcalderon/Master-s-thesis/tree/main/notebooks" target="_blank" rel="noreferrer">{copy.notebook.browse} <Icon name="external" size={14} /></a></div>
         <div className="notebook-list">
           {content.notebooks.map((notebook) => <article className="notebook-row" key={notebook.id}>
@@ -192,7 +201,7 @@ function App() {
       </section>
 
       <section id="docs" className="docs-section page-pad">
-        <SectionHeading index="04" kicker={copy.docs.kicker} title={copy.docs.title}>{copy.docs.intro}</SectionHeading>
+        <SectionHeading index="05" kicker={copy.docs.kicker} title={copy.docs.title}>{copy.docs.intro}</SectionHeading>
         <div className="docs-layout">
           <div className="docs-list">
             {content.docs.map((doc, index) => <a className="doc-row" href={doc.href} key={doc.label}><span className="doc-index">{String(index + 1).padStart(2, "0")}</span><span className="doc-label"><strong>{doc.label}</strong><small>{doc.meta}</small></span><Icon name="arrow" size={16} /></a>)}
@@ -223,15 +232,13 @@ function App() {
             <button className="button button-primary" type="button" onClick={() => setPdfOpen((value) => !value)}><Icon name="book" size={16} />{pdfOpen ? copy.pdf.closeViewer : copy.pdf.openViewer}</button>
             <a className="button button-quiet" href={pdfAvailable ? "./thesis/master-thesis.pdf" : undefined} aria-disabled={!pdfAvailable} title={pdfAvailable ? copy.pdf.englishPdf : copy.pdf.downloadUnavailable} onClick={(event) => { if (!pdfAvailable) event.preventDefault(); }} download><Icon name="download" size={16} /> {copy.pdf.englishPdf}</a>
             <a className="button button-quiet" href={pdfSpanishAvailable ? "./thesis/master-thesis.es.pdf" : undefined} aria-disabled={!pdfSpanishAvailable} title={pdfSpanishAvailable ? copy.pdf.translation : copy.pdf.missingSpanish} onClick={(event) => { if (!pdfSpanishAvailable) event.preventDefault(); }} download><Icon name="download" size={16} /> {copy.pdf.spanishPdf}</a>
-            <a className="button button-quiet" href="./thesis/main.tex" download><Icon name="download" size={16} /> {copy.pdf.englishSource}</a>
-            <a className="button button-quiet" href="./thesis/es/main.tex" download><Icon name="download" size={16} /> {copy.pdf.spanishSource}</a>
           </div>
           <p className="pdf-meta"><span className="mono">{copy.pdf.artifactLabel} / {release.tag}</span><span>{pdfStatus}</span></p>
         </div>
         <div className={"pdf-frame" + (pdfOpen ? " pdf-frame-open" : "")}>
-          <div className="pdf-window-bar"><span className="mono">{pdfLanguage === "en" ? "master-thesis.pdf · EN" : "master-thesis.es.pdf · ES"}</span><span>{pdfOpen ? copy.pdf.reader : copy.pdf.sourceReady}</span></div>
+          <div className="pdf-window-bar"><span className="mono">{pdfLanguage === "en" ? "master-thesis.pdf · EN" : "master-thesis.es.pdf · ES"}</span><span>{pdfOpen ? copy.pdf.reader : copy.pdf.pdfReady}</span></div>
           <div className={"pdf-page" + (selectedPdfAvailable && pdfOpen ? " pdf-page-live" : "")}>
-            {selectedPdfAvailable && pdfOpen ? <iframe className="pdf-embed" src={selectedPdfUrl + "#view=FitH"} title={pdfLanguage === "en" ? copy.pdf.englishPdfTitle : copy.pdf.spanishPdfTitle} /> : <><p className="pdf-page-label">{copy.pdf.pageLabel} · {release.tag}</p><h3>{copy.pdf.placeholderTitle}</h3><p>{pdfOpen ? (pdfLanguage === "es" ? copy.pdf.spanishPending : copy.pdf.englishPending) : copy.pdf.closedHint}</p><span className="pdf-page-number">01</span></>}
+            {selectedPdfAvailable && pdfOpen ? <iframe className="pdf-embed" src={selectedPdfUrl + "#view=FitH"} title={pdfLanguage === "en" ? copy.pdf.englishPdfTitle : copy.pdf.spanishPdfTitle} /> : <><p className="pdf-page-label">{copy.pdf.pageLabel} · {release.tag}</p><h3>{content.thesis.title}</h3><p>{pdfOpen ? (pdfLanguage === "es" ? copy.pdf.spanishPending : copy.pdf.englishPending) : copy.pdf.closedHint}</p><span className="pdf-page-number">01</span></>}
           </div>
         </div>
       </section>

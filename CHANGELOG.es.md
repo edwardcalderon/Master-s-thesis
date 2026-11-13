@@ -1,5 +1,17 @@
 # Registro de cambios
 
+## [0.1.5] - 2026-11-13
+
+### Añadido
+
+- Se añadieron al sitio los resúmenes y las palabras clave exactos de los manuscritos en inglés y español.
+- Se añadieron verificaciones para mantener sincronizados el título web y los resúmenes con ambas ediciones del manuscrito.
+
+### Cambios
+
+- El artefacto de Pages publica únicamente los PDF finales en inglés y español.
+- Se eliminaron las descargas directas de las fuentes LaTeX de la sección del manuscrito.
+
 ## [0.1.4] - 2026-11-13
 
 ### Añadido

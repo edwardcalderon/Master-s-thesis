@@ -61,17 +61,22 @@ jobs:
           test -s thesis/main.pdf
           test -s thesis/es/main.pdf
 
-      - name: Copy research assets into Pages artifact
+      - name: Copy research assets and final PDFs into Pages artifact
         run: |
           cp -R docs apps/web/dist/docs
           cp -R notebooks apps/web/dist/notebooks
-          cp -R thesis apps/web/dist/thesis
+          mkdir -p apps/web/dist/thesis
           cp thesis/main.pdf apps/web/dist/thesis/master-thesis.pdf
           cp thesis/es/main.pdf apps/web/dist/thesis/master-thesis.es.pdf
           cp README.md apps/web/dist/README.md
           cp README.es.md apps/web/dist/README.es.md
           cp VERSION_HISTORY.json apps/web/dist/VERSION_HISTORY.json
           cp VERSION_HISTORY.es.json apps/web/dist/VERSION_HISTORY.es.json
+
+      - name: Verify Pages publishes PDFs only
+        run: |
+          test "$(find apps/web/dist/thesis -type f | wc -l)" -eq 2
+          test -z "$(find apps/web/dist/thesis -type f -name '*.tex' -print -quit)"
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

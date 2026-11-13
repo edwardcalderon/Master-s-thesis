@@ -1,3 +1,15 @@
+## [0.1.5](https://github.com/edwardcalderon/Master-s-thesis/compare/v0.1.4...v0.1.5) (2026-11-13)
+
+### Added
+
+- Added the exact English and Spanish manuscript abstracts and keywords to the website.
+- Added checks that keep the web page title and abstract synchronized with both manuscript editions.
+
+### Changed
+
+- Updated the Pages artifact to publish only the final English and Spanish PDFs.
+- Removed direct LaTeX-source downloads from the manuscript section.
+
 ## [0.1.4](https://github.com/edwardcalderon/Master-s-thesis/compare/v0.1.3...v0.1.4) (2026-11-13)
 
 ### Added

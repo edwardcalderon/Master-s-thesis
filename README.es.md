@@ -4,17 +4,17 @@ Un espacio de investigación abierto y reproducible para una tesis de maestría.
 
 La experiencia pública toma como referencia algunos elementos útiles de [GeoAuPredict](https://github.com/edwardcalderon/GeoAuPredict): una presentación clara de la investigación, un explorador de cuadernos, una superficie de documentación y una publicación orientada a artefactos mediante GitHub Pages. El código específico para predicción de oro y los servicios pesados se dejan fuera hasta que la tesis los necesite.
 
-## 📋 Últimos cambios (v0.1.4)
+## 📋 Últimos cambios (v0.1.5)
 
 ### Añadido
 
-- Se añadió un laboratorio bilingüe de simulación en el navegador para el seguimiento de precios E0/E1 y la comparación de profundidad E2, con controles acotados y datos del escenario copiables.
-- Se añadieron SIM-001 para dar seguimiento a la simulación estática y THESIS-004 para auditar la redacción genérica de trabajo futuro.
+- Se añadieron al sitio los resúmenes y las palabras clave exactos de los manuscritos en inglés y español.
+- Se añadieron verificaciones para mantener sincronizados el título web y los resúmenes con ambas ediciones del manuscrito.
 
 ### Cambios
 
-- Se actualizó la página principal con los títulos oficiales de la tesis en inglés y español, se ubicó el laboratorio inmediatamente después del título y se redujo el texto introductorio.
-- Se mejoró la presentación en pantallas estrechas para mostrar los resultados de la simulación antes de sus controles.
+- El artefacto de Pages publica únicamente los PDF finales en inglés y español.
+- Se eliminaron las descargas directas de las fuentes LaTeX de la sección del manuscrito.
 
 Consulta el [historial completo](./CHANGELOG.es.md) y las [versiones de GitHub](https://github.com/edwardcalderon/Master-s-thesis/releases). [English version](./README.md).
 
@@ -28,8 +28,8 @@ Consulta el [historial completo](./CHANGELOG.es.md) y las [versiones de GitHub](
 ├── docs/                 # Notas públicas de investigación y reproducibilidad
 │   └── es/                # Versiones en español de la documentación pública
 ├── notebooks/            # Cuadernos Jupyter y versiones en español en notebooks/es/
-├── thesis/               # Manuscrito LaTeX en inglés e instrucciones de compilación
-│   └── es/                # Fuente de la traducción obligatoria al español
+├── thesis/               # Espacio de trabajo del manuscrito; Pages publica solo ambos PDF
+│   └── es/                # Edición obligatoria en español
 ├── data/                 # Límites entre datos brutos y procesados; los datos grandes no van en Git
 ├── .github/workflows/    # Compilación y publicación en GitHub Pages
 ├── VERSION               # Versión pública única
@@ -57,7 +57,7 @@ pnpm docs:build
 
 ## PDF de la tesis
 
-La fuente primaria en inglés está en [`thesis/main.tex`](thesis/main.tex), y la traducción obligatoria al español está en [`thesis/es/`](thesis/es/). Compila ambos PDF localmente con:
+El sitio público ofrece únicamente el PDF final en inglés y el PDF obligatorio en español. El equipo puede compilar ambos manuscritos localmente con:
 
 ```bash
 cd thesis
@@ -81,7 +81,7 @@ Consulta la [política de idiomas](docs/es/language-policy.md) para conocer las 
 [`@edcalderon/versioning`](https://www.npmjs.com/package/@edcalderon/versioning) gestiona los incrementos SemVer del espacio de trabajo y el changelog en inglés. El sincronizador del repositorio proyecta la versión en `VERSION`, ambos historiales, los dos archivos de idioma de la aplicación, las dos macros LaTeX de versión y los bloques de versión de ambos README. `pnpm readme:update` copia las entradas completas en inglés y español del changelog a los resúmenes correspondientes del README. Una macro distinta identifica la revisión del manuscrito y mantiene vinculadas las dos ediciones.
 
 <!-- versioning:release:start -->
-**Versión actual:** [`v0.1.4`](https://github.com/edwardcalderon/Master-s-thesis/releases/tag/v0.1.4)
+**Versión actual:** [`v0.1.5`](https://github.com/edwardcalderon/Master-s-thesis/releases/tag/v0.1.5)
 **Registro:** [Versiones de GitHub](https://github.com/edwardcalderon/Master-s-thesis/releases) · sincronizado con `@edcalderon/versioning`
 <!-- versioning:release:end -->
 

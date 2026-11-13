@@ -85,17 +85,34 @@ requireCondition(
   "Application languages must match the primary and required secondary languages in policy order."
 );
 const htmlEntry = await readFile(path.join(rootDir, "apps/web/index.html"), "utf8");
+const webAppSource = await readFile(path.join(rootDir, "apps/web/src/App.tsx"), "utf8");
 requireCondition(
   htmlEntry.includes(`<html lang="${policy.application.defaultLanguage}">`),
   "The app HTML entry must declare the default application language."
 );
+requireCondition(
+  htmlEntry.includes(
+    `<title>${(await readJson(policy.application.translations[policy.projectPrimary].content)).thesis.title}</title>`
+  ),
+  "The app HTML entry must declare the primary manuscript title before the app loads."
+);
+requireCondition(
+  !/href\s*=\s*"[^"]+\.tex(?:[?#][^"]*)?"/.test(webAppSource),
+  "The public web app must not expose direct TeX download links."
+);
 
 let primaryContent;
+const applicationContentByLocale = Object.create(null);
 for (const locale of locales) {
   const translationFiles = policy.application?.translations?.[locale];
   requireCondition(translationFiles, "Application translations are not configured for " + locale + ".");
   const messageData = await readJson(translationFiles.messages);
   const contentData = await readJson(translationFiles.content);
+  applicationContentByLocale[locale] = contentData;
+  requireCondition(
+    messageData.seo.title === contentData.thesis.title,
+    locale + " web document title must match its manuscript title."
+  );
   if (locale === policy.projectPrimary) {
     primaryContent = contentData;
     continue;
@@ -182,6 +199,13 @@ for (const locale of locales) {
 
   const sourcePath = path.join(rootDir, manuscript.source);
   const source = await readFile(sourcePath, "utf8");
+  const siteThesis = applicationContentByLocale[locale]?.thesis;
+  const documentTitle = source.match(/pdftitle=\{([^}]+)\}/)?.[1];
+  requireCondition(siteThesis, "No web thesis content is configured for " + locale + ".");
+  requireCondition(
+    siteThesis.title === documentTitle,
+    locale + " web heading must match the title embedded in " + manuscript.source + "."
+  );
   const languageCode = macroValue(source, "languageCode", manuscript.source);
   const edition = macroValue(source, "revisionManuscrito", manuscript.source);
   const version = macroValue(source, "versionTesis", manuscript.source);
@@ -197,6 +221,38 @@ for (const locale of locales) {
     .map((match) => match[1])
     .filter((inputPath) => inputPath.startsWith("chapters/"));
   requireCondition(inputs.length > 0, manuscript.source + " must input chapter sources.");
+
+  const abstractInput = inputs.find((inputPath) => /(?:^|\/)00-abstract$/.test(inputPath));
+  requireCondition(abstractInput, manuscript.source + " must include its abstract chapter.");
+  const abstractPath = path.resolve(path.dirname(sourcePath), abstractInput + ".tex");
+  const abstractSource = await readFile(abstractPath, "utf8");
+  const abstractHeading = locale === "en" ? "Abstract" : "Resumen";
+  const headingMarker = `\\section{${abstractHeading}}`;
+  const keywordMarker = locale === "en" ? "\\textbf{Keywords:}" : "\\textbf{Palabras clave:}";
+  const abstractStart = abstractSource.indexOf(headingMarker);
+  const paragraphStart = abstractStart + headingMarker.length;
+  const keywordStart = abstractSource.indexOf(keywordMarker, paragraphStart);
+  const webAbstract = siteThesis.abstract;
+  requireCondition(abstractStart >= 0, abstractPath + " is missing its " + abstractHeading + " section.");
+  requireCondition(keywordStart > paragraphStart, abstractPath + " is missing its keyword section.");
+  const sourceParagraphs = abstractSource.slice(paragraphStart, keywordStart)
+    .trim()
+    .split(/\n\s*\n/)
+    .map((paragraph) => paragraph.replace(/\s+/g, " ").trim())
+    .filter(Boolean);
+  const sourceKeywords = abstractSource.slice(keywordStart + keywordMarker.length)
+    .trim()
+    .replace(/\.$/, "")
+    .split(";")
+    .map((keyword) => keyword.trim());
+  requireCondition(
+    webAbstract?.heading === abstractHeading && JSON.stringify(webAbstract.paragraphs) === JSON.stringify(sourceParagraphs),
+    locale + " web abstract must match the text in " + abstractPath + "."
+  );
+  requireCondition(
+    JSON.stringify(webAbstract.keywords) === JSON.stringify(sourceKeywords),
+    locale + " web abstract keywords must match the text in " + abstractPath + "."
+  );
 
   for (const inputPath of inputs) {
     await access(path.resolve(path.dirname(sourcePath), inputPath + ".tex"));

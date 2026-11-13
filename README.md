@@ -6,17 +6,17 @@ The public web app, project documentation, notebooks, changelog, and release his
 
 The public experience is inspired by the useful parts of [GeoAuPredict](https://github.com/edwardcalderon/GeoAuPredict): a clear research overview, a notebook explorer, a docs surface, and an artifact-oriented GitHub Pages deployment. Application-specific gold-prediction code and heavyweight services are intentionally left out until the thesis needs them.
 
-## 📋 Latest Changes (v0.1.4)
+## 📋 Latest Changes (v0.1.5)
 
 ### Added
 
-- Added a bilingual, client-side simulation playground for deterministic E0/E1 price tracking and E2 pool-depth comparisons, with bounded controls and copyable scenario data.
-- Added SIM-001 to track the static-hosted simulation work and THESIS-004 to audit generic future-work wording in the manuscript.
+- Added the exact English and Spanish manuscript abstracts and keywords to the website.
+- Added checks that keep the web page title and abstract synchronized with both manuscript editions.
 
 ### Changed
 
-- Updated the landing page to use the official English and Spanish thesis titles, put the playground directly below the title, and reduce introductory copy.
-- Improved narrow-screen layout so the live result chart is visible before its controls.
+- Updated the Pages artifact to publish only the final English and Spanish PDFs.
+- Removed direct LaTeX-source downloads from the manuscript section.
 
 For full version history, see [CHANGELOG.md](./CHANGELOG.md) and [GitHub releases](https://github.com/edwardcalderon/Master-s-thesis/releases).
 
@@ -30,10 +30,8 @@ For full version history, see [CHANGELOG.md](./CHANGELOG.md) and [GitHub release
 
 This earlier mechanism-first draft studied CEX/DEX price tracking, bounded arbitrage, and liquidity fragility. It has been revised; the active bilingual manuscript is v0.4.0, and the v0.3.1 source is preserved in the version archive.
 
-- [Current English manuscript](thesis/main.tex)
-- [Current Spanish translation](thesis/es/main.tex)
+- The public site publishes the final English and required Spanish PDFs after the paired build.
 - [Current reproducible MVP](experiments/cex_dex_mvp/README.md)
-- [Archived LaTeX manuscript](thesis/preprint/manuscrito_cex_dex_revision_direccion_2026-10-29.tex)
 - [Compilation instructions](thesis/preprint/README.md)
 - [Preliminary CPMM simulation](experiments/cex_dex_preliminary/cex_dex_preliminary.py)
 - [Methods and limitations](experiments/cex_dex_preliminary/PRELIMINARY_ANALYSIS_2026-10-29.md)
@@ -50,8 +48,8 @@ The E0-E3 outputs are synthetic mechanism checks, not empirical market validatio
 ├── packages/ui/          # Shared visual tokens for future apps
 ├── docs/                 # Public research notes and Spanish companions in docs/es/
 ├── notebooks/            # Linkable Jupyter notebooks and Spanish companions in notebooks/es/
-├── thesis/               # English LaTeX manuscript and PDF build instructions
-│   └── es/                # Required Spanish translation source
+├── thesis/               # Manuscript workspace; Pages publishes paired PDFs only
+│   └── es/                # Required Spanish edition
 ├── data/                 # Raw/processed boundaries; large data stays out of git
 ├── .github/workflows/    # GitHub Pages build and deploy
 ├── VERSION               # Single public release version
@@ -78,7 +76,7 @@ pnpm docs:build
 
 ## Thesis PDF
 
-The English primary source lives in [`thesis/main.tex`](thesis/main.tex), and its required Spanish translation is in [`thesis/es/`](thesis/es/). Build both PDFs locally with:
+The public site offers only the final English PDF and required Spanish PDF. Contributors can compile the paired manuscripts locally with:
 
 ```bash
 cd thesis
@@ -102,7 +100,7 @@ See [`docs/language-policy.md`](docs/language-policy.md) for the source and publ
 [`@edcalderon/versioning`](https://www.npmjs.com/package/@edcalderon/versioning) handles workspace SemVer bumps and the English changelog. The repository synchronizer projects the version into `VERSION`, both release histories, both app locale files, both LaTeX workspace-version macros, and the release blocks in both READMEs. `pnpm readme:update` copies the populated English and Spanish changelog entries into their matching README summaries. A separate manuscript-revision macro keeps the thesis editions paired.
 
 <!-- versioning:release:start -->
-**Current release:** [`v0.1.4`](https://github.com/edwardcalderon/Master-s-thesis/releases/tag/v0.1.4)
+**Current release:** [`v0.1.5`](https://github.com/edwardcalderon/Master-s-thesis/releases/tag/v0.1.5)
 **Tracker:** [GitHub releases](https://github.com/edwardcalderon/Master-s-thesis/releases) · synchronized with `@edcalderon/versioning`
 <!-- versioning:release:end -->
 

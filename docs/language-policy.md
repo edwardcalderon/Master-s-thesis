@@ -14,14 +14,14 @@ Only two project surfaces must be available in both English and Spanish:
 1. **The web application UI and its user-facing content.** English is the default;
    Spanish is selectable from the interface. Both locale files must contain the same
    keys and content structure.
-2. **The final thesis manuscript.** The English source is primary, and every final
-   manuscript revision must include a complete Spanish source and PDF. Both PDFs share
-   a manuscript revision and are compiled and published together.
+2. **The final thesis PDFs.** Every final English manuscript revision has a complete
+   Spanish translation. Both PDFs share a manuscript revision and are compiled and
+   published together. TeX working files are build inputs and are not copied to Pages.
 
-| Role | LaTeX source | PDF output |
-| --- | --- | --- |
-| English primary | `thesis/main.tex` and `thesis/chapters/` | `thesis/main.pdf` |
-| Required Spanish translation | `thesis/es/main.tex` and `thesis/es/chapters/` | `thesis/es/main.pdf` |
+| Role | Public Pages artifact |
+| --- | --- |
+| English primary | `thesis/master-thesis.pdf` |
+| Required Spanish translation | `thesis/master-thesis.es.pdf` |
 
 The manuscript revision is distinct from the workspace release version. The language
 check enforces the app locales and matching thesis language, revision, workspace

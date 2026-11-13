@@ -28,5 +28,11 @@
     "date": "2026-11-13",
     "status": "release",
     "summary": "Versión v0.1.4 sincronizada con @edcalderon/versioning."
+  },
+  {
+    "version": "0.1.5",
+    "date": "2026-11-13",
+    "status": "release",
+    "summary": "Versión v0.1.5 sincronizada con @edcalderon/versioning."
   }
 ]

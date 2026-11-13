@@ -8,7 +8,7 @@ packages/content  → contenido versionado en inglés y español para la aplicac
 packages/ui       → tokens visuales compartidos
 docs              → contexto de investigación en Markdown
 notebooks         → evidencia ejecutable
-thesis            → fuente LaTeX en inglés, traducción obligatoria y PDF en ambos idiomas
+thesis            → PDF finales bilingües en Pages; se excluyen los insumos TeX
 docs/es           → versiones españolas de la documentación pública de investigación
 notebooks/es      → cuadernos traducidos con el mismo código y resultados
 data              → límites explícitos para los datos brutos y procesados
