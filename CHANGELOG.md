@@ -1,6 +1,11 @@
 # Changelog
 
-All notable changes to this research workspace are documented here. Releases follow semantic versioning and are prepared with `@edcalderon/versioning`.
+## [0.1.3] - 2026-11-12
+
+### Changed
+
+- Clarified the bilingual abstracts, research question, objectives, and limits of the reduced-map hypothesis.
+- Corrected the adaptive liquidity scenario description and the ODD reference.
 
 ## [0.1.2](https://github.com/edwardcalderon/Master-s-thesis/compare/v0.1.1...v0.1.2) (2026-11-12)
 

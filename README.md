@@ -6,18 +6,12 @@ The public web app, project documentation, notebooks, changelog, and release his
 
 The public experience is inspired by the useful parts of [GeoAuPredict](https://github.com/edwardcalderon/GeoAuPredict): a clear research overview, a notebook explorer, a docs surface, and an artifact-oriented GitHub Pages deployment. Application-specific gold-prediction code and heavyweight services are intentionally left out until the thesis needs them.
 
-## 📋 Latest Changes (v0.1.2)
-
-### Added
-
-- English/Spanish public app, documentation, notebook, and thesis surfaces with English as the primary language.
-- Local refscan pre-submission checks for both thesis editions, plus a labeled evaluation fixture.
-- Reproducible deterministic and paired stochastic CEX/DEX MVP runners with a held-out H1c diagnostic.
+## 📋 Latest Changes (v0.1.3)
 
 ### Changed
 
-- Updated the bilingual manuscript to v0.3.1 with traceable MVP results, the author-approved four-role taxonomy, and explicit limits on the 3-of-8 H1c result.
-- Preserved manuscript source snapshots v0.2.0 and v0.3.0; the older preliminary numerical claims remain unverified.
+- Clarified the bilingual abstracts, research question, objectives, and limits of the reduced-map hypothesis.
+- Corrected the adaptive liquidity scenario description and the ODD reference.
 
 For full version history, see [CHANGELOG.md](./CHANGELOG.md) and [GitHub releases](https://github.com/edwardcalderon/Master-s-thesis/releases).
 
@@ -103,7 +97,7 @@ See [`docs/language-policy.md`](docs/language-policy.md) for the source and publ
 [`@edcalderon/versioning`](https://www.npmjs.com/package/@edcalderon/versioning) handles workspace SemVer bumps and the English changelog. The repository synchronizer projects the version into `VERSION`, both release histories, both app locale files, both LaTeX workspace-version macros, and the release blocks in both READMEs. `pnpm readme:update` copies the populated English and Spanish changelog entries into their matching README summaries. A separate manuscript-revision macro keeps the thesis editions paired.
 
 <!-- versioning:release:start -->
-**Current release:** [`v0.1.2`](https://github.com/edwardcalderon/Master-s-thesis/releases/tag/v0.1.2)
+**Current release:** [`v0.1.3`](https://github.com/edwardcalderon/Master-s-thesis/releases/tag/v0.1.3)
 **Tracker:** [GitHub releases](https://github.com/edwardcalderon/Master-s-thesis/releases) · synchronized with `@edcalderon/versioning`
 <!-- versioning:release:end -->
 

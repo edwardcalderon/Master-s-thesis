@@ -1,18 +1,7 @@
 \section{Abstract}
 
-Hybrid crypto markets combine centralized trading mechanisms with decentralized
-automated market makers (AMMs). Arbitrage can reduce price discrepancies, while
-execution constraints, heterogeneous trading decisions, and endogenous liquidity
-changes can alter adjustment dynamics. This thesis proposes a two-level framework:
-(i) a reduced discrete map with simulator-observable variables; and (ii) a stochastic
-microworld with an external CEX reference, a constant-product AMM, and four author-approved representative roles. The reproducible MVP has deterministic mechanism checks and a
-300-seed paired selection model. In its configured scenarios, higher arbitrage capacity
-reduces peak tracking error, while the adaptive-LP effect changes with shock direction.
-On held-out seeds and shock magnitudes, the estimated map's Schur-stability label
-matches the majority contraction outcome in only 3 of 8 groups. These synthetic
-selection results do not validate the model against real markets or make the map
-coefficients empirical parameters. Broader agent-design review and confirmation
-experiments remain necessary.
+In cryptocurrency markets, the same asset can trade on a centralized exchange (CEX) and a decentralized exchange (DEX) that uses an automated market maker (AMM). Trades, limited arbitrage capacity, and changes in liquidity can produce price discrepancies between them. This thesis develops a computational framework and conducts controlled simulation experiments to investigate how arbitrage and adaptive liquidity affect price tracking and the response to shocks.
 
-\textbf{Keywords:} CEX/DEX price tracking; AMM; arbitrage; adaptive liquidity;
-multi-agent simulation; discrete map; reproducibility.
+The framework combines a reduced discrete-time map with a stochastic agent-based market model containing an exogenous CEX reference, a constant-product AMM, and four representative roles. The reproducible prototype includes deterministic mechanism checks and paired experiments using 300 seeds for model selection. In the configured scenarios, higher arbitrage capacity reduces peak tracking error, while the effect of adaptive liquidity provision depends on the direction of the shock. On held-out seeds and shock magnitudes, the estimated map's Schur-stability classification agrees with the majority contraction outcome in only three of eight groups. These synthetic results do not validate the model against real markets or establish its coefficients as empirical parameters. Further review of agent design and broader confirmation experiments are needed to identify the conditions under which the reduced map is informative.
+
+\textbf{Keywords:} CEX/DEX price tracking; AMM; arbitrage; adaptive liquidity; multi-agent simulation; discrete map; reproducibility.

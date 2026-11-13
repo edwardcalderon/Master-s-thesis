@@ -1,8 +1,11 @@
 # Registro de cambios
 
-Aquí se documentan los cambios relevantes de este espacio de investigación. Las versiones siguen el versionado semántico y se preparan con `@edcalderon/versioning`.
+## [0.1.3] - 2026-11-12
 
-[English version](./CHANGELOG.md).
+### Cambios
+
+- Se aclararon los resúmenes bilingües, la pregunta, los objetivos y los límites de la hipótesis del mapa reducido.
+- Se corrigieron la descripción del escenario de liquidez adaptativa y la referencia ODD.
 
 ## [0.1.2] - 2026-11-12
 
