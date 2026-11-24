@@ -2,12 +2,11 @@ TEX=pdflatex
 MAIN=main.tex
 BIB=bibtex
 
-.PHONY: pdf pdf-en pdf-es language-check clean
+.PHONY: pdf pdf-en pdf-es clean
 
-pdf: language-check pdf-en pdf-es
-
-language-check:
-	node ../scripts/check-language-pair.mjs
+# The language-pair checker validates the live manuscript in ../../, not this snapshot,
+# so it is not a prerequisite here.
+pdf: pdf-en pdf-es
 
 pdf-en:
 	$(TEX) -interaction=nonstopmode -halt-on-error $(MAIN)

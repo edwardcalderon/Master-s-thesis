@@ -8,11 +8,11 @@ This chapter reports two kinds of results. The first are analytical identities t
 \section{Analytical results: depth and impact}
 \label{sec:res-analitico}
 
-For a fixed sale of $q=1000$ units of $X$, the impact $I(q,\kappa x)$ of equation~\eqref{eq:impacto} grows as the reserve is reduced (table~\ref{tab:impacto}). With $x=10\,000$, reducing the reserve to one quarter multiplies the impact by 3.7 and the slippage by 3.5.
+For a fixed sale of $q=500$ units of $X$, the impact $I(q,\kappa x)$ of equation~\eqref{eq:impacto} grows as the reserve is reduced (table~\ref{tab:impacto}). With $x=10\,000$, reducing the reserve to one quarter multiplies the impact by 3.7 and the slippage by 3.5.
 
 \begin{table}[htbp]
 \centering
-\caption{Impact of a sale of $q=1000$ units according to the reserve (analytical result).}
+\caption{Impact of a sale of $q=500$ units according to the reserve (analytical result).}
 \label{tab:impacto}
 \small
 \begin{tabular}{@{}rrrr@{}}
@@ -36,7 +36,7 @@ Figure~\ref{fig:impacto} shows the full curve. With $I(q,\kappa x)=2\log(1+q/(\k
 \addplot[thick,blue!70!black] table[col sep=comma,x=reserve_factor,y=log_impact] {\datadir/impact_curve.csv};
 \end{axis}
 \end{tikzpicture}
-\caption{Logarithmic impact of a sale of $q=1000$ units according to the reserve factor.}
+\caption{Logarithmic impact of a sale of $q=500$ units according to the reserve factor.}
 \label{fig:impacto}
 \end{figure}
 
