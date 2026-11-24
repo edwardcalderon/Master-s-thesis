@@ -1,5 +1,20 @@
 # Registro de cambios
 
+## [0.1.7] - 2026-11-24
+
+### Añadido
+
+- Se añadió la revisión v0.5.0 del manuscrito, reestructurada según la retroalimentación de la dirección: introducción en seis párrafos, planteamiento del problema y estado del arte, justificación, hipótesis, objetivos, metodología, resultados, discusión y conclusiones, trabajos futuros, bibliografía y anexos, en inglés y español.
+- Se añadió el protocolo confirmatorio (`confirm.py`, `confirm_config.json`) con semillas de exploración y de confirmación disjuntas, inferencia pareada por semilla y corrección de Holm, y `export_thesis_data.py` para exportar los datos de figuras y tablas a `thesis/figures/data/`.
+- Se añadió una auditoría de referencias (`thesis/literature-audit/`) que verifica cada una de las 87 entradas de la bibliografía con Crossref, arXiv o el editor y las ordena por relevancia.
+- Se añadió la instantánea de fuentes v0.5.0 del manuscrito en `thesis/versions/`.
+
+### Cambios
+
+- Se reemplazaron los resultados del manuscrito por la ejecución confirmatoria `cex-dex-confirm-5b06486d695e`: H1 y H2 se sostienen en promedio, H2 solo con la menor profundidad, y H3 supera a la persistencia pero no a un autorregresivo escalar. Todos los resultados son sintéticos; no se alcanzó la precisión objetivo de H1.
+- Se actualizaron el resumen, las palabras clave y la versión del sitio web según el nuevo manuscrito.
+- Se actualizó la documentación de referencias, del experimento y de la tesis.
+
 ## [0.1.6] - 2026-11-13
 
 ### Cambios

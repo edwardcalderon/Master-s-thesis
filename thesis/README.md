@@ -9,11 +9,20 @@ together.
 - English PDF: `main.pdf`
 - Spanish PDF: `es/main.pdf`
 
-The current manuscript revision is v0.4.0. The workspace release version is tracked
-separately by the root `VERSION` file and is synchronized into both LaTeX entry points.
-The v0.3.1 snapshot preserves the bilingual source before this objective clarification;
-v0.3.0 preserves the prior role-taxonomy wording, v0.2.0 preserves the October 29 draft
-and its unverified preliminary values, and v0.1.1 is also retained.
+The current manuscript revision is v0.5.0. It restructures the thesis along the
+advisor's feedback (introduction in six paragraphs; problem and state of the art;
+justification; hypotheses; objectives; methodology; results; discussion and
+conclusions; future work; bibliography; annexes) and reports a confirmatory run
+(`cex-dex-confirm-5b06486d695e`) with disjoint exploration and confirmation seeds. The
+workspace release version is tracked separately by the root `VERSION` file and is
+synchronized into both LaTeX entry points. Snapshots `versions/v0.4.0/` and earlier
+keep the previous sources; v0.2.0 holds the October 29 draft and its unverified
+preliminary values.
+
+The figure and table data in `figures/data/` are exported from the confirmatory run by
+`experiments/cex_dex_mvp/export_thesis_data.py`; `figures/data/manifest.json` records
+the source run and file hashes. The bibliography (87 entries) was verified entry by
+entry; see `literature-audit/REFERENCE_AUDIT.md`.
 
 ## Build both PDFs
 

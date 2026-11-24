@@ -7,7 +7,9 @@ La edición en inglés es la principal. Cada revisión del manuscrito debe inclu
 - PDF en inglés: `main.pdf`
 - PDF en español: `es/main.pdf`
 
-La revisión actual del manuscrito es v0.4.0. La versión del espacio de trabajo se registra por separado en el archivo raíz `VERSION` y se sincroniza en ambas entradas LaTeX. La instantánea v0.3.1 conserva la fuente bilingüe anterior a esta aclaración de objetivos; v0.3.0 conserva la redacción anterior de la taxonomía de roles, v0.2.0 conserva el borrador del 29 de octubre y sus cifras preliminares no verificadas, y también se retiene v0.1.1.
+La revisión actual del manuscrito es v0.5.0. Reestructura la tesis según la retroalimentación de la dirección (introducción en seis párrafos; planteamiento del problema y estado del arte; justificación; hipótesis; objetivos; metodología; resultados; discusión y conclusiones; trabajos futuros; bibliografía; anexos) e informa una ejecución confirmatoria (`cex-dex-confirm-5b06486d695e`) con semillas de exploración y de confirmación disjuntas. La versión del espacio de trabajo se registra por separado en el archivo raíz `VERSION` y se sincroniza en ambas entradas LaTeX. Las instantáneas `versions/v0.4.0/` y anteriores conservan las fuentes previas; v0.2.0 conserva el borrador del 29 de octubre y sus cifras preliminares no verificadas.
+
+Los datos de figuras y tablas de `figures/data/` se exportan de la ejecución confirmatoria con `experiments/cex_dex_mvp/export_thesis_data.py`; `figures/data/manifest.json` registra la ejecución de origen y los hashes. La bibliografía (87 entradas) se verificó entrada por entrada; véase `literature-audit/REFERENCE_AUDIT.md`.
 
 ## Compilar ambos PDF
 

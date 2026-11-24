@@ -126,6 +126,35 @@ classification under this representative-agent model, not support for general
 stability claims. The holdout changes shock magnitude and seed stream but keeps agent
 rules, capacities, band, and other parameters fixed.
 
+## Confirmatory protocol (manuscript v0.5.0)
+
+The selection (`abm.py`) and held-out (`h1c.py`) runs above are exploratory. The
+manuscript's results come from `confirm.py`, which follows the protocol fixed in
+`confirm_config.json` before the confirmation seeds were simulated:
+
+```bash
+pnpm experiment:mvp:confirm
+pnpm experiment:mvp:export -- --run-dir experiments/cex_dex_mvp/output/confirm/<run-id>
+```
+
+- **Exploration:** seeds 0–299, depth 1, shocks ±0.1. It fits one two-state map and one
+  scalar autoregression per condition and gives pilot variances.
+- **Confirmation:** seeds 1000–1299 (disjoint from exploration), depths 0.5/1/2 and
+  shocks −0.05/−0.10/−0.20, over E0, E1-low, E1-high, E3 (primary) and E1-max
+  (extrapolation): 13,500 runs. H3 is evaluated on the eight cells absent from the
+  exploration grid; the (1.0, −0.10) cell is excluded.
+- **Hypotheses:** H1 (arbitrage lowers excess-error area), H2 (adaptive withdrawal raises
+  maximum response) and H3 (the map beats persistence in one-step MAE). Inference uses
+  the seed as the independent unit, a paired percentile bootstrap, a one-sided sign-flip
+  randomization test and Holm correction over the three primary tests.
+- **Reproducibility:** the run ID is `cex-dex-confirm-5b06486d695e`; re-running gives
+  byte-identical result files except `generated_at_utc` and
+  `git_working_tree_dirty`. Outputs are git-ignored; the thesis cites the run ID,
+  hashes and command (annex 11.2). `export_thesis_data.py` writes the figure and table
+  data to `thesis/figures/data/` with a manifest of hashes.
+- **Limits:** the simulator is zero-fee. Fee levels, execution latency and external
+  volatility are design candidates, not executed factors. Results are synthetic.
+
 ## Explicit assumptions
 
 - Two reserve CPMM with marginal price `p_D = y/x`, zero swap fees, and positive

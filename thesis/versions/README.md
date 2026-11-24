@@ -4,7 +4,9 @@
 the bilingual source immediately before the November 12, 2026 evidence reconciliation,
 including its preliminary table and figure. `v0.3.0/` preserves the source before the
 four-role taxonomy update. `v0.3.1/` preserves the published bilingual source before
-the objective clarification in `v0.4.0/`. The current working manuscript is v0.4.0 in
+the objective clarification in `v0.4.0/`. `v0.4.0/` preserves the source before the
+advisor-feedback restructuring and the confirmatory run. `v0.5.0/` is the restructured
+manuscript with the confirmatory results; it matches the current working manuscript in
 `../`.
 
 ---

@@ -1,0 +1,344 @@
+\chapter{Results}
+\label{cap:resultados}
+
+\section{Scope of the results}
+
+This chapter reports two kinds of results. The first are analytical identities that do not depend on simulation (section~\ref{sec:res-analitico}). The second are the confirmatory contrasts over 13\,500 simulator runs, with the protocol described in chapter~\ref{cap:metodologia}. All results are synthetic: they come from a micro-world without market data and without fees, and they were not validated against external observations. The confirmatory run has the identifier \code{\RunID}; its checksums and the command that regenerates it appear in annex~\ref{cap:anexos}.
+
+\section{Analytical results: depth and impact}
+\label{sec:res-analitico}
+
+For a fixed sale of $q=1000$ units of $X$, the impact $I(q,\kappa x)$ of equation~\eqref{eq:impacto} grows as the reserve is reduced (table~\ref{tab:impacto}). With $x=10\,000$, reducing the reserve to one quarter multiplies the impact by 3.7 and the slippage by 3.5.
+
+\begin{table}[htbp]
+\centering
+\caption{Impact of a sale of $q=1000$ units according to the reserve (analytical result).}
+\label{tab:impacto}
+\small
+\begin{tabular}{@{}rrrr@{}}
+\toprule
+Reserve factor & Reserve $x$ & Impact $I$ & Slippage (\%) \\
+\midrule
+1.00 & 10\,000 & 0.09758 & 4.76 \\
+0.75 & 7500 & 0.12908 & 6.25 \\
+0.50 & 5000 & 0.19062 & 9.09 \\
+0.25 & 2500 & 0.36464 & 16.67 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Figure~\ref{fig:impacto} shows the full curve. With $I(q,\kappa x)=2\log(1+q/(\kappa x))$ and $\kappa<1$, $I(q,\kappa x)>I(q,x)$ holds for all $q>0$, and the derivative of equation~\eqref{eq:dI} is negative. This result is not tested statistically: it is an algebraic consequence of the constant-product rule and works as a control of the implementation (check 8 of the annex).
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.78\textwidth,height=6cm,xlabel={Reserve factor $\kappa$},ylabel={Logarithmic impact $I$},grid=major,xmin=0.1,xmax=1.05]
+\addplot[thick,blue!70!black] table[col sep=comma,x=reserve_factor,y=log_impact] {\datadir/impact_curve.csv};
+\end{axis}
+\end{tikzpicture}
+\caption{Logarithmic impact of a sale of $q=1000$ units according to the reserve factor.}
+\label{fig:impacto}
+\end{figure}
+
+\section{Overview of the conditions}
+
+Table~\ref{tab:resumen} summarizes the five conditions, with 2700 runs each (300 seeds times 9 cells). The first four conditions are primary; E1-max is an extrapolation outside the contrasted levels and does not enter the inference.
+
+\begin{table}[htbp]
+\centering
+\caption{Summary of the confirmation conditions (2700 runs per condition).}
+\label{tab:resumen}
+\small
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+Condition & Area $A$ & Max. resp. $M$ & Recov. & Return\,$^{a}$ & Min. depth & Withdrawal \\
+\midrule
+E0 & 2.363 & 0.1012 & 4.6\,\% & 20.47 & 11667 & 0\,\% \\
+E1-low & 1.056 & 0.1305 & 56.8\,\% & 14.82 & 11667 & 0\,\% \\
+E1-high & 0.100 & 0.1220 & 100.0\,\% & 2.54 & 11667 & 0\,\% \\
+E3 & 0.180 & 0.1335 & 96.6\,\% & 4.27 & 6417 & 100\,\% \\
+E1-max & 0.005 & 0.1197 & 100.0\,\% & 1.22 & 11667 & 0\,\% \\
+\bottomrule
+\multicolumn{7}{@{}l}{\footnotesize $^{a}$ Restricted mean with censoring at 21 ticks.}
+\end{tabular}
+\end{table}
+
+The mean peak error is $0.176$ in E0, $0.127$ in E1-low, $0.064$ in E1-high, $0.073$ in E3 and $0.008$ in E1-max. No order was capital-limited in the 13\,500 runs.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.9\textwidth,height=6.4cm,xlabel={Tick},ylabel={Mean $|d_t|$},grid=major,legend pos=north east,legend style={font=\scriptsize},xmin=0,xmax=20,ymin=0]
+\addplot[thick,red!70!black] table[col sep=comma,x=tick,y=mean_abs_excess,restrict expr to domain={\thisrow{series_id}}{10:10}] {\datadir/trajectories.csv};
+\addplot[thick,orange!85!black] table[col sep=comma,x=tick,y=mean_abs_excess,restrict expr to domain={\thisrow{series_id}}{20:20}] {\datadir/trajectories.csv};
+\addplot[thick,blue!70!black] table[col sep=comma,x=tick,y=mean_abs_excess,restrict expr to domain={\thisrow{series_id}}{30:30}] {\datadir/trajectories.csv};
+\addplot[thick,dashed,green!50!black] table[col sep=comma,x=tick,y=mean_abs_excess,restrict expr to domain={\thisrow{series_id}}{40:40}] {\datadir/trajectories.csv};
+\legend{E0,E1-low,E1-high,E3}
+\end{axis}
+\end{tikzpicture}
+\caption{Mean excess error $|d_t|$ per tick, averaged over all cells and seeds.}
+\label{fig:trayectorias}
+\end{figure}
+
+\section{H1: active arbitrage reduces the excess error}
+\label{sec:res-h1}
+
+The primary contrast compares E1-high with E0. The mean difference of the excess area is $\Delta_1=-2.263$ (median $-2.078$; 95\,\% interval $[-2.345,\,-2.182]$) and the one-sided $p$ with Holm correction is $1.5\times10^{-4}$; all 300 seeds go in the expected direction (table~\ref{tab:inferencia}). The null hypothesis is rejected. The comparison of capacities (E1-high against E1-low) yields $\Delta=-0.956$ (interval $[-1.003,\,-0.909]$), also in all 300 seeds, so that capacity grades the effect and not only its presence.
+
+\begin{table}[htbp]
+\centering
+\caption{Confirmatory inference (300 seeds, contrasts paired by seed).}
+\label{tab:inferencia}
+\small
+\begin{tabular}{@{}lrrrrrl@{}}
+\toprule
+Contrast & Mean $\Delta$ & Median & 95\,\% CI & Seeds & Holm $p$ & Rejection \\
+\midrule
+H1 primary & $-2.2629$ & $-2.0784$ & $[-2.3448,-2.1820]$ & 100\,\% & $1.5\times10^{-4}$ & yes \\
+H1 capacity & $-0.9560$ & $-0.8456$ & $[-1.0034,-0.9091]$ & 100\,\% & --- & --- \\
+H2 primary & $+0.01143$ & $0.01140$ & $[0.01074,0.01212]$ & 99.67\,\% & $1.5\times10^{-4}$ & yes \\
+H3 vs. persistence & $-0.000808$ & $-0.000960$ & $[-0.000917,-0.000692]$ & 84.67\,\% & $1.5\times10^{-4}$ & yes \\
+H3 vs. scalar AR & $+0.0000822$ & $0.0000844$ & $[0.0000780,0.0000864]$ & 2.33\,\% & --- & no \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Recovery rate}
+
+Sustained recovery depends on capacity and on the cell (table~\ref{tab:recuperacion}). Without arbitrage it barely occurs. With low capacity it varies between 20 and 100\,\%, and it is lower the larger the shock: a large shock requires more steps bounded by $c\,x$. With high and maximum capacity it is total in all cells.
+
+\begin{table}[htbp]
+\centering
+\caption{Sustained recovery rate (\%) by cell and condition.}
+\label{tab:recuperacion}
+\small
+\begin{tabular}{@{}rrrrrrr@{}}
+\toprule
+$\kappa$ & Shock & E0 & E1-low & E1-high & E3 & E1-max \\
+\midrule
+0.5 & $-0.05$ & 21.7 & 54.7 & 100.0 & 87.0 & 100.0 \\
+0.5 & $-0.10$ & 1.3 & 45.3 & 100.0 & 86.7 & 100.0 \\
+0.5 & $-0.20$ & 5.3 & 29.3 & 100.0 & 95.7 & 100.0 \\
+1 & $-0.05$ & 0.0 & 72.0 & 100.0 & 100.0 & 100.0 \\
+1 & $-0.10$ & 3.7 & 59.3 & 100.0 & 100.0 & 100.0 \\
+1 & $-0.20$ & 0.0 & 20.3 & 100.0 & 100.0 & 100.0 \\
+2 & $-0.05$ & 9.7 & 100.0 & 100.0 & 100.0 & 100.0 \\
+2 & $-0.10$ & 0.0 & 99.0 & 100.0 & 100.0 & 100.0 \\
+2 & $-0.20$ & 0.0 & 31.0 & 100.0 & 100.0 & 100.0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Breakdown by cell}
+
+The effect of H1 is negative in all cells (table~\ref{tab:celdas}); its magnitude grows with the shock, because without arbitrage the excess accumulates over the 20 ticks. The heterogeneity across seeds is large (figure~\ref{fig:cuantiles}): the contrast ranges from $-4.60$ to $-1.38$.
+
+\begin{table}[htbp]
+\centering
+\caption{Mean difference by cell of the H1 contrasts (primary and capacity) and H2.}
+\label{tab:celdas}
+\small
+\begin{tabular}{@{}rrrrrc@{}}
+\toprule
+$\kappa$ & Shock & H1 primary & H1 capacity & H2 & Held out \\
+\midrule
+0.5 & $-0.05$ & $-1.630$ & $-0.832$ & $+0.0523$ & yes \\
+0.5 & $-0.10$ & $-1.873$ & $-0.941$ & $+0.0361$ & yes \\
+0.5 & $-0.20$ & $-3.128$ & $-1.703$ & $+0.0146$ & yes \\
+1 & $-0.05$ & $-1.222$ & $-0.294$ & $0.0000$ & yes \\
+1 & $-0.10$ & $-2.023$ & $-0.652$ & $0.0000$ & no \\
+1 & $-0.20$ & $-3.784$ & $-1.883$ & $0.0000$ & yes \\
+2 & $-0.05$ & $-1.007$ & $-0.116$ & $0.0000$ & yes \\
+2 & $-0.10$ & $-1.951$ & $-0.450$ & $0.0000$ & yes \\
+2 & $-0.20$ & $-3.748$ & $-1.732$ & $0.0000$ & yes \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.8\textwidth,height=6cm,xlabel={Quantile},ylabel={Per-seed contrast},grid=major,legend pos=south east,legend style={font=\scriptsize}]
+\addplot[thick,blue!70!black,mark=*,mark size=1.5pt] table[col sep=comma,x=quantile,y=value,restrict expr to domain={\thisrow{contrast_id}}{1:1}] {\datadir/delta_quantiles.csv};
+\addplot[thick,orange!85!black,mark=square*,mark size=1.5pt] table[col sep=comma,x=quantile,y=value,restrict expr to domain={\thisrow{contrast_id}}{2:2}] {\datadir/delta_quantiles.csv};
+\legend{H1 primary,H1 capacity}
+\end{axis}
+\end{tikzpicture}
+\caption{Quantiles of the per-seed contrast of H1 ($\Delta_1$ and the comparison of capacities).}
+\label{fig:cuantiles}
+\end{figure}
+
+\subsection{Precision achieved}
+
+The sample-size guide was computed with the exploration pilot (table~\ref{tab:muestra}). For H1 the pilot indicated $n=253$ seeds for a half-width of $0.01$. With 300 confirmation seeds the half-width achieved is $0.0816$, not $0.0092$: \textbf{the target precision for H1 was not reached} and would have required about 19\,991 seeds. The cause is one of design and not of chance: in exploration the shocks $+0.1$ and $-0.1$ were averaged within each seed, and their contrasts have correlation $-0.981$ (deviations $0.790$ and $0.822$), so that they cancel almost completely and the average has deviation $0.081$. In confirmation there are only negative shocks, and the deviation is $0.721$. The pilot underestimated the variance because of a difference between designs and not for lack of seeds. This does not affect the rejection of the null hypothesis, whose interval is far from zero, but it does affect the precision of the estimate of the effect size. For H2 the pilot had null variance (the effect is zero at depth 1) and the confirmation design did achieve the precision: $0.0007$ against $0.01$.
+
+\begin{table}[htbp]
+\centering
+\caption{Sample-size guide and precision achieved.}
+\label{tab:muestra}
+\small
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+Contrast & Source & Dev. & Required $n$ & Half-width & Target \\
+\midrule
+H1 primary & pilot & 0.0811 & 253 & 0.00918 & 0.01 \\
+H1 primary & confirmation & 0.7214 & 19\,991 & 0.0816 & 0.01 \\
+H2 primary & pilot & $10^{-16}$ & 1 & $10^{-17}$ & 0.01 \\
+H2 primary & confirmation & 0.00615 & 2 & 0.00070 & 0.01 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{H2: effect of adaptive withdrawal}
+\label{sec:res-h2}
+
+The contrast E3 against E1-high gives $\Delta_2=+0.0114$ (interval $[0.0107,\,0.0121]$), with 99.67\,\% of the seeds in the expected direction and Holm $p$ of $1.5\times10^{-4}$. On average the null hypothesis is rejected. However, table~\ref{tab:celdas} shows that the effect is concentrated at the lowest depth: $+0.052$, $+0.036$ and $+0.015$ with $\kappa=0.5$ and null with $\kappa=1$ and $2$. The global mean of $0.0114$ results from averaging three cells of positive effect with six of null effect.
+
+Table~\ref{tab:respuesta} explains why. With $\kappa=1$ and $2$ the maximum response of E1-high and E3 coincides with the value $|\text{shock}|+\gamma$ ($0.053$, $0.103$, $0.203$ for shocks of $-0.05$, $-0.10$, $-0.20$), identical in both conditions: the displacement of the AMM price is bounded by the new level of the reference and the liquidity withdrawal does not increase it. In a review run (seed 1000, shock $-0.10$, $\kappa=1$) that value was reached at tick 3 in both conditions. Only with $\kappa=0.5$ does the movement exceed that level, because the orders after the shock, of fixed absolute size, displace the price of a shallower pool more; in that same seed the maximum response was $0.109$ in E1-high and $0.149$ in E3.
+
+\begin{table}[htbp]
+\centering
+\caption{Mean maximum response $M$ by cell and condition.}
+\label{tab:respuesta}
+\small
+\begin{tabular}{@{}rrrrrrr@{}}
+\toprule
+$\kappa$ & Shock & E0 & E1-low & E1-high & E3 & E1-max \\
+\midrule
+0.5 & $-0.05$ & 0.1741 & 0.1266 & 0.0668 & 0.1190 & 0.0530 \\
+0.5 & $-0.10$ & 0.1741 & 0.1542 & 0.1105 & 0.1466 & 0.1030 \\
+0.5 & $-0.20$ & 0.1741 & 0.2091 & 0.2030 & 0.2176 & 0.2030 \\
+1 & $-0.05$ & 0.0859 & 0.0681 & 0.0530 & 0.0530 & 0.0530 \\
+1 & $-0.10$ & 0.0859 & 0.1103 & 0.1030 & 0.1030 & 0.1030 \\
+1 & $-0.20$ & 0.0859 & 0.1700 & 0.2030 & 0.2030 & 0.2030 \\
+2 & $-0.05$ & 0.0437 & 0.0530 & 0.0530 & 0.0530 & 0.0530 \\
+2 & $-0.10$ & 0.0437 & 0.1028 & 0.1030 & 0.1030 & 0.1030 \\
+2 & $-0.20$ & 0.0437 & 0.1801 & 0.2030 & 0.2030 & 0.2030 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Mechanism}
+
+The withdrawal was activated in 100\,\% of the E3 runs in all cells, normally at tick 1 (mean tick 1.47 with $\kappa=0.5$ and shock $-0.10$). Therefore, the fact that the effect is null with $\kappa=1$ and $2$ is not because the withdrawal does not occur, but because it does not change the maximum response. Table~\ref{tab:mecanismo} also shows that the panic sale, which the trend agent executes if the AMM return falls below $-1.5\,\%$, is activated only with $\kappa=0.5$, where the noise order has a larger impact ($0.016$) and suffices to exceed that threshold.
+
+\begin{table}[htbp]
+\centering
+\caption{Mechanism: panic-sale rate (\%) by condition and rate and mean tick of the withdrawal in E3.}
+\label{tab:mecanismo}
+\small
+\begin{tabular}{@{}rrrrrrr@{}}
+\toprule
+$\kappa$ & Shock & Panic E0 & Panic E1-high & Panic E3 & E3 withdrawal (\%) & Withdrawal tick \\
+\midrule
+0.5 & $-0.05$ & 100.0 & 100.0 & 100.0 & 100 & 1.00 \\
+0.5 & $-0.10$ & 100.0 & 100.0 & 100.0 & 100 & 1.47 \\
+0.5 & $-0.20$ & 100.0 & 81.3 & 100.0 & 100 & 1.00 \\
+1 & all & 0.0 & 0.0 & 0.0 & 100 & 1.00 \\
+2 & all & 0.0 & 0.0 & 0.0 & 100 & 1.00 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{A check that was not pre-registered}
+
+To find out how much of the effect at $\kappa=0.5$ comes from the panic sale and how much from the liquidity withdrawal, the comparison E3 against E1-high was repeated with $\kappa=0.5$, the 300 seeds and the three shocks, with and without the panic agent (\code{panic\_max\_orders\_per\_run}$=0$). With panic the difference is $0.0343$ (99.67\,\% of the seeds positive); without panic it is $0.0153$ (96.67\,\%). This check was not part of the confirmatory protocol and is reported as exploratory. It suggests that approximately half of the effect at the lowest depth is due to the interaction with the panic agent, and not to the withdrawal alone.
+
+\section{H3: reduced map and baseline models}
+\label{sec:res-h3}
+
+\subsection{Fit in exploration}
+
+Table~\ref{tab:ajustes} presents the coefficients estimated in exploration (12\,000 transitions per condition). All matrices are stable in the Schur sense. The persistence coefficient $a$ is $0.998$ without arbitrage and decreases to $0.869$ with low capacity and to $0.083$ with high capacity: arbitrage turns an almost integrating dynamics into a contractive one. In E1-max the equation of $d$ is degenerate (the excess is null almost always) and only the equation of $z$ is estimated. In E3 the coefficient $\beta$ is negative ($-0.064$), unlike the other conditions, which indicates that the net buying pressure has in that condition an effect on the excess of the opposite sign to the expected one; it is not interpreted causally.
+
+\begin{table}[htbp]
+\centering
+\caption{Map coefficients fitted with the exploration seeds.}
+\label{tab:ajustes}
+\small
+\begin{tabular}{@{}lrrrrrrr@{}}
+\toprule
+Condition & $a$ & $\beta$ & $c$ & $\rho$ & Trace & Det. & Spec. radius \\
+\midrule
+E0 & 0.9979 & 0.0470 & $-0.00113$ & 0.0246 & 1.0225 & 0.02459 & 0.9978 \\
+E1-low & 0.8690 & 0.0437 & 0.00060 & 0.0235 & 0.8925 & 0.02037 & 0.8690 \\
+E1-high & 0.0828 & 0.0086 & 0.00640 & 0.0280 & 0.1108 & 0.00226 & 0.0838 \\
+E3 & 0.2091 & $-0.0638$ & 0.02427 & $-0.0027$ & 0.2064 & 0.00099 & 0.2015 \\
+E1-max$^{\ast}$ & 0 & 0 & 0 & 0.0291 & 0.0291 & 0 & 0.0291 \\
+\bottomrule
+\multicolumn{8}{@{}l}{\footnotesize $^{\ast}$ Degenerate equation of $d$.}
+\end{tabular}
+\end{table}
+
+\subsection{Out-of-sample error}
+
+The map beats persistence overall, but not in all conditions (table~\ref{tab:h3}). In E0 the map is slightly worse ($+0.8\,\%$), since without arbitrage the excess barely changes and persistence is hard to improve on. In E1-high and E3 the improvement is $20.6\,\%$ and $15.2\,\%$. Relative to a scalar autoregression, the two-variable map does not improve: it is worse in E0, E1-low, E1-high and E3 by $0.4$ to $1.3\,\%$ and better only in E1-max ($-1.9\,\%$, an extrapolation condition). The H3 contrast against the scalar AR is not primary, but it is informative: most of the improvement over persistence can be achieved with a single state, and the second (buying pressure) adds no one-step predictive ability.
+
+\begin{table}[htbp]
+\centering
+\caption{Mean absolute one-step error in held-out cells.}
+\label{tab:h3}
+\small
+\begin{tabular}{@{}lrrrc@{}}
+\toprule
+Condition & Map & Persistence & Scalar AR & Map better than persistence \\
+\midrule
+E0 & 0.01765 & 0.01751 & 0.01757 & no \\
+E1-low & 0.01573 & 0.01615 & 0.01566 & yes \\
+E1-high & 0.00493 & 0.00620 & 0.00486 & yes \\
+E3 & 0.00929 & 0.01096 & 0.00916 & yes \\
+E1-max$^{\ast}$ & 0.00567 & 0.00594 & 0.00578 & yes \\
+\bottomrule
+\multicolumn{5}{@{}l}{\footnotesize $^{\ast}$ Extrapolation condition, non-primary.}
+\end{tabular}
+\end{table}
+
+The primary contrast, averaged over the four primary conditions and the held-out cells, gives $\Delta_3=-0.000808$ (interval $[-0.000917,\,-0.000692]$), with 84.67\,\% of the seeds in the expected direction and Holm $p$ of $1.5\times10^{-4}$. The null hypothesis is rejected. The magnitude is small in absolute terms, because the errors of a single transition are small in all models.
+
+\subsection{Regime classification}
+
+The observed classification of the runs in held-out cells (table~\ref{tab:regimenes}) shows the change of regime with capacity: without arbitrage the persistent label dominates (57\,\%), with low capacity the contractive one (86\,\%), and with high and maximum capacity the in-band label appears (28\,\% and 75\,\%). All fitted matrices are stable in the Schur sense, so the criterion does not discriminate between conditions; in particular, E0 turns out stable even though its spectral radius is $0.998$ and 57\,\% of its runs are persistent. The classification of regimes from the map is, therefore, weak: the Schur criterion does not distinguish the observed regimes.
+
+\begin{table}[htbp]
+\centering
+\caption{Observed labels in held-out cells and Schur stability of the fitted matrix.}
+\label{tab:regimenes}
+\small
+\begin{tabular}{@{}lrrrc@{}}
+\toprule
+Condition & Contractive & Persistent & In-band & Schur stable \\
+\midrule
+E0 & 1035 & 1365 & 0 & yes \\
+E1-low & 2057 & 343 & 0 & yes \\
+E1-high & 1715 & 1 & 684 & yes \\
+E3 & 1750 & 178 & 472 & yes \\
+E1-max$^{\ast}$ & 603 & 0 & 1797 & yes \\
+\bottomrule
+\multicolumn{5}{@{}l}{\footnotesize $^{\ast}$ Extrapolation. Each condition sums to 2400 held-out runs.}
+\end{tabular}
+\end{table}
+
+\section{Trajectories by depth}
+
+Figure~\ref{fig:prof} compares E1-high and E3 with $\kappa=0.5$. At the lowest depth, E3 starts from the same initial excess and is corrected more slowly. A compatible explanation is that the withdrawal leaves a smaller pool and that the arbitrage order, bounded by $c\,x$, is then smaller; this explanation was not tested separately. With $\kappa=1$ and $2$ the two trajectories are almost identical. The sustained return occurs on average at tick $7.8$ for E3 with $\kappa=0.5$ against $2.8$ for E1-high, whereas with $\kappa=1$ and $2$ the differences are $0.1$ ticks or less.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.9\textwidth,height=6.2cm,xlabel={Tick},ylabel={Mean $|d_t|$},grid=major,legend style={font=\scriptsize},xmin=0,xmax=20,ymin=0]
+\addplot[thick,blue!70!black] table[col sep=comma,x=tick,y=mean_abs_excess,restrict expr to domain={\thisrow{series_id}}{31:31}] {\datadir/trajectories.csv};
+\addplot[thick,dashed,green!50!black] table[col sep=comma,x=tick,y=mean_abs_excess,restrict expr to domain={\thisrow{series_id}}{41:41}] {\datadir/trajectories.csv};
+\legend{E1-high,E3}
+\end{axis}
+\end{tikzpicture}
+\caption{Mean excess error with $\kappa=0.5$: static high arbitrage (E1-high) and with adaptive withdrawal (E3).}
+\label{fig:prof}
+\end{figure}
+
+\section{Summary of the results}
+
+\begin{itemize}
+  \item \textbf{H1:} the null is rejected; active arbitrage reduces the excess area by $2.26$ on average and capacity grades the recovery. The target precision was not reached with 300 seeds.
+  \item \textbf{H2:} the null is rejected on average, with $\Delta_2=0.0114$, but the effect exists only with $\kappa=0.5$ and approximately half of the effect depends on the panic agent.
+  \item \textbf{H3:} the null is rejected against persistence, but the map does not beat a scalar autoregression, does not improve on persistence in E0 and its regime classification is weak.
+\end{itemize}

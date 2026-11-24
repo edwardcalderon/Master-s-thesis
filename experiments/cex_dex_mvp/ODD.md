@@ -22,6 +22,13 @@ It includes a first held-out H1c map diagnostic, but does not establish general 
 validity, estimate cascade probabilities, model strategic agents, or establish external
 validity.
 
+Manuscript revision v0.5.0 uses the same model (0.4.0) under the confirmatory protocol in
+`confirm_config.json` (analysis version 0.5.0), which tests H1 (arbitrage and excess-error
+area), H2 (adaptive withdrawal and maximum response) and H3 (reduced map versus
+persistence) with confirmation seeds and cells disjoint from exploration. The model has
+no swap fee; fee, latency and external-volatility levels are design candidates only. The
+README section "Confirmatory protocol" gives the commands and the run identifier.
+
 ## Entities, state variables, and scales
 
 - **CEX reference:** exogenous scalar price `p_C > 0`; it changes only at configured

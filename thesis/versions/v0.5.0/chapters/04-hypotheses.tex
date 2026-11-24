@@ -1,0 +1,40 @@
+\chapter{Hypotheses}
+\label{cap:hipotesis}
+
+\section{General hypothesis}
+
+There is a systematic association between arbitrage conditions, liquidity depth and the price response of a constant-product AMM to a perturbation in the centralized reference, and that association can be described with a low-order discrete dynamical map estimated from the simulator. The following three hypotheses break it down into refutable claims about a metric and a contrast defined in advance.
+
+\section{H1: active arbitrage reduces the excess error}
+
+Let $A=\sum_{t=1}^{H} D_t$ be the excess-error area of a run, with $D_t=|d_t|$ and $H=20$ ticks. For each seed the paired contrast is formed,
+\[
+\Delta_1 = A_{\text{active}} - A_{\text{inactive}},
+\]
+where the two runs share the perturbation and the noise orders and differ only in arbitrage capacity. The null hypothesis is $\E[\Delta_1]\ge 0$ and the alternative is $\E[\Delta_1]<0$.
+
+The hypothesis is completed by a secondary comparison between capacities: if arbitrage capacity matters and not only its presence, a larger capacity should produce a smaller excess area than a smaller capacity. This comparison (capacity H1) is reported as non-primary and does not enter the Holm correction.
+
+\section{H2: adaptive withdrawal amplifies the response}
+
+Let $M=\max_{1\le t\le H}\left|\log(\pD_t/\pD_0)\right|$ be the maximum response of the AMM price. For each seed,
+\[
+\Delta_2 = M_{\text{adaptive}} - M_{\text{static}},
+\]
+with both runs under active arbitrage and the same exogenous flows. The null hypothesis is $\E[\Delta_2]\le 0$ and the alternative is $\E[\Delta_2]>0$: if providers withdraw liquidity upon observing a persistent error, the AMM is left with fewer reserves and the same subsequent flow produces a larger response.
+
+The mechanical effect of a lower depth on the impact of an order is an analytical identity (chapter~\ref{cap:resultados}, section on analytical results) and is not tested as a hypothesis. What H2 evaluates is whether the specific adaptive rule of this work produces the effect in the simulator, and at which depths.
+
+\section{H3: the reduced map beats persistence}
+
+Let $L$ be the mean absolute one-step prediction error of the excess error over the held-out configurations and seeds. For each seed,
+\[
+\Delta_3 = \E\left[L_{\text{map}} - L_{\text{persistence}}\right],
+\]
+with the expectation taken over the primary conditions and the held-out evaluation cells. The null hypothesis is $\Delta_3\ge 0$ and the alternative is $\Delta_3<0$: the two-variable map predicts the excess error of the next tick with a smaller absolute error than keeping the current value corrected for the change in the reference.
+
+The classification of regimes (contractive, persistent, in-band) with the Schur criterion is a complementary result and not a confirmatory contrast. The comparison with a scalar autoregression is reported as a non-primary diagnostic: it serves to know what the second state contributes, not to support H3.
+
+\section{Testing criteria}
+
+The three primary hypotheses are tested with a one-sided sign-flip randomization test on the per-seed contrasts, with Holm correction at the 0.05 level \cite{holm1979simple}. In addition, the mean difference, a 95 percent confidence interval from the paired percentile bootstrap \cite{efron1979bootstrap} and the proportion of seeds in the expected direction are reported. The detail of the protocol is presented in section~\ref{sec:analisis-estadistico}.

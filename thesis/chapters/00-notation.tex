@@ -1,0 +1,37 @@
+\chapter*{Notation}
+\addcontentsline{toc}{chapter}{Notation}
+
+The following symbols are used throughout the document. The superscript $\mathrm{D}$ denotes the decentralized exchange (AMM) and $\mathrm{C}$ the centralized reference.
+
+\begin{center}
+\small
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+Symbol & Meaning \\
+\midrule
+$x_t,\ y_t$ & AMM reserves of assets $X$ and $Y$ at tick $t$ (price quoted in units of $Y$ per unit of $X$). \\
+$k_t = x_t y_t$ & Reserve product; constant in a zero-fee swap. \\
+$\pD_t = y_t/x_t$ & AMM marginal price. \\
+$\pC_t$ & Centralized reference price (exogenous). \\
+$q$ & Amount of $X$ sold to the AMM in a swap. \\
+$f$ & Proportional fee retained by the pool. \\
+$I(q,x)$ & Logarithmic impact of a sale: $2\log(1+q/x)$ without fee. \\
+$e_t = \log(\pD_t/\pC_t)$ & Logarithmic tracking error. \\
+$\gamma$ & Logarithmic half-width of the operating no-arbitrage band (executed value: $0.003$). \\
+$d_t,\ D_t = |d_t|$ & Excess error outside the band with sign, and its absolute value. \\
+$c$ & Arbitrage capacity: maximum fraction of the tradable reserve per tick. \\
+$q^{\ast}$ & Sale size that takes the price to the edge of the band. \\
+$z_t$ & Net buying pressure (noise and trend; no arbitrage) normalized by the initial reserve of $Y$. \\
+$u_t = -\Delta\log \pC_t$ & Exogenous input of the reduced map. \\
+$\alpha,\ \beta,\ \chi,\ \rho$ & Coefficients of the two-state map; $a = 1-\alpha$ and $c_z = -\chi$ in the fit tables. \\
+$A$ & Local matrix of the autonomous map; $\operatorname{tr}A$ and $\det A$ its trace and determinant. \\
+$H$ & Horizon of the response window (20 ticks). \\
+$A_{\mathrm{ex}} = \sum_{t=1}^{H} D_t$ & Excess-error area (primary metric of H1). \\
+$M = \max_{1\le t\le H}\bigl|\log(\pD_t/\pD_0)\bigr|$ & Maximum response of the AMM price (primary metric of H2). \\
+$\Delta_1,\Delta_2,\Delta_3$ & Paired contrasts of H1, H2 and H3. \\
+$\mathrm{MAE}$ & Mean absolute one-step prediction error (primary metric of H3). \\
+E0--E3 & Experimental scenarios (table~\ref{tab:escenarios}). \\
+OE1--OE4 & Specific objectives. \\
+\bottomrule
+\end{tabularx}
+\end{center}

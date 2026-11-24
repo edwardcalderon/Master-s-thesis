@@ -1,0 +1,36 @@
+\chapter{Objectives}
+\label{cap:objetivos}
+
+\section{General objective}
+
+To evaluate the conditions of price tracking and perturbation amplification in a simplified CEX/DEX market through agent-based computational experimentation and the testing of a low-order discrete dynamical approximation.
+
+\section{Specific objectives}
+
+\begin{enumerate}[label=\textbf{OE\arabic*.}, leftmargin=3em]
+  \item To formulate and verify a discrete simulator of a constant-product AMM with an exogenous CEX reference, noise, trend, arbitrage and liquidity-provision agents, and a reproducible record of the runs.
+  \item To characterize the effect of arbitrage capacity on the tracking error and on the recovery time after a perturbation of the reference.
+  \item To evaluate whether adaptive liquidity reduction amplifies the response of the AMM price and at which depths.
+  \item To estimate a two-variable discrete dynamical map from simulator observables and to test its out-of-sample predictive ability against baseline models.
+\end{enumerate}
+
+\section{Correspondence between objectives, hypotheses and evidence}
+
+Table~\ref{tab:oe-h} relates each objective to the hypothesis that tests it, the method and the evidence with which it is reported. Objective OE1 is instrumental: it is not tested with a hypothesis of its own, but it enables the others, because without a verified simulator no comparison would be interpretable.
+
+\begin{table}[htbp]
+\centering
+\caption{Correspondence between specific objectives, hypotheses, method and evidence.}
+\label{tab:oe-h}
+\small
+\begin{tabularx}{\textwidth}{@{}l l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X@{}}
+\toprule
+Objective & Hypothesis & Method & Evidence \\
+\midrule
+OE1 & H1--H3 (instrumental) & Specification, invariants and run record & Nine invariant checks; identifier and checksums (annex~\ref{cap:anexos}) \\
+OE2 & H1 & Paired design with arbitrage capacities 0, low, high and maximum & Excess area, recovery rate and return time (section~\ref{sec:res-h1}) \\
+OE3 & H2 & Paired static versus adaptive design at three depths & Maximum response, mechanism and per-cell breakdown (section~\ref{sec:res-h2}) \\
+OE4 & H3 & Estimation with exploration seeds; evaluation on held-out cells and seeds & Prediction error against persistence and scalar autoregression; regime classification (section~\ref{sec:res-h3}) \\
+\bottomrule
+\end{tabularx}
+\end{table}

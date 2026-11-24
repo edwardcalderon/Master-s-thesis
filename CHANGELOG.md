@@ -1,3 +1,18 @@
+## [0.1.7](https://github.com/edwardcalderon/Master-s-thesis/compare/v0.1.6...v0.1.7) (2026-11-24)
+
+### Added
+
+- Added manuscript revision v0.5.0, restructured along the advisor's feedback: a six-paragraph introduction, problem statement and state of the art, justification, hypotheses, objectives, methodology, results, discussion and conclusions, future work, bibliography and annexes, in English and Spanish.
+- Added the confirmatory protocol (`confirm.py`, `confirm_config.json`) with disjoint exploration and confirmation seeds, paired-by-seed inference and Holm correction, and `export_thesis_data.py` to export the figure and table data to `thesis/figures/data/`.
+- Added a reference audit (`thesis/literature-audit/`) that verifies each of the 87 bibliography entries against Crossref, arXiv or the publisher and ranks them by relevance.
+- Added the v0.5.0 manuscript source snapshot under `thesis/versions/`.
+
+### Changed
+
+- Replaced the manuscript results with the confirmatory run `cex-dex-confirm-5b06486d695e`: H1 and H2 are supported on average, H2 only at the shallowest depth, and H3 beats persistence but not a scalar autoregression. All results are synthetic; the H1 target precision was not reached.
+- Updated the website abstract, keywords and version to match the new manuscript.
+- Updated the reference, experiment and thesis documentation.
+
 ## [0.1.6](https://github.com/edwardcalderon/Master-s-thesis/compare/v0.1.5...v0.1.6) (2026-11-13)
 
 ### Changed

@@ -1,6 +1,6 @@
 {
   "name": "master-thesis-lab",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "private": true,
   "packageManager": "pnpm@9.15.5",
   "engines": {
@@ -22,6 +22,8 @@
     "experiment:mvp:sweep": "python3 experiments/cex_dex_mvp/sweep.py",
     "experiment:mvp:abm": "python3 experiments/cex_dex_mvp/abm.py",
     "experiment:mvp:h1c": "python3 experiments/cex_dex_mvp/h1c.py",
+    "experiment:mvp:confirm": "python3 experiments/cex_dex_mvp/confirm.py",
+    "experiment:mvp:export": "python3 experiments/cex_dex_mvp/export_thesis_data.py",
     "prepare": "husky",
     "version:check": "node scripts/version.mjs check",
     "version:sync": "node scripts/version.mjs sync",
