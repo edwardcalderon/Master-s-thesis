@@ -1,0 +1,12 @@
+{
+  "analysis_version": "0.6.0",
+  "purpose": "Supplementary synthetic engineering sensitivity; not a new primary H1-H3 test or external validation",
+  "seed_start": 2000,
+  "seed_count": 300,
+  "depth_scales": [0.5, 1.0, 2.0],
+  "shock_log_returns": [-0.05, -0.1, -0.2],
+  "variants": ["fixed_orders", "proportional_orders", "no_panic"],
+  "deadlines_ticks": [5, 10, 20],
+  "band_tolerance": 1e-12,
+  "interval_note": "Cell recovery intervals are Wilson 95%; paired depth effects average shocks within seed before a normal-approximation 95% interval. Descriptive sensitivity, no multiplicity-controlled claims."
+}

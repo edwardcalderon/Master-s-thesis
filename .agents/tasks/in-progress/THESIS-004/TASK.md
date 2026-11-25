@@ -1,8 +1,8 @@
 # THESIS-004 — Replace generic pending-work language with findings-led claims
 
 - **Owner:** `edcalderon`
-- **Status:** TODO
-- **Started:** Not started
+- **Status:** IN PROGRESS
+- **Started:** 2026-11-25
 - **Priority:** High; apply during the next manuscript evidence reconciliation
 
 ## Goal
@@ -51,5 +51,8 @@ claim.
 
 ## Current status
 
-Queued. The cited sentence is a target for review; rewrite it after its claim is
-reconciled with the latest evidence and both language editions.
+CURRENT FOCUS: manuscript v0.6.0 engineering interpretation, fresh-seed sensitivity,
+complete experimental replay, bilingual reconciliation and workspace v0.1.9 release.
+The engineering protocol is fixed in experiments/cex_dex_mvp/ENGINEERING_PROTOCOL.md
+before execution; original H1–H3 evidence remains frozen. Acceptance is pending results
+and full validation. The author explicitly requested this release and task audit.
