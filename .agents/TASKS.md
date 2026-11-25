@@ -15,6 +15,7 @@ maintained in English.
 | SIM-001 | edcalderon | — | **IN PROGRESS** | [`tasks/in-progress/SIM-001/`](tasks/in-progress/SIM-001/TASK.md) | Build a reproducible browser-side simulation playground for inspecting the thesis mechanisms and hypotheses. | Static-hosted UI reproduces bounded deterministic E0/E1/E2 scenarios from versioned model inputs; labels synthetic outputs and exposes parameters, metrics, and assumptions in English and Spanish. | THESIS-001 model contract; E3 and current confirmation presentation are handed off to SIM-002. |
 | SIM-002 | edcalderon | — | **TODO** | [`tasks/todo/SIM-002/`](tasks/todo/SIM-002/TASK.md) | Build an animated 3D findings replay and reproducible sandbox with local saved scenarios. | Versioned confirmation bundles and illustrative traces drive synchronized 3D/2D views; H1-H3 limits, bounded exploration, EN/ES accessibility, provenance, and local persistence pass the phased gates. | SIM-001 browser foundation; THESIS-003 v0.5.0 evidence contract. Shared persistent worlds and evolutionary agents require separate research scope. |
 | THESIS-004 | edcalderon | — | **TODO** | [`tasks/todo/THESIS-004/`](tasks/todo/THESIS-004/TASK.md) | Replace generic pending-work language in the final manuscript with precise, findings-led statements. | Audit both language editions; replace vague future-work promises with claims grounded in available findings and specific evidence limits; maintain factual parity. | THESIS-003 evidence reconciliation and the latest versioned experiment outputs. |
+| INFRA-001 | edcalderon | — | **IN PROGRESS** | [`tasks/in-progress/INFRA-001/`](tasks/in-progress/INFRA-001/TASK.md) | Stand up the separately-scoped persistent-world service SIM-002 defers: a periodically-ticking microworld engine (GitHub Actions, free) and the one small Azure backend needed to dispatch scenario requests to it, within an Azure for Students Starter subscription's confirmed Free/`brazilsouth`-only limits. | `az deployment group what-if` runs clean against the F1 App Service template; a POST to the deployed dispatcher produces a GitHub Actions run; the tick workflow has one confirmed manual run before relying on its schedule; SIM-002's six deferred-extension requirements are each met or explicitly tracked as open; SIM-001's static playground keeps building with zero dependency on this infrastructure; no secret reaches Git history. | SIM-002's "Deferred persistent and evolutionary research extension" as the originating scope decision; THESIS-001's versioned model as the eventual source of real tick semantics; operator-side `az login`, service-principal bootstrap, and GitHub token creation outside this repo. |
 
 ## Current work note
 
@@ -41,3 +42,18 @@ with their recorded historical checks; these records do not imply a new v0.5.0 c
 or UI audit. THESIS-004 remains queued for an explicit acceptance audit of the current
 manuscript. The requested v0.1.8 patch packages this plan and tracker reconciliation;
 manuscript revision 0.5.0 and experiment versions remain unchanged.
+
+INFRA-001 is the separately-scoped service SIM-002's deferred-extension section
+gestures at for a world that keeps evolving while browsers are closed. Its first
+draft assumed the full "Azure for Students" ($100-credit) offer; live checks against
+the real subscription showed it is the far more restricted "Azure for Students
+Starter" grant (Free-tier `Microsoft.Web` only, `brazilsouth` only, no VMs/Storage/
+VNet at any price). Upgrading or re-applying for the full offer were offered and
+declined; the engine now runs as a 15-minute GitHub Actions cron
+(`infra/microworld/tick.py`, free and unlimited on this public repo) publishing to a
+dedicated `microworld-data` branch, with Azure reduced to one F1 Web App
+(`infra/azure/webapp/`) whose only job is dispatching scenario requests to that
+workflow. Both the tick script and the Flask app are locally tested; nothing is
+deployed to Azure yet, no service principal or GitHub token exists yet, the workflow
+hasn't had its required first manual run, and scenario isolation (forks vs. one
+shared mutable world) is still unresolved — see INFRA-001's updated task record.
