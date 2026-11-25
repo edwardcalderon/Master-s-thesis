@@ -7,20 +7,19 @@
     "abstract": {
       "heading": "Abstract",
       "paragraphs": [
-        "In cryptocurrency markets, the same asset can trade on a centralized exchange (CEX) and a decentralized exchange (DEX) that uses an automated market maker (AMM). Trades, limited arbitrage capacity, and changes in liquidity can produce price discrepancies between them. This thesis develops a computational framework and conducts controlled simulation experiments to investigate how arbitrage and adaptive liquidity affect price tracking and the response to shocks.",
-        "The framework combines a reduced discrete-time map with a stochastic agent-based market model containing an exogenous CEX reference, a constant-product AMM, and four representative roles. The reproducible prototype includes deterministic mechanism checks and paired experiments using 300 seeds for model selection. In the configured scenarios, higher arbitrage capacity reduces peak tracking error, while the effect of adaptive liquidity provision depends on the direction of the shock. On held-out seeds and shock magnitudes, the estimated map's Schur-stability classification agrees with the majority contraction outcome in only three of eight groups. These synthetic results do not validate the model against real markets or establish its coefficients as empirical parameters. Further review of agent design and broader confirmation experiments are needed to identify the conditions under which the reduced map is informative."
+        "Cryptoasset markets combine centralized exchanges (CEX) with automated market makers (AMM), whose price depends on reserves and on the trades executed against them. Arbitrage links the two prices, but its capacity to correct them is limited by costs, inventory and liquidity. This study examines how a constant-product AMM tracks an exogenous CEX price after a shock, in a micro-world with noise, trend, arbitrage and liquidity-provision agents, and evaluates a two-variable discrete dynamical map as a reduced description. Three hypotheses are tested under a confirmatory protocol fixed in advance: confirmation seeds and cells disjoint from the exploration ones, inference paired by seed, and Holm correction.",
+        "With 300 confirmation seeds and 13500 runs, active arbitrage lowers the excess-error area from 2.36 to 0.10 (H1; mean difference of −2.26; Holm p of 0.00015), and capacity grades recovery: 56.8 percent with low capacity and 100 percent with high capacity. Adaptive liquidity withdrawal raises the maximum response by 0.011 on average (H2), but only at the shallowest depth; at greater depths the effect is null. The reduced map beats persistence (H3), though not a scalar autoregression, and its out-of-sample regime classification is weak. The results are synthetic, use no market data and have no external validation, and the target precision for H1 was not reached with 300 seeds."
       ],
       "keywords": [
-        "CEX/DEX price tracking",
-        "AMM",
+        "agent-based simulation",
         "arbitrage",
-        "adaptive liquidity",
-        "multi-agent simulation",
-        "discrete map",
-        "reproducibility"
+        "liquidity",
+        "price tracking",
+        "decentralized exchanges",
+        "discrete dynamical systems"
       ]
     },
-    "version": "0.1.6",
+    "version": "0.1.7",
     "state": "Foundation",
     "location": "Colombia · distributed lab",
     "license": "CC BY-NC 4.0 · source available"

@@ -1,77 +1,14 @@
-\section{Introducción}
+\chapter{Introducción}
+\label{cap:introduccion}
 
-Los intercambios descentralizados basados en creadores automáticos de mercado (AMM) y
-los mercados centralizados (CEX) representan mecanismos complementarios de
-formación de precios. Su interacción mediante arbitraje y diferencias de liquidez
-permite estudiar el seguimiento de precios y la respuesta a shocks. El aporte esperado
-no es una teoría general de estabilidad de mercados, sino un conjunto de mecanismos
-verificables en un simulador: qué parte de la corrección procede del arbitraje, cómo
-cambia con capacidad limitada y cómo la profundidad de liquidez transforma una venta
-de tamaño fijo. El modelo reducido se subordina a esa evidencia computacional y no se
-presenta como equivalente automático a un mercado real.
+Los mercados de criptoactivos tienen una particularidad frente a los mercados organizados solo mediante libros de órdenes: un mismo activo se negocia a la vez en intercambios centralizados (CEX) y en intercambios descentralizados (DEX), cuyos precios resultan de las reservas de una piscina de liquidez. Los dos precios no coinciden de manera automática. Su diferencia abre oportunidades de arbitraje, pero que se corrija depende de las condiciones en que es posible negociar: capital disponible, costos y profundidad de la piscina. El problema de investigación consiste en comprender cómo la capacidad de arbitraje, la profundidad disponible y las decisiones de los participantes modifican el seguimiento de un precio de referencia por un creador automático de mercado (AMM) de producto constante, y en establecer si una representación dinámica reducida describe las trayectorias que esos mecanismos generan.
 
-El aporte esperado para la investigación es un experimento reutilizable y auditable,
-junto con una evaluación de dónde falla su descripción reducida. Para los participantes
-del mercado, las
-comparaciones controladas pueden ilustrar cómo los supuestos de capacidad y liquidez
-modifican la exposición de ejecución; son análisis de escenarios, no señales validadas
-ni estimaciones de costos de negociación reales.
+El problema importa porque dos piscinas con el mismo precio marginal pueden reaccionar de forma muy distinta ante la misma orden. Si la liquidez disminuye, una transacción de tamaño fijo produce un impacto mayor; si los proveedores retiran reservas al observar una discrepancia o volatilidad, su propia reacción puede cambiar la respuesta a perturbaciones posteriores. La calidad del seguimiento de precios y el impacto de las órdenes son propiedades relevantes del funcionamiento de un mercado aun cuando no se busque predecir el precio de un activo ni optimizar una estrategia de inversión. Desde la ingeniería de sistemas, el interés es relacionar mecanismos locales, estados y restricciones con el comportamiento agregado.
 
-\section{Problema, pregunta e hipótesis}
+La literatura ha estudiado los mercados artificiales con agentes heterogéneos, las propiedades matemáticas de los AMM y el arbitraje entre mecanismos de negociación. Los modelos de Brock y Hommes \cite{brock1998heterogeneous} y de Lux y Marchesi \cite{lux1999scaling} muestran la relevancia de la heterogeneidad en la dinámica financiera; Angeris y colaboradores \cite{angeris2020uniswap} analizan formalmente y mediante simulación basada en agentes el seguimiento de un precio de referencia por Uniswap; Campbell y colaboradores \cite{campbell2025optimal} estudian un modelo conjunto CEX/DEX para las comisiones y la rentabilidad de la provisión de liquidez; y Bergault y colaboradores \cite{bergault2025exit} formulan el retiro de liquidez como un problema de parada óptima. Estos antecedentes impiden presentar la sola combinación de un mercado de referencia y un AMM como una novedad suficiente. Subsiste, para el sistema delimitado aquí, la necesidad de contrastar de forma explícita una aproximación dinámica de bajo orden con el comportamiento que generan reglas de ejecución, arbitraje limitado y liquidez adaptativa.
 
-\subsection{Problema científico}
+Se propone un marco experimental de dos niveles. El primero representa el mercado descentralizado con un simulador discreto de producto constante, un precio CEX exógeno y agentes de ruido, de tendencia, de arbitraje y de provisión de liquidez. El segundo describe el exceso de error de seguimiento y la presión neta de órdenes con un mapa local discreto de dos variables. Los parámetros del mapa se estiman a partir de observables del simulador y no se suponen constantes universales. El contraste se hace con escenarios de referencia, perturbaciones exógenas, variaciones de la capacidad de arbitraje y de la profundidad, y retiro de liquidez, y se rige por un protocolo confirmatorio fijado antes de simular las semillas de confirmación.
 
-No está suficientemente determinado, para el modelo mínimo propuesto, bajo qué
-combinaciones de capacidad de arbitraje, profundidad de liquidez, fricciones de
-ejecución y comportamiento de los agentes se logra seguimiento de precios, persiste
-una discrepancia o se amplifica una perturbación. Una simulación que solo grafique
-estos efectos no constituye por sí sola una explicación de las condiciones que los
-producen.
+Se espera identificar configuraciones en las que la discrepancia se corrige dentro de un horizonte definido, configuraciones en las que persiste, y condiciones bajo las cuales una menor profundidad amplifica la respuesta a una perturbación; se espera además cuantificar el error del mapa reducido frente al simulador y documentar las regiones en que no resulta adecuado. El capítulo~\ref{cap:resultados} informa el resultado: el arbitraje activo reduce de manera marcada el exceso de error y la capacidad gradúa la recuperación (H1); el retiro adaptativo de liquidez amplifica la respuesta solo con la menor profundidad ensayada (H2); y el mapa reducido supera a la persistencia, pero no a un modelo autorregresivo escalar (H3). Todos los resultados son sintéticos, y la aportación se limita a las condiciones que el modelo representa.
 
-\subsection{Pregunta principal}
-
-¿Cómo afectan la capacidad de arbitraje y la respuesta de los proveedores de liquidez
-al error máximo de seguimiento y a la recuperación tras shocks controlados en un mercado
-CEX/DEX simulado, y con qué precisión clasifica un mapa discreto reducido la contracción
-en escenarios de simulación reservados?
-
-\subsection{Hipótesis de trabajo}
-
-El seguimiento depende del balance entre realimentación correctiva (arbitraje) y
-mecanismos potencialmente amplificadores (presión de negociación y liquidez
-adaptativa). La variación de estos mecanismos produce regiones de comportamiento
-distinguibles con métricas experimentales; el mapa reducido sirve como diagnóstico
-local y debe fallar explícitamente cuando sus hipótesis dejan de ser razonables.
-
-\begin{description}[style=nextline]
-  \item[H1a.] Bajo supuestos definidos de capacidad, latencia y costes, el arbitraje
-    reduce las discrepancias posteriores a una perturbación aislada.
-  \item[H1b.] La retirada proporcional de liquidez aumenta el impacto de una operación
-    posterior de tamaño fijo; ciertas reglas adaptativas de LP amplifican shocks en
-    comparación con un contrafactual de liquidez estática.
-  \item[H1c.] Un mapa estimado en una región de operación declarada puede distinguir
-    contracción de no contracción en escenarios ABM reservados. La confirmación debe
-    especificar de antemano la regla de decisión, una referencia independiente y una
-    mejora mínima aceptable; el diagnóstico actual de 3/8 no demuestra esa mejora.
-\end{description}
-
-\section{Objetivos}
-
-\textbf{General.} Desarrollar y evaluar un marco computacional reproducible que cuantifique cómo la
-capacidad de arbitraje y las respuestas de liquidez afectan el seguimiento de precios
-tras shocks controlados, y contraste los límites predictivos de un mapa reducido con
-simulaciones basadas en agentes reservadas para evaluación.
-
-\begin{enumerate}
-  \item Formalizar el estado, los mecanismos de transacción del AMM, el arbitraje y las
-    políticas de la taxonomía de cuatro roles aprobada por el autor mediante ODD \cite{grimm2020odd}.
-  \item Construir un mapa discreto reducido con banda de no arbitraje y variables
-    observables en el ABM; evaluar contracción local y condiciones de estabilidad de la
-    linealización solo en las regiones donde aplique.
-  \item Implementar y verificar un simulador reproducible con reservas, inventarios,
-    costes y eventos ordenados de forma explícita.
-  \item Diseñar experimentos factoriales o de sensibilidad para shocks, intensidad de
-    arbitraje, profundidad y respuesta de LP.
-  \item Contrastar resultados teóricos y simulados, incluyendo regiones de desacuerdo,
-    robustez estadística y límites de extrapolación.
-\end{enumerate}
+El documento se organiza así. El capítulo~\ref{cap:problema} delimita el problema y revisa los antecedentes; el capítulo~\ref{cap:justificacion} justifica su relevancia. Los capítulos~\ref{cap:hipotesis} y~\ref{cap:objetivos} presentan las hipótesis y los objetivos. El capítulo~\ref{cap:metodologia} desarrolla la formulación matemática, las reglas del micromundo, el diseño experimental y el protocolo estadístico. El capítulo~\ref{cap:resultados} presenta los resultados analíticos y confirmatorios, y el capítulo~\ref{cap:discusion} los discute y enuncia las conclusiones que sustentan. El capítulo~\ref{cap:futuro} propone trabajos futuros; la bibliografía y los anexos técnicos (capítulo~\ref{cap:anexos}) cierran el documento.

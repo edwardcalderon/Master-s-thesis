@@ -1,0 +1,48 @@
+{
+  "analysis_version": "0.5.0",
+  "protocol_note": "Fixed before the confirmation seeds were simulated. Do not edit levels after inspecting confirmation output; a change requires a new analysis_version and a new run.",
+  "exploration": {
+    "seed_start": 0,
+    "seed_count": 300,
+    "depth_scales": [1.0],
+    "shock_log_returns": [-0.1, 0.1],
+    "use": "fit condition-specific two-state and scalar AR maps; pilot variances for sample-size guidance"
+  },
+  "confirmation": {
+    "seed_start": 1000,
+    "seed_count": 300,
+    "depth_scales": [0.5, 1.0, 2.0],
+    "shock_log_returns": [-0.05, -0.1, -0.2],
+    "heldout_cells_rule": "H3 is evaluated only on cells whose (depth_scale, shock) pair is absent from the exploration grid; every confirmation seed is also absent from the exploration seeds"
+  },
+  "conditions": {
+    "E0-arb-off-static": {"capacity": 0.0, "adaptive_lp": false, "region": "primary"},
+    "E1-arb-low-static": {"capacity": 0.005, "adaptive_lp": false, "region": "primary"},
+    "E1-arb-high-static": {"capacity": 0.03, "adaptive_lp": false, "region": "primary"},
+    "E3-adaptive-lp-high-arb": {"capacity": 0.03, "adaptive_lp": true, "region": "primary"},
+    "E1-arb-max-static": {"capacity": 0.1, "adaptive_lp": false, "region": "extrapolation"}
+  },
+  "contrasts": {
+    "H1_primary": {"first": "E1-arb-high-static", "second": "E0-arb-off-static", "metric": "excess_area", "direction": "negative"},
+    "H1_capacity": {"first": "E1-arb-high-static", "second": "E1-arb-low-static", "metric": "excess_area", "direction": "negative"},
+    "H2_primary": {"first": "E3-adaptive-lp-high-arb", "second": "E1-arb-high-static", "metric": "max_response", "direction": "positive"}
+  },
+  "response_window_ticks": [1, 20],
+  "inference": {
+    "unit": "seed (outcomes averaged over confirmation cells within seed, so seeds are the independent replicates)",
+    "bootstrap_resamples": 10000,
+    "randomization_draws": 20000,
+    "confidence_level": 0.95,
+    "primary_tests": ["H1_primary", "H2_primary", "H3_map_vs_persistence"],
+    "multiplicity": "Holm over the three primary one-sided randomization tests, familywise alpha 0.05",
+    "target_half_width_excess_area": 0.01,
+    "target_half_width_max_response": 0.01,
+    "target_half_width_mae": 0.0005,
+    "rng_seed": 20261123
+  },
+  "baselines": {
+    "persistence": "d_hat(t+1) = d(t) + u(t+1)",
+    "scalar_ar": "d(t+1) - u(t+1) = a_s d(t), fit per condition on exploration data",
+    "input_convention": "u(t+1) = -(CEX log return applied at tick t+1), so e(t+1) = e(t) + u(t+1) outside the band"
+  }
+}

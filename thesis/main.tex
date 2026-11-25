@@ -1,25 +1,28 @@
-\documentclass[10pt,a4paper]{article}
+\documentclass[11pt,letterpaper]{report}
 
-% English is the primary manuscript; the required Spanish translation is in es/.
+% English edition, synchronised with manuscript revision v0.5.0 (Spanish: es/main.tex).
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{lmodern}
+\DeclareUnicodeCharacter{2212}{\ensuremath{-}}% U+2212 minus sign used in the abstracts
+\usepackage{mathptmx}
 \usepackage{microtype}
-\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage[letterpaper,left=3cm,right=2.5cm,top=2.7cm,bottom=2.5cm]{geometry}
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
-\usepackage{booktabs}
-\usepackage{tabularx}
+\usepackage{booktabs,tabularx,array,multirow,makecell}
 \usepackage{enumitem}
+\usepackage{setspace}
+\usepackage[font=small,labelfont=bf,labelsep=period,position=top]{caption}
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{titlesec}
 \usepackage{fancyhdr}
+\usepackage{xurl}
 \usepackage{hyperref}
-
-\setlength{\parskip}{0.25em}
-\setlength{\parindent}{0pt}
-\setlength{\headheight}{13pt}
-\setlength{\emergencystretch}{1em}
-\renewcommand{\arraystretch}{1.12}
-\setlist{leftmargin=*,itemsep=0.15em,topsep=0.25em}
 
 \hypersetup{
   colorlinks=true,
@@ -29,52 +32,127 @@
   pdflang={en-US},
   pdftitle={Price Tracking and Liquidity Fragility in Hybrid CEX/DEX Crypto Markets},
   pdfauthor={Edward Calderón},
-  pdfsubject={Working thesis revision with synthetic model-selection results, November 12, 2026, manuscript v0.4.0}
+  pdfsubject={Master's thesis with a synthetic confirmatory test of H1, H2 and H3, November 24, 2026, manuscript v0.5.0}
 }
 
 \newcommand{\languageCode}{en}
-\newcommand{\versionTesis}{v0.1.6}
-\newcommand{\revisionManuscrito}{v0.4.0}
+\newcommand{\versionTesis}{v0.1.7}
+\newcommand{\revisionManuscrito}{v0.5.0}
+\newcommand{\datadir}{figures/data}
+\newcommand{\RunID}{cex-dex-confirm-5b06486d695e}
+
+\tolerance=1600
+\emergencystretch=3em
+
+% Notation common to both editions.
+\newcommand{\pD}{p^{\mathrm{D}}}
+\newcommand{\pC}{p^{\mathrm{C}}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\code}[1]{\texttt{#1}}
+
+\setlength{\parskip}{0.35em}
+\setlength{\parindent}{0pt}
+\setlength{\headheight}{14pt}
+\renewcommand{\arraystretch}{1.12}
+\setlist{leftmargin=*,itemsep=0.15em,topsep=0.3em}
+\setcounter{tocdepth}{2}
+\numberwithin{equation}{chapter}
+\captionsetup{skip=6pt}
+\titleformat{\chapter}[hang]{\Large\bfseries}{\thechapter.}{0.6em}{}
+\titlespacing*{\chapter}{0pt}{-8pt}{16pt}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection.}{0.5em}{}
+\renewcommand{\bibsection}{\chapter{\bibname}}
+\setlength{\bibsep}{3pt}
+
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{CEX/DEX: price tracking and liquidity}
-\fancyhead[R]{12 Nov 2026}
-\fancyfoot[C]{\thepage}
+\fancyhead[L]{\small CEX/DEX: price tracking and liquidity}
+\fancyhead[R]{\small Manuscript \revisionManuscrito{} · 24 Nov 2026}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
 \fancypagestyle{plain}{%
   \fancyhf{}
-  \fancyhead[L]{CEX/DEX: price tracking and liquidity}
-  \fancyhead[R]{12 Nov 2026}
-  \fancyfoot[C]{\thepage}
+  \fancyhead[L]{\small CEX/DEX: price tracking and liquidity}
+  \fancyhead[R]{\small Manuscript \revisionManuscrito{} · 24 Nov 2026}
+  \fancyfoot[C]{\small\thepage}
+  \renewcommand{\headrulewidth}{0.3pt}
 }
 
 \begin{document}
 
-\begin{center}
+% ---------------------------------------------------------------- Cover page
+\begin{titlepage}
+  \thispagestyle{empty}
+  \centering
+  \singlespacing
+  {\large\bfseries Universidad Nacional de Colombia\\[2pt]
+  Facultad de Minas\\[2pt]
+  Sede Medellín\par}
+  \vspace{3.2cm}
   {\LARGE\bfseries Price Tracking and Liquidity Fragility\\
   in Hybrid CEX/DEX Crypto Markets\par}
-  \vspace{0.35em}
-  {\large An Agent-Based Experimental Framework and a Reduced-Order Dynamical Model\par}
-  \vspace{0.35em}
-  {\normalsize Preliminary Draft for Supervisory Review\par}
-  \vspace{0.8em}
-  {\large Edward Calderón\par}
-  Universidad Nacional de Colombia, Faculty of Mines\\
-  Master's in Systems and Computer Engineering\\
-  November 12, 2026\\
-  {\small Manuscript revision: \revisionManuscrito}
-\end{center}
+  \vspace{0.9cm}
+  {\Large An agent-based experimental framework\\
+  and a reduced dynamical model\par}
+  \vspace{2.6cm}
+  {\Large Edward Calderón Aristizábal\par}
+  \vspace{1.6cm}
+  {\large Master in Engineering -- Systems and Computer Engineering\\[2pt]
+  In-depth (profundización) modality\par}
+  \vspace{0.8cm}
+  {\large Advisor: Prof. Juan David Ospina Arango\par}
+  \vfill
+  {\large Medellín, Colombia\\[2pt]
+  November 24, 2026\par}
+  \vspace{0.3cm}
+  {\small Working manuscript for advisor review --- revision \revisionManuscrito{} (edition \versionTesis{})\par}
+\end{titlepage}
 
+\pagenumbering{roman}
+\setcounter{page}{1}
+
+% ---------------------------------------------------------------- Abstract / Resumen
+\begingroup
+\setcounter{secnumdepth}{-1}
+\addtocontents{toc}{\protect\setcounter{tocdepth}{0}}
+\titleformat{\section}{\Large\bfseries}{}{0pt}{}
+\singlespacing
 \input{chapters/00-abstract}
-\input{chapters/01-introduction}
-\input{chapters/02-method}
-\input{chapters/03-evidence}
-\input{chapters/04-conclusion}
-
-\appendix
-\input{chapters/appendix-repository}
+\clearpage
+\input{chapters/00-abstract-translation}
+\addtocontents{toc}{\protect\setcounter{tocdepth}{2}}
+\endgroup
+\setcounter{secnumdepth}{2}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.5em}{}
 
 \clearpage
-\renewcommand{\refname}{References}
-\bibliographystyle{unsrt}
+\tableofcontents
+\clearpage
+\listoftables
+\clearpage
+\listoffigures
+\clearpage
+\input{chapters/00-notation}
+\onehalfspacing
+
+% ---------------------------------------------------------------- Body
+\clearpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\input{chapters/01-introduction}
+\input{chapters/02-problem-and-state-of-the-art}
+\input{chapters/03-justification}
+\input{chapters/04-hypotheses}
+\input{chapters/05-objectives}
+\input{chapters/06-methodology}
+\input{chapters/07-results}
+\input{chapters/08-discussion-and-conclusions}
+\input{chapters/09-future-work}
+
+\bibliographystyle{unsrtnat}
 \bibliography{references}
+
+\input{chapters/11-annexes}
 \end{document}

@@ -1,0 +1,170 @@
+\documentclass[11pt,letterpaper]{report}
+
+% Edición en español, sincronizada con la revisión de manuscrito v0.5.0 (inglés: ../main.tex).
+\usepackage[utf8]{inputenc}
+\DeclareUnicodeCharacter{2212}{\ensuremath{-}}% U+2212 minus sign used in the abstracts
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx}
+\usepackage{microtype}
+\usepackage[letterpaper,left=3cm,right=2.5cm,top=2.7cm,bottom=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs,tabularx,array,multirow,makecell}
+\usepackage{enumitem}
+\usepackage{setspace}
+\usepackage[font=small,labelfont=bf,labelsep=period,position=top]{caption}
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{xurl}
+\usepackage{hyperref}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=blue,
+  pdflang={es-CO},
+  pdftitle={Seguimiento de precios y fragilidad de liquidez en mercados cripto híbridos CEX/DEX},
+  pdfauthor={Edward Calderón},
+  pdfsubject={Tesis de maestría con contraste confirmatorio sintético de H1, H2 y H3, 24 de noviembre de 2026, manuscrito v0.5.0}
+}
+
+\newcommand{\languageCode}{es}
+\newcommand{\versionTesis}{v0.1.7}
+\newcommand{\revisionManuscrito}{v0.5.0}
+\newcommand{\datadir}{../figures/data}
+\newcommand{\RunID}{cex-dex-confirm-5b06486d695e}
+
+% Nombres en español (no hay patrones de separación silábica en español en esta instalación).
+\renewcommand{\contentsname}{Contenido}
+\renewcommand{\listtablename}{Lista de tablas}
+\renewcommand{\listfigurename}{Lista de figuras}
+\renewcommand{\tablename}{Tabla}
+\renewcommand{\figurename}{Figura}
+\renewcommand{\bibname}{Bibliografía}
+\renewcommand{\appendixname}{Anexo}
+\renewcommand{\chaptername}{Capítulo}
+\renewcommand{\refname}{Bibliografía}
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\tolerance=1600
+\emergencystretch=3em
+
+% Notación común a ambas ediciones.
+\newcommand{\pD}{p^{\mathrm{D}}}
+\newcommand{\pC}{p^{\mathrm{C}}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\code}[1]{\texttt{#1}}
+
+\setlength{\parskip}{0.35em}
+\setlength{\parindent}{0pt}
+\setlength{\headheight}{14pt}
+\renewcommand{\arraystretch}{1.12}
+\setlist{leftmargin=*,itemsep=0.15em,topsep=0.3em}
+\setcounter{tocdepth}{2}
+\numberwithin{equation}{chapter}
+\captionsetup{skip=6pt}
+\titleformat{\chapter}[hang]{\Large\bfseries}{\thechapter.}{0.6em}{}
+\titlespacing*{\chapter}{0pt}{-8pt}{16pt}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection.}{0.5em}{}
+\renewcommand{\bibsection}{\chapter{\bibname}}
+\setlength{\bibsep}{3pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small CEX/DEX: seguimiento de precios y liquidez}
+\fancyhead[R]{\small Manuscrito \revisionManuscrito{} · 24 nov. 2026}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\fancypagestyle{plain}{%
+  \fancyhf{}
+  \fancyhead[L]{\small CEX/DEX: seguimiento de precios y liquidez}
+  \fancyhead[R]{\small Manuscrito \revisionManuscrito{} · 24 nov. 2026}
+  \fancyfoot[C]{\small\thepage}
+  \renewcommand{\headrulewidth}{0.3pt}
+}
+
+\begin{document}
+
+% ---------------------------------------------------------------- Portada
+\begin{titlepage}
+  \thispagestyle{empty}
+  \centering
+  \singlespacing
+  {\large\bfseries Universidad Nacional de Colombia\\[2pt]
+  Facultad de Minas\\[2pt]
+  Sede Medellín\par}
+  \vspace{3.2cm}
+  {\LARGE\bfseries Seguimiento de precios y fragilidad de liquidez\\
+  en mercados cripto híbridos CEX/DEX\par}
+  \vspace{0.9cm}
+  {\Large Un marco experimental basado en agentes\\
+  y un modelo dinámico reducido\par}
+  \vspace{2.6cm}
+  {\Large Edward Calderón Aristizábal\par}
+  \vspace{1.6cm}
+  {\large Maestría en Ingeniería -- Ingeniería de Sistemas e Informática\\[2pt]
+  Modalidad de profundización\par}
+  \vspace{0.8cm}
+  {\large Director: Prof. Juan David Ospina Arango\par}
+  \vfill
+  {\large Medellín, Colombia\\[2pt]
+  24 de noviembre de 2026\par}
+  \vspace{0.3cm}
+  {\small Manuscrito de trabajo para revisión de la dirección --- revisión \revisionManuscrito{} (edición \versionTesis{})\par}
+\end{titlepage}
+
+\pagenumbering{roman}
+\setcounter{page}{1}
+
+% ---------------------------------------------------------------- Resumen / Abstract
+\begingroup
+\setcounter{secnumdepth}{-1}
+\addtocontents{toc}{\protect\setcounter{tocdepth}{0}}
+\titleformat{\section}{\Large\bfseries}{}{0pt}{}
+\singlespacing
+\input{chapters/00-abstract}
+\clearpage
+\input{chapters/00-abstract-translation}
+\addtocontents{toc}{\protect\setcounter{tocdepth}{2}}
+\endgroup
+\setcounter{secnumdepth}{2}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.5em}{}
+
+\clearpage
+\tableofcontents
+\clearpage
+\listoftables
+\clearpage
+\listoffigures
+\clearpage
+\input{chapters/00-notation}
+\onehalfspacing
+
+% ---------------------------------------------------------------- Cuerpo
+\clearpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\input{chapters/01-introduction}
+\input{chapters/02-problem-and-state-of-the-art}
+\input{chapters/03-justification}
+\input{chapters/04-hypotheses}
+\input{chapters/05-objectives}
+\input{chapters/06-methodology}
+\input{chapters/07-results}
+\input{chapters/08-discussion-and-conclusions}
+\input{chapters/09-future-work}
+
+\bibliographystyle{unsrtnat}
+\bibliography{../references}
+
+\input{chapters/11-annexes}
+\end{document}

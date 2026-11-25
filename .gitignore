@@ -26,12 +26,17 @@ thesis/*.out
 thesis/*.run.xml
 thesis/*.synctex.gz
 thesis/*.toc
+thesis/*.lof
+thesis/*.lot
 thesis/*.pdf
 thesis/es/*.bbl
 thesis/es/*.blg
 thesis/es/*.aux
 thesis/es/*.log
 thesis/es/*.out
+thesis/es/*.toc
+thesis/es/*.lof
+thesis/es/*.lot
 thesis/es/*.pdf
 thesis/literature/
 experiments/cex_dex_mvp/output/
