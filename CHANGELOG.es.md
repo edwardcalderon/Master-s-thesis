@@ -1,3 +1,14 @@
+## [0.1.8] - 2026-11-25
+
+### Añadido
+
+- Se añadió el plan de implementación SIM-002 para la reproducción visual 3D de los hallazgos del micromundo, trazas pareadas de eventos, exploración acotada de escenarios y escenarios guardados en el navegador. La función queda pendiente de implementación.
+- Se definieron criterios de evidencia, accesibilidad, interfaz bilingüe, reproducibilidad y rendimiento, además del alcance de investigación independiente que requieren los mundos persistentes compartidos y los agentes evolutivos.
+
+### Corregido
+
+- Se concilió el registro de tareas y la transición de simulación con la evidencia confirmatoria de v0.5.0 y se corrigieron notas desactualizadas sobre la versión del manuscrito. Las versiones del manuscrito y del experimento se conservan.
+
 # Registro de cambios
 
 ## [0.1.7] - 2026-11-24

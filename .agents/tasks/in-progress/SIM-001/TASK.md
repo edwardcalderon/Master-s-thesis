@@ -75,9 +75,9 @@ lightweight, versioned summaries before they are loaded.
 ## Remaining work
 
 - Review keyboard-only operation and focus states for both simulation tabs and controls.
-- Add the E3 policy comparison and assess whether its bounded trajectories should be
-  computed live or presented as a compact precomputed selection result.
-- Define a versioned compact artifact schema for stochastic and H1c views; do not load
-  the full 50,400-row ABM trajectory file into the UI.
+- Hand off E3/current confirmation views and their compact artifact schema to
+  [SIM-002](../../todo/SIM-002/TASK.md). Use the v0.5.0 confirmation evidence; keep the
+  older H1c holdout labeled historical. SIM-002 also owns the illustrative event traces
+  needed for faithful 3D playback. Do not load full trajectory sweeps by default.
 - Add scenario share/export metadata and document exact reproduction steps.
 - Review client bundle size and use a Web Worker only if profiling demonstrates a need.

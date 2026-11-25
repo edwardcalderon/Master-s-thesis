@@ -46,5 +46,11 @@
     "date": "2026-11-24",
     "status": "release",
     "summary": "Synchronized release v0.1.7 with @edcalderon/versioning."
+  },
+  {
+    "version": "0.1.8",
+    "date": "2026-11-25",
+    "status": "release",
+    "summary": "Plan SIM-002 for a 3D findings replay, bounded sandbox, and local saved scenarios; reconcile the task ledger with manuscript v0.5.0. Implementation remains queued."
   }
 ]

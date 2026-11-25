@@ -6,20 +6,16 @@ The public web app, project documentation, notebooks, changelog, and release his
 
 The public experience is inspired by the useful parts of [GeoAuPredict](https://github.com/edwardcalderon/GeoAuPredict): a clear research overview, a notebook explorer, a docs surface, and an artifact-oriented GitHub Pages deployment. Application-specific gold-prediction code and heavyweight services are intentionally left out until the thesis needs them.
 
-## 📋 Latest Changes (v0.1.7)
+## 📋 Latest Changes (v0.1.8)
 
 ### Added
 
-- Added manuscript revision v0.5.0, restructured along the advisor's feedback: a six-paragraph introduction, problem statement and state of the art, justification, hypotheses, objectives, methodology, results, discussion and conclusions, future work, bibliography and annexes, in English and Spanish.
-- Added the confirmatory protocol (`confirm.py`, `confirm_config.json`) with disjoint exploration and confirmation seeds, paired-by-seed inference and Holm correction, and `export_thesis_data.py` to export the figure and table data to `thesis/figures/data/`.
-- Added a reference audit (`thesis/literature-audit/`) that verifies each of the 87 bibliography entries against Crossref, arXiv or the publisher and ranks them by relevance.
-- Added the v0.5.0 manuscript source snapshot under `thesis/versions/`.
+- Added the SIM-002 implementation plan for a 3D microworld findings replay, paired event traces, bounded scenario exploration, and browser-local saved scenarios. The feature is queued for implementation.
+- Defined evidence, accessibility, bilingual UI, reproducibility, and performance gates, plus the separate research scope required for shared persistent worlds and evolutionary agents.
 
-### Changed
+### Fixed
 
-- Replaced the manuscript results with the confirmatory run `cex-dex-confirm-5b06486d695e`: H1 and H2 are supported on average, H2 only at the shallowest depth, and H3 beats persistence but not a scalar autoregression. All results are synthetic; the H1 target precision was not reached.
-- Updated the website abstract, keywords and version to match the new manuscript.
-- Updated the reference, experiment and thesis documentation.
+- Reconciled the task ledger and simulation handoff with the v0.5.0 confirmatory evidence and corrected stale manuscript-version notes. Manuscript and experiment versions are unchanged.
 
 For full version history, see [CHANGELOG.md](./CHANGELOG.md) and [GitHub releases](https://github.com/edwardcalderon/Master-s-thesis/releases).
 
@@ -31,7 +27,7 @@ For full version history, see [CHANGELOG.md](./CHANGELOG.md) and [GitHub release
 
 ## Earlier preliminary manuscript — 29 Oct 2026
 
-This earlier mechanism-first draft studied CEX/DEX price tracking, bounded arbitrage, and liquidity fragility. It has been revised; the active bilingual manuscript is v0.4.0, and the v0.3.1 source is preserved in the version archive.
+This earlier mechanism-first draft studied CEX/DEX price tracking, bounded arbitrage, and liquidity fragility. It has been revised; the active bilingual manuscript is v0.5.0, with confirmatory H1–H3 results; earlier sources are preserved in the version archive.
 
 - The public site publishes the final English and required Spanish PDFs after the paired build.
 - [Current reproducible MVP](experiments/cex_dex_mvp/README.md)
@@ -103,7 +99,7 @@ See [`docs/language-policy.md`](docs/language-policy.md) for the source and publ
 [`@edcalderon/versioning`](https://www.npmjs.com/package/@edcalderon/versioning) handles workspace SemVer bumps and the English changelog. The repository synchronizer projects the version into `VERSION`, both release histories, both app locale files, both LaTeX workspace-version macros, and the release blocks in both READMEs. `pnpm readme:update` copies the populated English and Spanish changelog entries into their matching README summaries. A separate manuscript-revision macro keeps the thesis editions paired.
 
 <!-- versioning:release:start -->
-**Current release:** [`v0.1.7`](https://github.com/edwardcalderon/Master-s-thesis/releases/tag/v0.1.7)
+**Current release:** [`v0.1.8`](https://github.com/edwardcalderon/Master-s-thesis/releases/tag/v0.1.8)
 **Tracker:** [GitHub releases](https://github.com/edwardcalderon/Master-s-thesis/releases) · synchronized with `@edcalderon/versioning`
 <!-- versioning:release:end -->
 
