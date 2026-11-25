@@ -1,6 +1,6 @@
 \documentclass[11pt,letterpaper]{report}
 
-% English edition, synchronised with manuscript revision v0.5.0 (Spanish: es/main.tex).
+% English edition, synchronised with manuscript revision v0.5.1 (Spanish: es/main.tex).
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \DeclareUnicodeCharacter{2212}{\ensuremath{-}}% U+2212 minus sign used in the abstracts
@@ -14,6 +14,7 @@
 \usepackage{setspace}
 \usepackage[font=small,labelfont=bf,labelsep=period,position=top]{caption}
 \usepackage{float}
+\usepackage{placeins}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,calc}
 \usepackage{pgfplots}
@@ -32,12 +33,12 @@
   pdflang={en-US},
   pdftitle={Price Tracking and Liquidity Fragility in Hybrid CEX/DEX Crypto Markets},
   pdfauthor={Edward Calderón},
-  pdfsubject={Master's thesis with a synthetic confirmatory test of H1, H2 and H3, November 24, 2026, manuscript v0.5.0}
+  pdfsubject={Master's thesis with a synthetic confirmatory test of H1, H2 and H3, November 25, 2026, manuscript v0.5.1}
 }
 
 \newcommand{\languageCode}{en}
 \newcommand{\versionTesis}{v0.1.8}
-\newcommand{\revisionManuscrito}{v0.5.0}
+\newcommand{\revisionManuscrito}{v0.5.1}
 \newcommand{\datadir}{figures/data}
 \newcommand{\RunID}{cex-dex-confirm-5b06486d695e}
 
@@ -69,13 +70,13 @@
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{\small CEX/DEX: price tracking and liquidity}
-\fancyhead[R]{\small Manuscript \revisionManuscrito{} · 24 Nov 2026}
+\fancyhead[R]{\small Manuscript \revisionManuscrito{} · 25 Nov 2026}
 \fancyfoot[C]{\small\thepage}
 \renewcommand{\headrulewidth}{0.3pt}
 \fancypagestyle{plain}{%
   \fancyhf{}
   \fancyhead[L]{\small CEX/DEX: price tracking and liquidity}
-  \fancyhead[R]{\small Manuscript \revisionManuscrito{} · 24 Nov 2026}
+  \fancyhead[R]{\small Manuscript \revisionManuscrito{} · 25 Nov 2026}
   \fancyfoot[C]{\small\thepage}
   \renewcommand{\headrulewidth}{0.3pt}
 }
@@ -105,7 +106,7 @@
   {\large Advisor: Prof. Juan David Ospina Arango\par}
   \vfill
   {\large Medellín, Colombia\\[2pt]
-  November 24, 2026\par}
+  November 25, 2026\par}
   \vspace{0.3cm}
   {\small Working manuscript for advisor review --- revision \revisionManuscrito{} (edition \versionTesis{})\par}
 \end{titlepage}

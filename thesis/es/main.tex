@@ -1,6 +1,6 @@
 \documentclass[11pt,letterpaper]{report}
 
-% Edición en español, sincronizada con la revisión de manuscrito v0.5.0 (inglés: ../main.tex).
+% Edición en español, sincronizada con la revisión de manuscrito v0.5.1 (inglés: ../main.tex).
 \usepackage[utf8]{inputenc}
 \DeclareUnicodeCharacter{2212}{\ensuremath{-}}% U+2212 minus sign used in the abstracts
 \usepackage[T1]{fontenc}
@@ -14,6 +14,7 @@
 \usepackage{setspace}
 \usepackage[font=small,labelfont=bf,labelsep=period,position=top]{caption}
 \usepackage{float}
+\usepackage{placeins}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,calc}
 \usepackage{pgfplots}
@@ -32,12 +33,12 @@
   pdflang={es-CO},
   pdftitle={Seguimiento de precios y fragilidad de liquidez en mercados cripto híbridos CEX/DEX},
   pdfauthor={Edward Calderón},
-  pdfsubject={Tesis de maestría con contraste confirmatorio sintético de H1, H2 y H3, 24 de noviembre de 2026, manuscrito v0.5.0}
+  pdfsubject={Tesis de maestría con contraste confirmatorio sintético de H1, H2 y H3, 25 de noviembre de 2026, manuscrito v0.5.1}
 }
 
 \newcommand{\languageCode}{es}
 \newcommand{\versionTesis}{v0.1.8}
-\newcommand{\revisionManuscrito}{v0.5.0}
+\newcommand{\revisionManuscrito}{v0.5.1}
 \newcommand{\datadir}{../figures/data}
 \newcommand{\RunID}{cex-dex-confirm-5b06486d695e}
 
@@ -81,13 +82,13 @@
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{\small CEX/DEX: seguimiento de precios y liquidez}
-\fancyhead[R]{\small Manuscrito \revisionManuscrito{} · 24 nov. 2026}
+\fancyhead[R]{\small Manuscrito \revisionManuscrito{} · 25 nov. 2026}
 \fancyfoot[C]{\small\thepage}
 \renewcommand{\headrulewidth}{0.3pt}
 \fancypagestyle{plain}{%
   \fancyhf{}
   \fancyhead[L]{\small CEX/DEX: seguimiento de precios y liquidez}
-  \fancyhead[R]{\small Manuscrito \revisionManuscrito{} · 24 nov. 2026}
+  \fancyhead[R]{\small Manuscrito \revisionManuscrito{} · 25 nov. 2026}
   \fancyfoot[C]{\small\thepage}
   \renewcommand{\headrulewidth}{0.3pt}
 }
@@ -117,7 +118,7 @@
   {\large Director: Prof. Juan David Ospina Arango\par}
   \vfill
   {\large Medellín, Colombia\\[2pt]
-  24 de noviembre de 2026\par}
+  25 de noviembre de 2026\par}
   \vspace{0.3cm}
   {\small Manuscrito de trabajo para revisión de la dirección --- revisión \revisionManuscrito{} (edición \versionTesis{})\par}
 \end{titlepage}

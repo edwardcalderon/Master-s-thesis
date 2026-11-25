@@ -9,8 +9,12 @@ together.
 - English PDF: `main.pdf`
 - Spanish PDF: `es/main.pdf`
 
-The current manuscript revision is v0.5.0. It restructures the thesis along the
-advisor's feedback (introduction in six paragraphs; problem and state of the art;
+The current manuscript revision is v0.5.1. This layout correction keeps the research
+question and its heading together and prevents the preceding literature table from
+interrupting it in either edition. It also removes an editorial source-replacement
+note from both annexes. The research question and v0.5.0 findings are unchanged.
+
+The manuscript follows the structure introduced in response to the advisor's feedback (introduction in six paragraphs; problem and state of the art;
 justification; hypotheses; objectives; methodology; results; discussion and
 conclusions; future work; bibliography; annexes) and reports a confirmatory run
 (`cex-dex-confirm-5b06486d695e`) with disjoint exploration and confirmation seeds. The
@@ -36,6 +40,10 @@ The target first checks that both sources declare the required locales, matching
 manuscript revision, workspace release version, and chapter order. It then compiles
 both PDFs. CI publishes the pair as `master-thesis.pdf` and
 `master-thesis.es.pdf`.
+
+The PDF build also runs `python3 ../scripts/check-thesis-layout.py` after compilation.
+This requires Poppler (`pdftotext`) and rejects a research question split across pages
+or separated from its heading. The Pages workflow runs the same check before upload.
 
 Both editions use the shared citation keys in `references.bib`; `make pdf` runs
 BibTeX for each source tree before producing the final PDFs.

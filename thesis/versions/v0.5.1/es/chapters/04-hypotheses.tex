@@ -1,0 +1,40 @@
+\chapter{Hipótesis}
+\label{cap:hipotesis}
+
+\section{Hipótesis general}
+
+Existe una asociación sistemática entre las condiciones de arbitraje, la profundidad de liquidez y la respuesta de precios de un AMM de producto constante ante una perturbación en la referencia centralizada, y esa asociación puede describirse con un mapa dinámico discreto de bajo orden estimado a partir del simulador. Las tres hipótesis siguientes la desagregan en afirmaciones refutables sobre una métrica y un contraste definidos de antemano.
+
+\section{H1: el arbitraje activo reduce el exceso de error}
+
+Sea $A=\sum_{t=1}^{H} D_t$ el área de exceso de error de una ejecución, con $D_t=|d_t|$ y $H=20$ ticks. Para cada semilla se forma el contraste pareado
+\[
+\Delta_1 = A_{\text{activo}} - A_{\text{inactivo}},
+\]
+donde las dos ejecuciones comparten la perturbación y las órdenes de ruido y difieren solo en la capacidad de arbitraje. La hipótesis nula es $\E[\Delta_1]\ge 0$ y la alternativa $\E[\Delta_1]<0$.
+
+La hipótesis se completa con una comparación secundaria entre capacidades: si la capacidad de arbitraje importa y no solo su presencia, una capacidad mayor debe producir un área de exceso menor que una capacidad menor. Esta comparación (H1 de capacidad) se informa como no primaria y no entra en la corrección de Holm.
+
+\section{H2: el retiro adaptativo amplifica la respuesta}
+
+Sea $M=\max_{1\le t\le H}\left|\log(\pD_t/\pD_0)\right|$ la respuesta máxima del precio del AMM. Para cada semilla,
+\[
+\Delta_2 = M_{\text{adaptativo}} - M_{\text{estático}},
+\]
+con ambas ejecuciones bajo arbitraje activo y los mismos flujos exógenos. La hipótesis nula es $\E[\Delta_2]\le 0$ y la alternativa $\E[\Delta_2]>0$: si los proveedores retiran liquidez al observar un error persistente, el AMM queda con menos reservas y el mismo flujo posterior produce una respuesta mayor.
+
+El efecto mecánico de una menor profundidad sobre el impacto de una orden es una identidad analítica (capítulo~\ref{cap:resultados}, sección de resultados analíticos) y no se contrasta como hipótesis. Lo que H2 evalúa es si la regla adaptativa concreta de este trabajo produce el efecto en el simulador, y bajo qué profundidades.
+
+\section{H3: el mapa reducido supera a la persistencia}
+
+Sea $L$ el error absoluto medio de predicción a un paso del exceso de error sobre las configuraciones y semillas reservadas. Para cada semilla,
+\[
+\Delta_3 = \E\left[L_{\text{mapa}} - L_{\text{persistencia}}\right],
+\]
+con la esperanza tomada sobre las condiciones primarias y las celdas de evaluación reservadas. La hipótesis nula es $\Delta_3\ge 0$ y la alternativa $\Delta_3<0$: el mapa de dos variables predice el exceso de error del tick siguiente con menor error absoluto que mantener el valor actual corregido por el cambio de la referencia.
+
+La clasificación de regímenes (contractivo, persistente, en banda) con el criterio de Schur es un resultado complementario y no un contraste confirmatorio. La comparación con un autorregresivo escalar se informa como diagnóstico no primario: sirve para saber qué aporta el segundo estado, no para sostener H3.
+
+\section{Criterios de contraste}
+
+Las tres hipótesis primarias se contrastan con una prueba de aleatorización unilateral por inversión de signos sobre los contrastes por semilla, con corrección de Holm al nivel 0.05 \cite{holm1979simple}. Además se informan la diferencia media, un intervalo de confianza del 95 por ciento por bootstrap percentílico pareado \cite{efron1979bootstrap} y la proporción de semillas en la dirección prevista. El detalle del protocolo se presenta en la sección~\ref{sec:analisis-estadistico}.

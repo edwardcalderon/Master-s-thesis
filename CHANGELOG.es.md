@@ -1,3 +1,11 @@
+## [Sin publicar]
+
+### Corregido
+
+- Se eliminó de ambos anexos una nota editorial sobre la sustitución de una fuente bibliográfica.
+- Se corrigió la paginación de la pregunta de investigación en el manuscrito v0.5.1: el título y la pregunta completa permanecen juntos y la tabla de antecedentes queda antes de esta sección en ambas ediciones. La pregunta y los hallazgos se conservan.
+- Se añadió una comprobación de la maquetación de los PDF a la compilación bilingüe y al flujo de Pages para detectar una pregunta dividida o interrumpida antes de la publicación.
+
 ## [0.1.8] - 2026-11-25
 
 ### Añadido

@@ -1,0 +1,37 @@
+\chapter*{Notación}
+\addcontentsline{toc}{chapter}{Notación}
+
+Los símbolos siguientes se usan en todo el documento. El superíndice $\mathrm{D}$ designa al intercambio descentralizado (AMM) y $\mathrm{C}$ a la referencia centralizada.
+
+\begin{center}
+\small
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+Símbolo & Significado \\
+\midrule
+$x_t,\ y_t$ & Reservas de los activos $X$ e $Y$ del AMM en el tick $t$ (precio cotizado en unidades de $Y$ por unidad de $X$). \\
+$k_t = x_t y_t$ & Producto de reservas; constante en un intercambio sin comisión. \\
+$\pD_t = y_t/x_t$ & Precio marginal del AMM. \\
+$\pC_t$ & Precio de referencia centralizado (exógeno). \\
+$q$ & Cantidad de $X$ vendida al AMM en un intercambio. \\
+$f$ & Comisión proporcional retenida por la piscina. \\
+$I(q,x)$ & Impacto logarítmico de una venta: $2\log(1+q/x)$ sin comisión. \\
+$e_t = \log(\pD_t/\pC_t)$ & Error logarítmico de seguimiento. \\
+$\gamma$ & Semiancho logarítmico de la banda operativa de no arbitraje (valor ejecutado: $0.003$). \\
+$d_t,\ D_t = |d_t|$ & Exceso de error fuera de la banda con signo, y su valor absoluto. \\
+$c$ & Capacidad de arbitraje: fracción máxima de la reserva negociable por tick. \\
+$q^{\ast}$ & Tamaño de venta que lleva el precio al borde de la banda. \\
+$z_t$ & Presión neta de compra (ruido y tendencia; sin arbitraje) normalizada por la reserva inicial de $Y$. \\
+$u_t = -\Delta\log \pC_t$ & Entrada exógena del mapa reducido. \\
+$\alpha,\ \beta,\ \chi,\ \rho$ & Coeficientes del mapa de dos estados; $a = 1-\alpha$ y $c_z = -\chi$ en las tablas de ajuste. \\
+$A$ & Matriz local del mapa autónomo; $\operatorname{tr}A$ y $\det A$ su traza y determinante. \\
+$H$ & Horizonte de la ventana de respuesta (20 ticks). \\
+$A_{\mathrm{ex}} = \sum_{t=1}^{H} D_t$ & Área de exceso de error (métrica primaria de H1). \\
+$M = \max_{1\le t\le H}\bigl|\log(\pD_t/\pD_0)\bigr|$ & Respuesta máxima del precio del AMM (métrica primaria de H2). \\
+$\Delta_1,\Delta_2,\Delta_3$ & Contrastes pareados de H1, H2 y H3. \\
+$\mathrm{MAE}$ & Error absoluto medio de predicción a un paso (métrica primaria de H3). \\
+E0--E3 & Escenarios experimentales (tabla~\ref{tab:escenarios}). \\
+OE1--OE4 & Objetivos específicos. \\
+\bottomrule
+\end{tabularx}
+\end{center}
