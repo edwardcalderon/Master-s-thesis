@@ -2,7 +2,7 @@
 
 - **Owner:** `edcalderon`
 - **Status:** IN PROGRESS
-- **Focus:** CURRENT FOCUS — paired deterministic and stochastic model development
+- **Focus:** CURRENT FOCUS — next model-design review beyond representative-agent evidence
 - **Started:** 2026-11-12
 
 ## Goal
@@ -95,7 +95,4 @@ SIM-002 consumes the frozen confirmation evidence for presentation.
 
 ## Next action
 
-Review this task's acceptance criteria against v0.5.0 and reconcile the ODD with the
-executed confirmation protocol before closure. Scope any heterogeneous populations,
-new policies, or evolutionary/long-running dynamics as subsequent model revisions.
-Preserve the original selection artifacts and all released manuscript snapshots.
+Next: advisor review of the remaining representative-agent gap, ODD/model contract, and whether a heterogeneous-agent extension is justified. Keep fees, calibrated provider rules, production latency, and external-market validation outside the current evidenced claim. Any adopted model extension must use a new model version, protocol and run; preserve all current run IDs and manuscript snapshots.

@@ -3,7 +3,7 @@
 
 \section{Scope of the results}
 
-This chapter reports two kinds of results. The first are analytical identities that do not depend on simulation (section~\ref{sec:res-analitico}). The second are the confirmatory contrasts over 13\,500 simulator runs, with the protocol described in chapter~\ref{cap:metodologia}. All results are synthetic: they come from a micro-world without market data and without fees, and they were not validated against external observations. The confirmatory run has the identifier \code{\RunID}; its checksums and the command that regenerates it appear in annex~\ref{cap:anexos}.
+This chapter reports analytical identities, confirmatory contrasts over 13\,500 simulator runs, and a separate engineering sensitivity over 40\,500 paths (section~\ref{sec:engineering-sensitivity}). The confirmatory protocol is described in chapter~\ref{cap:metodologia}. All results are synthetic: they come from a micro-world without market data and without fees, and they were not validated against external observations. The confirmatory run has the identifier \code{\RunID}; its checksums and the command that regenerates it appear in annex~\ref{cap:anexos}.
 
 \section{Analytical results: depth and impact}
 \label{sec:res-analitico}
@@ -240,9 +240,9 @@ $\kappa$ & Shock & Panic E0 & Panic E1-high & Panic E3 & E3 withdrawal (\%) & Wi
 \end{tabular}
 \end{table}
 
-\subsection{A check that was not pre-registered}
+\subsection{Earlier exploratory panic ablation and new sensitivity}
 
-To find out how much of the effect at $\kappa=0.5$ comes from the panic sale and how much from the liquidity withdrawal, the comparison E3 against E1-high was repeated with $\kappa=0.5$, the 300 seeds and the three shocks, with and without the panic agent (\code{panic\_max\_orders\_per\_run}$=0$). With panic the difference is $0.0343$ (99.67\,\% of the seeds positive); without panic it is $0.0153$ (96.67\,\%). This check was not part of the confirmatory protocol and is reported as exploratory. It suggests that approximately half of the effect at the lowest depth is due to the interaction with the panic agent, and not to the withdrawal alone.
+To find out how much of the effect at $\kappa=0.5$ comes from the panic sale and how much from the liquidity withdrawal, the comparison E3 against E1-high was repeated with $\kappa=0.5$, the 300 seeds and the three shocks, with and without the panic agent (\code{panic\_max\_orders\_per\_run}$=0$). With panic the difference is $0.0343$ (99.67\,\% of the seeds positive); without panic it is $0.0153$ (96.67\,\%). That earlier ablation was not part of the frozen confirmatory protocol and is retained as an exploratory result. The new analysis in section~\ref{sec:engineering-sensitivity} used fresh seeds and a protocol fixed before those runs; it confirms a smaller effect with panic disabled under the fixed-order variant, while showing that scaling orders with reserves removes the contrast altogether.
 
 \section{H3: reduced map and baseline models}
 \label{sec:res-h3}
@@ -335,10 +335,38 @@ Figure~\ref{fig:prof} compares E1-high and E3 with $\kappa=0.5$. At the lowest d
 \label{fig:prof}
 \end{figure}
 
+\section{Engineering sensitivity: recovery and order scale}
+\label{sec:engineering-sensitivity}
+
+A supplementary analysis (analysis 0.6.0, run \code{\EngineeringRunID}) used 300 new seeds (2000--2299), three order-flow variants and the 15 depth/shock/condition cells of the frozen confirmation design: 40\,500 paths, 20 abstract ticks each. It is descriptive sensitivity analysis, not a new confirmatory test. Recovery means the first observed pair of consecutive ticks inside the band; a later departure is counted separately. Deadlines are ticks, not elapsed time.
+
+With the original fixed absolute order sizes, adaptive E3 recovered at least once in 97.4\,\% of paths, yet only 81.9\,\% ended in-band. Of paths that recovered, 31.2\,\% later departed. At depth 0.5, only 45.8\,\% ended in-band and 98.8\,\% of recovered paths later departed. Thus a first sustained return is not equivalent to persistent tracking in this model. These equally weighted design averages carry no multiplicity-adjusted population claim.
+
+The depth-specific adaptive-minus-static maximum-response contrast changes with order definition (table~\ref{tab:engineering-sensitivity}). Holding absolute orders fixed produced an effect at depth 0.5, while scaling the noise and trend orders with initial reserves made the contrast effectively zero at all three depths. Disabling the panic sale reduced the shallow-depth contrast but did not eliminate it. This isolates an important model boundary: depth alone does not determine the result; order size relative to reserves and the reaction rule matter.
+
+\begin{table}[htbp]
+\centering
+\caption{Supplementary paired adaptive-minus-static maximum response by depth (300 new seeds). Approximate 95\,\% intervals are unadjusted.}
+\label{tab:engineering-sensitivity}
+\small
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Order-flow variant & Depth 0.5 & Depth 1 & Depth 2 \\
+\midrule
+Fixed absolute orders & 0.03458 [0.03225, 0.03690] & 0.00000 & 0.00000 \\
+Orders proportional to initial reserves & 0.00000 & 0.00000 & 0.00000 \\
+Fixed orders, panic disabled & 0.01471 [0.01364, 0.01577] & 0.00000 & 0.00000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+At depth 0.5 under fixed absolute orders, adaptive E3 ended in-band in 45.8\,\% of paths; with proportional orders it ended in-band in 100\,\%. These variants still share the same stylized representative-agent model and are not empirical comparisons. The complete cell summaries, paired contrasts, configuration and hashes are exported under \code{figures/engineering/}.
+
 \section{Summary of the results}
 
 \begin{itemize}
   \item \textbf{H1:} the null is rejected; active arbitrage reduces the excess area by $2.26$ on average and capacity grades the recovery. The target precision was not reached with 300 seeds.
   \item \textbf{H2:} the null is rejected on average, with $\Delta_2=0.0114$, but the effect exists only with $\kappa=0.5$ and approximately half of the effect depends on the panic agent.
   \item \textbf{H3:} the null is rejected against persistence, but the map does not beat a scalar autoregression, does not improve on persistence in E0 and its regime classification is weak.
+  \item \textbf{Engineering sensitivity:} return can be temporary (31.2\,\% of recovered E3 paths later leave the band overall); the shallow-depth H2 contrast vanishes when order sizes scale with reserves and is reduced when panic is disabled.
 \end{itemize}

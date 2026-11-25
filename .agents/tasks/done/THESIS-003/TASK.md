@@ -1,8 +1,8 @@
 # THESIS-003 — Reconcile manuscript evidence and evaluate H1c
 
 - **Owner:** `edcalderon`
-- **Status:** IN PROGRESS
-- **Focus:** v0.5.0 confirmation evidence recorded; acceptance review remains.
+- **Status:** DONE
+- **Focus:** v0.6.0 bilingual evidence and engineering reconciliation complete.
 - **Started:** 2026-11-12
 
 ## Goal
@@ -84,3 +84,8 @@ SIM-002 consumes the frozen confirmation evidence for presentation.
 - Preserve the distinction between confirmatory contrasts, exploratory panic ablation,
   and historical H1c diagnostics. Any new fees, policies, or long horizons need a new
   protocol; they are not prerequisites for accurately presenting the frozen findings.
+
+
+## Completion record — 2026-11-25
+
+The original deterministic mechanism, sweep, stochastic selection, held-out map and confirmatory pipeline were rerun. All recorded numeric artifacts reproduced byte for byte; all nine implementation invariants passed. The new v0.6.0 engineering sensitivity is separately versioned, uses fresh seeds 2000–2299, and reproduced in a second output directory. Findings and limits were reconciled in both active editions; see the v0.6.0 annex and experiments/cex_dex_mvp/ENGINEERING_PROTOCOL.md. External validity remains untested and is tracked under DATA-001.

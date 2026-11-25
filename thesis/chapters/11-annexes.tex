@@ -95,6 +95,12 @@ Checksum & SHA-256 of configurations, code and products. \\
   \item SHA-256 of the products: \code{run\_metrics.csv} \code{2a0fbd17bb3e5eb6\ldots}; \code{inference.csv} \code{d4828a48cd0f8f2a\ldots}; \code{cell\_breakdown.csv} \code{0a87125ca4a09068\ldots}; \code{h3\_by\_condition.csv} \code{28d31f52e5c4be41\ldots};\hfill\break\code{condition\_summary.csv} \code{ee6c02c5ac37544b\ldots}; \hfill\break\code{exploration\_fits.csv} \code{1f5f7ffbe00a86c6\ldots}; \code{sample\_size\_guidance.csv} \code{86d4a3a45fedd0a2\ldots}.
 \end{itemize}
 
+\subsection*{Supplementary engineering sensitivity and full replay}
+
+The original runner sources and the confirmatory configuration were not changed. Five existing pipelines reproduced their recorded output artifacts byte for byte: deterministic mechanism \code{cex-dex-mvp-f183520b90aa}, sweep \code{cex-dex-sweep-5e33d51c51a3}, stochastic selection \code{cex-dex-abm-a99f9be866b2}, held-out map \code{cex-dex-h1c-43e446f04adf}, and confirmation \code{cex-dex-confirm-5b06486d695e}. All nine implementation invariants passed.
+
+The supplementary analysis is \code{cex-dex-engineering-9438e194aa7e} (analysis 0.6.0; model 0.4.0), 300 fresh seeds (2000--2299), 40\,500 paths. Its protocol and configuration are \code{experiments/cex\_dex\_mvp/ENGINEERING\_PROTOCOL.md} and \code{engineering\_config.json}. The independent-unit resampling is by seed; cell recovery intervals are Wilson intervals, and paired depth intervals are unadjusted normal approximations. The run and export checksums are in \code{figures/engineering/manifest.json}. Repeating the analysis in a second output directory reproduced all numeric CSV and config artifacts byte for byte.
+
 The products of the run are not versioned in the repository. To regenerate them and export the figure data:
 
 \begin{verbatim}

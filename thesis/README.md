@@ -9,10 +9,13 @@ together.
 - English PDF: `main.pdf`
 - Spanish PDF: `es/main.pdf`
 
-The current manuscript revision is v0.5.1. This layout correction keeps the research
-question and its heading together and prevents the preceding literature table from
-interrupting it in either edition. It also removes an editorial source-replacement
-note from both annexes. The research question and v0.5.0 findings are unchanged.
+The current manuscript revision is v0.6.0. It retains the frozen v0.5.0 confirmatory
+findings, corrects bilingual pagination and removes the editorial source-replacement
+note from both annexes. It adds a fresh-seed engineering sensitivity: recovery can be
+followed by a later departure, and the shallow-depth effect changes with order size
+relative to reserves and with the panic rule. The new conclusions derive monitoring
+and stress-test requirements while keeping all findings explicitly synthetic and
+requiring real-pair validation before operational use.
 
 The manuscript follows the structure introduced in response to the advisor's feedback (introduction in six paragraphs; problem and state of the art;
 justification; hypotheses; objectives; methodology; results; discussion and
@@ -23,9 +26,10 @@ synchronized into both LaTeX entry points. Snapshots `versions/v0.4.0/` and earl
 keep the previous sources; v0.2.0 holds the October 29 draft and its unverified
 preliminary values.
 
-The figure and table data in `figures/data/` are exported from the confirmatory run by
+The original confirmatory figure and table data in `figures/data/` are exported from the frozen run by
 `experiments/cex_dex_mvp/export_thesis_data.py`; `figures/data/manifest.json` records
-the source run and file hashes. The bibliography (87 entries) was verified entry by
+the source run and file hashes. The supplementary data in `figures/engineering/` come from analysis 0.6.0 and carry
+the fresh run ID and file hashes. The bibliography (87 entries) was verified entry by
 entry; see `literature-audit/REFERENCE_AUDIT.md`.
 
 ## Build both PDFs

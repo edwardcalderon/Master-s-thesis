@@ -6,10 +6,10 @@ including its preliminary table and figure. `v0.3.0/` preserves the source befor
 four-role taxonomy update. `v0.3.1/` preserves the published bilingual source before
 the objective clarification in `v0.4.0/`. `v0.4.0/` preserves the source before the
 advisor-feedback restructuring and the confirmatory run. `v0.5.0/` is the restructured
-manuscript with the confirmatory results. The current working manuscript in `../` is
-v0.5.1, which corrects research-question pagination in both editions without changing
-the question or findings, and removes an editorial source-replacement note from both
-annexes. `v0.5.1/` preserves these corrected sources. Earlier snapshots remain immutable.
+manuscript with the confirmatory results. The current working manuscript in `../` is v0.6.0: it adds engineering sensitivity
+and findings-led conclusions to v0.5.1. The v0.6.0 snapshot preserves both language
+editions and the confirmatory and engineering figure data; prior snapshots remain
+immutable.
 
 ---
 

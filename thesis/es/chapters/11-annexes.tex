@@ -95,6 +95,12 @@ Suma de verificación & SHA-256 de configuraciones, código y productos. \\
   \item SHA-256 de los productos: \code{run\_metrics.csv} \code{2a0fbd17bb3e5eb6\ldots}; \code{inference.csv} \code{d4828a48cd0f8f2a\ldots}; \code{cell\_breakdown.csv} \code{0a87125ca4a09068\ldots}; \code{h3\_by\_condition.csv} \code{28d31f52e5c4be41\ldots}; \code{condition\_summary.csv} \code{ee6c02c5ac37544b\ldots}; \code{exploration\_fits.csv} \code{1f5f7ffbe00a86c6\ldots}; \code{sample\_size\_guidance.csv} \code{86d4a3a45fedd0a2\ldots}.
 \end{itemize}
 
+\subsection*{Sensibilidad de ingeniería y repetición completa}
+
+Las fuentes de los ejecutores originales y la configuración confirmatoria no cambiaron. Cinco flujos existentes reprodujeron byte por byte sus artefactos de resultados registrados: mecánica determinista \code{cex-dex-mvp-f183520b90aa}, barrido \code{cex-dex-sweep-5e33d51c51a3}, selección estocástica \code{cex-dex-abm-a99f9be866b2}, mapa reservado \code{cex-dex-h1c-43e446f04adf} y confirmación \code{cex-dex-confirm-5b06486d695e}. Pasaron las nueve invariantes de implementación.
+
+El análisis suplementario es \code{cex-dex-engineering-9438e194aa7e} (análisis 0.6.0; modelo 0.4.0), 300 semillas nuevas (2000--2299), 40\,500 trayectorias. El protocolo y la configuración son \code{experiments/cex\_dex\_mvp/ENGINEERING\_PROTOCOL.md} y \code{engineering\_config.json}. La unidad independiente es la semilla; los intervalos de recuperación por celda son Wilson y los intervalos pareados por profundidad son aproximaciones normales sin ajuste. Las sumas de verificación de la ejecución y de la exportación están en \code{figures/engineering/manifest.json}. Repetir el análisis en otra carpeta de salida reprodujo byte por byte los artefactos numéricos CSV y de configuración.
+
 Los productos de la ejecución no se versionan en el repositorio. Para regenerarlos y exportar los datos de las figuras:
 
 \begin{verbatim}

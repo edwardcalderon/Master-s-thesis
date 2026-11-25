@@ -11,7 +11,7 @@ introduce a second release-numbering system.
    English release records are canonical; Spanish README/history copies are optional.
 2. **Manuscript revision:** `\revisionManuscrito` and the dated source snapshot track
    thesis-content revisions independently of the workspace release. The current source
-   declares v0.5.1; the workspace version is recorded in root `VERSION`. Preserve
+   declares v0.6.0; the workspace version is recorded in root `VERSION`. Preserve
    this distinction.
 3. **Experiment model version:** version configurations and output schemas separately
    when their semantics change. Every run should retain its exact configuration and

@@ -6,16 +6,22 @@ The public web app, project documentation, notebooks, changelog, and release his
 
 The public experience is inspired by the useful parts of [GeoAuPredict](https://github.com/edwardcalderon/GeoAuPredict): a clear research overview, a notebook explorer, a docs surface, and an artifact-oriented GitHub Pages deployment. Application-specific gold-prediction code and heavyweight services are intentionally left out until the thesis needs them.
 
-## 📋 Latest Changes (v0.1.8)
+## 📋 Latest Changes (v0.1.9)
 
 ### Added
 
-- Added the SIM-002 implementation plan for a 3D microworld findings replay, paired event traces, bounded scenario exploration, and browser-local saved scenarios. The feature is queued for implementation.
-- Defined evidence, accessibility, bilingual UI, reproducibility, and performance gates, plus the separate research scope required for shared persistent worlds and evolutionary agents.
+- Added manuscript v0.6.0 with a preregistered supplementary engineering sensitivity over 40,500 fresh-seed paths, export hashes, and evidence-bounded implications for monitoring and stress testing.
+- Added reproducible engineering run/export commands and tests for recovery deadlines, later departures, order scaling, and the panic ablation.
+- Replayed the five existing experiment pipelines; numeric result artifacts reproduced byte for byte, with all nine mechanism invariants passing.
+
+### Changed
+
+- Updated both manuscript conclusions, abstracts, results, objectives, and future-work sections with the current findings and a concrete real-pair validation path. Refreshed the bilingual site abstracts and task handoffs.
 
 ### Fixed
 
-- Reconciled the task ledger and simulation handoff with the v0.5.0 confirmatory evidence and corrected stale manuscript-version notes. Manuscript and experiment versions are unchanged.
+- Kept the complete research question with its heading, added a rendered layout check, and removed the editorial source-replacement note from both annexes.
+- Distinguished first recovery from terminal tracking and subsequent departures; qualified the shallow-depth effect by order scaling and panic behavior.
 
 For full version history, see [CHANGELOG.md](./CHANGELOG.md) and [GitHub releases](https://github.com/edwardcalderon/Master-s-thesis/releases).
 
@@ -27,7 +33,7 @@ For full version history, see [CHANGELOG.md](./CHANGELOG.md) and [GitHub release
 
 ## Earlier preliminary manuscript — 29 Oct 2026
 
-This earlier mechanism-first draft studied CEX/DEX price tracking, bounded arbitrage, and liquidity fragility. It has been revised; the active bilingual manuscript is v0.5.1, with confirmatory H1–H3 results; earlier sources are preserved in the version archive.
+This earlier mechanism-first draft studied CEX/DEX price tracking, bounded arbitrage, and liquidity fragility. It has been revised; the active bilingual manuscript is v0.6.0, with confirmatory H1–H3 evidence and a fresh engineering sensitivity; earlier sources are preserved in the version archive.
 
 - The public site publishes the final English and required Spanish PDFs after the paired build.
 - [Current reproducible MVP](experiments/cex_dex_mvp/README.md)
@@ -99,7 +105,7 @@ See [`docs/language-policy.md`](docs/language-policy.md) for the source and publ
 [`@edcalderon/versioning`](https://www.npmjs.com/package/@edcalderon/versioning) handles workspace SemVer bumps and the English changelog. The repository synchronizer projects the version into `VERSION`, both release histories, both app locale files, both LaTeX workspace-version macros, and the release blocks in both READMEs. `pnpm readme:update` copies the populated English and Spanish changelog entries into their matching README summaries. A separate manuscript-revision macro keeps the thesis editions paired.
 
 <!-- versioning:release:start -->
-**Current release:** [`v0.1.8`](https://github.com/edwardcalderon/Master-s-thesis/releases/tag/v0.1.8)
+**Current release:** [`v0.1.9`](https://github.com/edwardcalderon/Master-s-thesis/releases/tag/v0.1.9)
 **Tracker:** [GitHub releases](https://github.com/edwardcalderon/Master-s-thesis/releases) · synchronized with `@edcalderon/versioning`
 <!-- versioning:release:end -->
 

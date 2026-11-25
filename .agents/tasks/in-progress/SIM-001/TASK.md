@@ -76,7 +76,7 @@ lightweight, versioned summaries before they are loaded.
 
 - Review keyboard-only operation and focus states for both simulation tabs and controls.
 - Hand off E3/current confirmation views and their compact artifact schema to
-  [SIM-002](../../todo/SIM-002/TASK.md). Use the v0.5.0 confirmation evidence; keep the
+  [SIM-002](../../todo/SIM-002/TASK.md). Use v0.6.0 data and visualise first recovery versus terminal tracking and later departures; keep the
   older H1c holdout labeled historical. SIM-002 also owns the illustrative event traces
   needed for faithful 3D playback. Do not load full trajectory sweeps by default.
 - Add scenario share/export metadata and document exact reproduction steps.

@@ -126,7 +126,7 @@ classification under this representative-agent model, not support for general
 stability claims. The holdout changes shock magnitude and seed stream but keeps agent
 rules, capacities, band, and other parameters fixed.
 
-## Confirmatory protocol (manuscript v0.5.0)
+## Confirmatory protocol (manuscript v0.6.0; frozen analysis 0.5.0)
 
 The selection (`abm.py`) and held-out (`h1c.py`) runs above are exploratory. The
 manuscript's results come from `confirm.py`, which follows the protocol fixed in
@@ -172,6 +172,28 @@ pnpm experiment:mvp:export -- --run-dir experiments/cex_dex_mvp/output/confirm/<
   trader flow. The stochastic selection model adds representative noise and
   trend/panic flow, but not a heterogeneous agent population or external market data.
   Its first H1c holdout is limited to new shocks and seeds under the same policies.
+
+## Engineering sensitivity (manuscript v0.6.0)
+
+The original five experiment pipelines have been rerun; their numeric outputs reproduce
+byte for byte. A separate supplementary analysis uses model 0.4.0, analysis 0.6.0 and
+fresh seeds 2000–2299 to examine whether first recovery persists, and how the adaptive
+liquidity contrast changes with order scaling and panic behavior. Its protocol was fixed
+before running the new seeds. Execute it and export compact thesis tables with:
+
+```bash
+pnpm experiment:mvp:engineering
+pnpm experiment:mvp:engineering:export -- --run-dir experiments/cex_dex_mvp/output/engineering/<run-id>
+```
+
+The 40,500 paths comprise three order variants, three depths, three shocks, five frozen
+conditions and 300 seeds. Under fixed absolute orders, 97.4% of adaptive paths return at
+least once, 81.9% finish in-band and 31.2% of recovered paths later leave the band. The
+shallow-depth adaptive-minus-static peak-response contrast is 0.03458 log units
+[0.03225, 0.03690]; it is effectively zero when order sizes scale with initial reserves
+and falls to 0.01471 [0.01364, 0.01577] when panic is disabled. The intervals are
+unadjusted descriptive sensitivities, not extra confirmatory tests. Outputs and checksums
+are recorded in the run metadata and thesis export manifest. Results remain synthetic.
 
 These boundaries make E0/E1/E2/E3 mechanical checks, the stochastic model an exploratory
 selection ABM, and the first H1c run a narrow held-out diagnostic. They do not reproduce

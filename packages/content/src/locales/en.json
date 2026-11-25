@@ -8,7 +8,7 @@
       "heading": "Abstract",
       "paragraphs": [
         "Cryptoasset markets combine centralized exchanges (CEX) with automated market makers (AMM), whose price depends on reserves and on the trades executed against them. Arbitrage links the two prices, but its capacity to correct them is limited by costs, inventory and liquidity. This study examines how a constant-product AMM tracks an exogenous CEX price after a shock, in a micro-world with noise, trend, arbitrage and liquidity-provision agents, and evaluates a two-variable discrete dynamical map as a reduced description. Three hypotheses are tested under a confirmatory protocol fixed in advance: confirmation seeds and cells disjoint from the exploration ones, inference paired by seed, and Holm correction.",
-        "With 300 confirmation seeds and 13500 runs, active arbitrage lowers the excess-error area from 2.36 to 0.10 (H1; mean difference of −2.26; Holm p of 0.00015), and capacity grades recovery: 56.8 percent with low capacity and 100 percent with high capacity. Adaptive liquidity withdrawal raises the maximum response by 0.011 on average (H2), but only at the shallowest depth; at greater depths the effect is null. The reduced map beats persistence (H3), though not a scalar autoregression, and its out-of-sample regime classification is weak. The results are synthetic, use no market data and have no external validation, and the target precision for H1 was not reached with 300 seeds."
+        "With 300 confirmation seeds and 13500 runs, active arbitrage lowers the excess-error area from 2.36 to 0.10 (H1; mean difference of −2.26; Holm p of 0.00015), and capacity grades recovery: 56.8 percent with low capacity and 100 percent with high capacity. Adaptive liquidity withdrawal raises the maximum response by 0.011 on average (H2), but only at the shallowest depth; at greater depths the effect is null. The reduced map beats persistence (H3), though not a scalar autoregression, and its out-of-sample regime classification is weak. A supplementary 40,500-path sensitivity found that 31.2 percent of recovered adaptive-LP paths later left the band; the shallow-depth amplification vanished when order sizes scaled with reserves and fell from 0.0346 to 0.0147 log units when panic was disabled. These conditional results support candidate monitoring and stress-test requirements, not live-market prescriptions. All findings are synthetic, lack external validation, and the H1 precision target was not met."
       ],
       "keywords": [
         "agent-based simulation",
@@ -19,7 +19,7 @@
         "discrete dynamical systems"
       ]
     },
-    "version": "0.1.8",
+    "version": "0.1.9",
     "state": "Foundation",
     "location": "Colombia · distributed lab",
     "license": "CC BY-NC 4.0 · source available"

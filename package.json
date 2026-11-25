@@ -1,6 +1,6 @@
 {
   "name": "master-thesis-lab",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "private": true,
   "packageManager": "pnpm@9.15.5",
   "engines": {
@@ -33,7 +33,10 @@
     "secrets:check": "pnpm exec versioning check-secrets",
     "release:patch": "node scripts/release-patch.mjs",
     "release:verify": "pnpm version:validate && pnpm language:check && pnpm secrets:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build && pnpm docs:build",
-    "release": "pnpm release:verify"
+    "release": "pnpm release:verify",
+    "experiment:mvp:engineering": "python3 experiments/cex_dex_mvp/engineering.py",
+    "experiment:mvp:engineering:export": "python3 experiments/cex_dex_mvp/export_engineering_data.py",
+    "experiment:mvp:test": "python3 -m unittest discover -s experiments/cex_dex_mvp -p \"test_*.py\""
   },
   "devDependencies": {
     "@edcalderon/versioning": "1.5.13",
