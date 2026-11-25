@@ -11,7 +11,8 @@ introduce a second release-numbering system.
    English release records are canonical; Spanish README/history copies are optional.
 2. **Manuscript revision:** `\revisionManuscrito` and the dated source snapshot track
    thesis-content revisions independently of the workspace release. The current source
-   declares v0.4.0 while the workspace release is v0.1.3; preserve this distinction.
+   declares v0.5.0; the workspace version is recorded in root `VERSION`. Preserve
+   this distinction.
 3. **Experiment model version:** version configurations and output schemas separately
    when their semantics change. Every run should retain its exact configuration and
    source checksum; do not overwrite released evidence.
@@ -44,5 +45,9 @@ introduce a second release-numbering system.
 - Manuscript: matching `\revisionManuscrito` in `thesis/main.tex` and
   `thesis/es/main.tex`; required English/Spanish PDFs are built together.
 - Manuscript snapshots: `thesis/versions/v0.1.1/`, `v0.2.0/`, `v0.3.0/`, `v0.3.1/`,
-  and `v0.4.0/`.
+  `v0.4.0/`, and `v0.5.0/`.
 - Release automation: `package.json`, `versioning.config.json`, and `scripts/version.mjs`.
+
+The v0.1.8 planning patch was explicitly requested by the author on 2026-11-25.
+It packages SIM-002 and corrects stale evidence/version notes; it does not advance
+the manuscript or model versions, or change the normal task-status-only rule.

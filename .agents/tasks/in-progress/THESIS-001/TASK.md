@@ -34,7 +34,24 @@ from explicit, versioned configurations and traceable run artifacts.
   earlier v0.2.0 draft values as unverified historical claims; the new outputs do not
   claim to reproduce those old numbers.
 
-## Progress
+## Current evidence update — 2026-11-25
+
+Manuscript v0.5.0 now reports `cex-dex-confirm-5b06486d695e` (analysis 0.5.0,
+model 0.4.0), with 300 confirmation seeds and 13,500 runs across depths 0.5/1/2,
+negative shocks -0.05/-0.10/-0.20, and five conditions. See
+`experiments/cex_dex_mvp/confirm_config.json` and `thesis/figures/data/manifest.json`.
+This supersedes the older selection and 3-of-8 holdout as active H1-H3 evidence.
+H1 missed its precision target despite a clear negative contrast; H2's primary
+maximum-response effect is concentrated at depth 0.5; H3 beats persistence overall
+but not scalar AR and remains weak at regime classification. Results are synthetic.
+
+The progress entries below are historical. References to confirmation still being
+pending describe the pre-v0.5.0 state. Further fee, policy, or long-horizon extensions
+require separate versioned protocols. Review acceptance explicitly before closing this
+task; the planning patch does not claim a fresh experimental or manuscript audit.
+SIM-002 consumes the frozen confirmation evidence for presentation.
+
+## Historical progress
 
 - Deterministic model 0.3.0 covers E0/E1 capacity, cost-band and delay mechanics; E2
   fixed-sale depth; and paired deterministic E3 static/adaptive LP policy selection.
@@ -78,7 +95,7 @@ from explicit, versioned configurations and traceable run artifacts.
 
 ## Next action
 
-Broaden the approved four-role representative model across the agreed operating regions;
-review policy thresholds and inventory limits before confirmation work. Keep further H1c fitting and confirmation
-conditions separate. The old draft numbers remain archived and unverified unless their
-original implementation and raw artifacts are recovered.
+Review this task's acceptance criteria against v0.5.0 and reconcile the ODD with the
+executed confirmation protocol before closure. Scope any heterogeneous populations,
+new policies, or evolutionary/long-running dynamics as subsequent model revisions.
+Preserve the original selection artifacts and all released manuscript snapshots.

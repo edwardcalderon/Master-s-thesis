@@ -1,3 +1,14 @@
+## [0.1.8](https://github.com/edwardcalderon/Master-s-thesis/compare/v0.1.6...v0.1.8) (2026-11-25)
+
+### Added
+
+- Added the SIM-002 implementation plan for a 3D microworld findings replay, paired event traces, bounded scenario exploration, and browser-local saved scenarios. The feature is queued for implementation.
+- Defined evidence, accessibility, bilingual UI, reproducibility, and performance gates, plus the separate research scope required for shared persistent worlds and evolutionary agents.
+
+### Fixed
+
+- Reconciled the task ledger and simulation handoff with the v0.5.0 confirmatory evidence and corrected stale manuscript-version notes. Manuscript and experiment versions are unchanged.
+
 ## [0.1.7](https://github.com/edwardcalderon/Master-s-thesis/compare/v0.1.6...v0.1.7) (2026-11-24)
 
 ### Added

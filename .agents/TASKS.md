@@ -6,45 +6,38 @@ maintained in English.
 
 | ID | Owner | Focus | Status | Task folder | Task | Acceptance criteria | Dependencies |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| THESIS-001 | edcalderon | **CURRENT FOCUS** | **IN PROGRESS** | [`tasks/in-progress/THESIS-001/`](tasks/in-progress/THESIS-001/TASK.md) | Build the reproducible CEX/DEX hypothesis MVP for the mechanical H1a/H1b contrasts. | A versioned CPMM runner produces deterministic E0/E1 tracking and E2 fixed-sale outputs, with configuration, metrics, source/config/artifact checksums, and run metadata; the ODD scope and event order are documented. | Broaden the author-approved roles over additional ABM operating regions, then refine H1c confirmation. |
+| THESIS-001 | edcalderon | **CURRENT FOCUS** | **IN PROGRESS** | [`tasks/in-progress/THESIS-001/`](tasks/in-progress/THESIS-001/TASK.md) | Build the reproducible CEX/DEX hypothesis MVP for the mechanical H1a/H1b contrasts. | A versioned CPMM runner produces deterministic E0/E1 tracking and E2 fixed-sale outputs, with configuration, metrics, source/config/artifact checksums, and run metadata; the ODD scope and event order are documented. | Review acceptance and ODD alignment against the executed v0.5.0 confirmation protocol; later model extensions use new versions. |
 | LANG-001 | edcalderon | — | **DONE** | [`tasks/done/LANG-001/`](tasks/done/LANG-001/TASK.md) | Finish and audit the bilingual web UI and required bilingual final thesis PDF. | App UI supports English and Spanish; both thesis sources and final PDFs are paired and internally consistent; language/version checks, builds, and browser QA are recorded. Internal docs, notebooks, and working assets may remain English-only. | None. |
 | THESIS-002 | edcalderon | — | **DONE** | [`tasks/done/THESIS-002/`](tasks/done/THESIS-002/TASK.md) | Preserve the pre-update manuscript source as an immutable version. | Snapshot `thesis/versions/v0.1.1/` and its index exist; the working manuscript is separately identified as v0.2.0. | None. |
 | CHECK-001 | edcalderon | — | **DONE** | [`tasks/done/CHECK-001/`](tasks/done/CHECK-001/TASK.md) | Integrate refscan as the first local pre-submission checker for the thesis. | One command scans both LaTeX editions against the locally available cited-source PDFs and writes separate reviewable reports; BibTeX conversion preserves citations; outputs are advisory and ignored by Git. Current coverage gaps are listed in the generated tracker. | None. |
-| THESIS-003 | edcalderon | — | **IN PROGRESS** | [`tasks/in-progress/THESIS-003/`](tasks/in-progress/THESIS-003/TASK.md) | Reconcile manuscript claims with reproducible outputs and evaluate H1c on held-out configurations. | Active manuscript evidence traces to versioned runs; held-out disagreements and limits are explicit in both editions. | THESIS-001 model review and broader confirmation conditions. |
+| THESIS-003 | edcalderon | — | **IN PROGRESS** | [`tasks/in-progress/THESIS-003/`](tasks/in-progress/THESIS-003/TASK.md) | Reconcile manuscript claims with reproducible outputs and evaluate H1c on held-out configurations. | Active manuscript evidence traces to versioned runs; held-out disagreements and limits are explicit in both editions. | THESIS-001 model contract and the frozen v0.5.0 confirmation artifacts. |
 | DATA-001 | edcalderon | — | **TODO** | [`tasks/todo/DATA-001/`](tasks/todo/DATA-001/TASK.md) | Add a bounded empirical validation path after the synthetic MVP. | Data source, licensing, pair identity, timestamps, ingestion, and external-validity limits are documented and reproducible. | Synthetic mechanics and reproduction contract are stable. |
-| SIM-001 | edcalderon | — | **IN PROGRESS** | [`tasks/in-progress/SIM-001/`](tasks/in-progress/SIM-001/TASK.md) | Build a reproducible browser-side simulation playground for inspecting the thesis mechanisms and hypotheses. | Static-hosted UI reproduces bounded deterministic E0/E1/E2 scenarios from versioned model inputs; labels synthetic outputs and exposes parameters, metrics, and assumptions in English and Spanish. | THESIS-001 model contract; later E3 and stochastic summaries require traceable, bounded inputs. |
+| SIM-001 | edcalderon | — | **IN PROGRESS** | [`tasks/in-progress/SIM-001/`](tasks/in-progress/SIM-001/TASK.md) | Build a reproducible browser-side simulation playground for inspecting the thesis mechanisms and hypotheses. | Static-hosted UI reproduces bounded deterministic E0/E1/E2 scenarios from versioned model inputs; labels synthetic outputs and exposes parameters, metrics, and assumptions in English and Spanish. | THESIS-001 model contract; E3 and current confirmation presentation are handed off to SIM-002. |
+| SIM-002 | edcalderon | — | **TODO** | [`tasks/todo/SIM-002/`](tasks/todo/SIM-002/TASK.md) | Build an animated 3D findings replay and reproducible sandbox with local saved scenarios. | Versioned confirmation bundles and illustrative traces drive synchronized 3D/2D views; H1-H3 limits, bounded exploration, EN/ES accessibility, provenance, and local persistence pass the phased gates. | SIM-001 browser foundation; THESIS-003 v0.5.0 evidence contract. Shared persistent worlds and evolutionary agents require separate research scope. |
 | THESIS-004 | edcalderon | — | **TODO** | [`tasks/todo/THESIS-004/`](tasks/todo/THESIS-004/TASK.md) | Replace generic pending-work language in the final manuscript with precise, findings-led statements. | Audit both language editions; replace vague future-work promises with claims grounded in available findings and specific evidence limits; maintain factual parity. | THESIS-003 evidence reconciliation and the latest versioned experiment outputs. |
 
 ## Current work note
 
-THESIS-001 remains the current focus. Deterministic model 0.3.0 covers E0/E1 arbitrage,
-cost-band, and delay mechanics; E2 fixed-sale depth; and a 16-setting paired E3 policy
-selection grid. Stochastic model 0.4.0 implements four author-approved representative roles and
-paired conditions sharing pre-generated noise schedules. Its current run used 300 seeds
-and wrote 50,400 trajectories after meeting the configured approximate 95% interval
-half-width target of 0.005 for all six paired peak-error contrasts.
+As of 2026-11-25, the active bilingual manuscript is v0.5.0. Its evidence comes from
+`cex-dex-confirm-5b06486d695e` (analysis 0.5.0, model 0.4.0), with 300 confirmation
+seeds and 13,500 runs. `thesis/figures/data/manifest.json` identifies the source and
+checksums. H1 reduces excess-error area but missed its precision target; H2's maximum-
+response increase is concentrated at depth 0.5; H3 beats persistence on average but
+not scalar AR, and regime classification remains weak. All results are synthetic.
 
-A first H1c holdout fits four condition-specific maps on 48,000 selection transitions,
-then tests new seeds 1000–1299 and held-out shocks ±0.05. All four maps are Schur-stable,
-but only 3 of 8 held-out condition/shock majority labels match. The z equation has
-near-zero selection R-squared. This is a narrow result under representative policies,
-not broad validation. Nine invariant checks pass across 2,654 deterministic states plus
-504 stochastic smoke states. Fresh runs reproduce the core sweep, ABM, and H1c artifacts
-byte-for-byte.
+The earlier 300-seed selection run and 3-of-8 H1c holdout are historical exploratory
+results. They are not the current manuscript's H1-H3 confirmation evidence. THESIS-001
+remains CURRENT FOCUS; THESIS-001 and THESIS-003 retain their in-progress status pending
+explicit acceptance review. Future model extensions must preserve the frozen evidence.
 
-The author approved the four-role taxonomy: arbitrageur, noise trader, trend/panic
-trader as one policy, and LP with static/adaptive conditions. The current policy rules
-remain simplified selection assumptions. Manuscript v0.3.1 carries this taxonomy;
-release v0.1.3 publishes v0.4.0 with the clarified operational question and objectives,
-while preserving v0.3.1 and earlier snapshots. The v0.2.0 snapshot preserves the old
-table and scalar map estimate as unverified claims. THESIS-003 is broadening held-out
-conditions.
+SIM-001 provides the deterministic model-0.3.0 E0/E1/E2 browser foundation. SIM-002 is
+queued for the 3D findings replay, current confirmation views, bounded sandbox, and
+browser-local saves; its plan records the implementation gates and the separate scope
+needed for shared persistent/evolutionary worlds. Planning is complete; implementation
+has not started. Keyboard/focus review and scenario-export cleanup remain in SIM-001.
 
-CHECK-001 and LANG-001 are complete. The latest CHECK-001 scan for v0.3.1 found zero
-matches in both editions against four local source PDFs; two bibliography entries remain
-coverage gaps, and network verification was skipped. LANG-001 passed language checks,
-builds, and interactive bilingual UI QA. DATA-001 remains queued in `tasks/todo/`.
-THESIS-004 is queued to audit generic future-work phrasing in the final manuscript.
-SIM-001's deterministic E0/E1/E2 browser slice now builds; E3 and compact stochastic/H1c
-views remain. Pages run 43459607132 completed successfully after repository Pages was
-configured for Actions; it uploaded the PDF-only artifact and deployed the site.
+DATA-001 remains queued for empirical validation. CHECK-001 and LANG-001 remain done
+with their recorded historical checks; these records do not imply a new v0.5.0 corpus
+or UI audit. THESIS-004 remains queued for an explicit acceptance audit of the current
+manuscript. The requested v0.1.8 patch packages this plan and tracker reconciliation;
+manuscript revision 0.5.0 and experiment versions remain unchanged.
