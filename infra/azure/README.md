@@ -53,9 +53,11 @@ Three pieces, none of them a 24/7 Azure compute resource:
 2. **State and reads — a dedicated git branch, not Azure Storage.** The workflow
    keeps `state.json` (full internal state), `snapshot.json` (compact, checksummed,
    versioned — matching [`SIM-001`](../../.agents/tasks/in-progress/SIM-001/TASK.md)'s
-   own conventions), and a bounded `history.json` (last N ticks only) on a `
-   microworld-data` branch, rewriting one commit each run rather than growing history
-   forever. `main` and its versioning/changelog tooling are untouched —
+   own conventions), and a bounded `history.json` (last N ticks only) on a
+   `microworld-data` branch, replacing its parentless root commit each run rather than
+   growing history forever. Failed remote-branch lookups abort instead of silently
+   initializing over saved state. Scenario inputs are finite and range checked before
+   they reach persisted state. `main` and its versioning/changelog tooling are untouched —
    [`pages.yml`](../../.github/workflows/pages.yml) only triggers on pushes to `main`.
    The static site (`apps/web`, GitHub Pages) can fetch `snapshot.json`/`history.json`
    straight from `raw.githubusercontent.com`, with zero Azure dependency for reads.

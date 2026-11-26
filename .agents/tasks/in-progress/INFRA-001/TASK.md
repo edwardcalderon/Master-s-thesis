@@ -73,7 +73,7 @@ for the full writeup.
 - **Tick engine:** [`infra/microworld/tick.py`](../../../infra/microworld/tick.py),
   run by [`.github/workflows/microworld-tick.yml`](../../../.github/workflows/microworld-tick.yml)
   on a 15-minute cron plus manual dispatch. Free and unlimited — this repo is public.
-  State lives on a dedicated `microworld-data` branch (one rewritten commit per run),
+  State lives on a dedicated `microworld-data` branch (one parentless rolling commit per run),
   never touching `main` or its versioning/Pages tooling.
 - **Reads:** the static site can fetch `snapshot.json`/`history.json` straight from
   `raw.githubusercontent.com` on that branch — no Azure involved.
@@ -118,7 +118,18 @@ for the full writeup.
 - Wrote and locally tested `infra/microworld/tick.py` (resume-from-state, scenario
   overrides, rejection of unrecognized fields all verified in a scratch directory)
   and `infra/azure/webapp/app.py` (all routes smoke-tested with Flask's test client).
-- Wrote `.github/workflows/microworld-tick.yml`; not yet merged or run.
+- Added finite, bounded scenario validation at both the tick engine and dispatcher;
+  invalid persisted state fails closed. Bounds are band `[0, 0.5]`, capacity
+  `[0, 1]`, and shock scale `[0, 0.2]`.
+- Hardened branch recovery so remote lookup/fetch errors stop the run instead of
+  silently initializing a fresh world. Each published tick is a parentless Git
+  commit, keeping the public data branch from accumulating unbounded ancestry.
+- Passed 3 tick-engine unit tests and 2 Flask endpoint tests locally. A 2-tick
+  scratch run succeeded; a NaN scenario was rejected with exit code 2 before state
+  was changed. The workflow has not yet had its first real manual run.
+- Kept scenario JSON in a workflow environment variable to avoid interpolating
+  user-controlled input into shell source.
+- Workflow and application code are prepared in PR #5; it has not yet been merged.
 - Nothing has been deployed to Azure yet. No service principal exists yet. No GitHub
   token has been created yet.
 

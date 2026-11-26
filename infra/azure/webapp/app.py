@@ -24,6 +24,7 @@ Run locally: pip install -r requirements.txt && FLASK_APP=app flask run
 from __future__ import annotations
 
 import json
+import math
 import os
 import time
 
@@ -32,10 +33,13 @@ from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
-# Must match infra/microworld/tick.py's ALLOWED_SCENARIO_OVERRIDES. Duplicated
-# rather than imported because this app and the tick script are deployed
-# separately; keep them in sync by hand.
-ALLOWED_SCENARIO_OVERRIDES = {"no_arbitrage_band_log", "capacity_fraction", "shock_scale"}
+# Must match infra/microworld/tick.py's scenario fields and limits. The app and tick
+# script are deployed separately, so tests enforce parity between these contracts.
+SCENARIO_LIMITS = {
+    "no_arbitrage_band_log": (0.0, 0.5),
+    "capacity_fraction": (0.0, 1.0),
+    "shock_scale": (0.0, 0.2),
+}
 WORKFLOW_FILE = "microworld-tick.yml"
 
 _last_dispatch_at = 0.0
@@ -85,14 +89,25 @@ def scenario():
     if not isinstance(body, dict):
         return jsonify({"error": "expected a JSON object"}), 400
 
-    overrides = {
-        key: value
-        for key, value in body.items()
-        if key in ALLOWED_SCENARIO_OVERRIDES and isinstance(value, (int, float))
-    }
-    rejected = sorted(set(body) - set(overrides))
+    unknown = sorted(set(body) - set(SCENARIO_LIMITS))
+    if unknown:
+        return jsonify({"error": "unsupported scenario field(s)", "fields": unknown}), 400
+
+    overrides = {}
+    for key, value in body.items():
+        low, high = SCENARIO_LIMITS[key]
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            return jsonify({"error": f"{key} must be a finite number in [{low}, {high}]"}), 400
+        try:
+            numeric_value = float(value)
+        except (OverflowError, ValueError):
+            numeric_value = float("inf")
+        if not math.isfinite(numeric_value) or not low <= numeric_value <= high:
+            return jsonify({"error": f"{key} must be a finite number in [{low}, {high}]"}), 400
+        overrides[key] = numeric_value
+
     if not overrides:
-        return jsonify({"error": "no recognized scenario fields", "rejected": rejected}), 400
+        return jsonify({"error": "at least one scenario field is required"}), 400
 
     resp = requests.post(
         f"https://api.github.com/repos/{repo}/actions/workflows/{WORKFLOW_FILE}/dispatches",
@@ -107,7 +122,7 @@ def scenario():
         return jsonify({"error": "dispatch failed", "detail": resp.text}), 502
 
     _last_dispatch_at = now
-    return jsonify({"accepted": overrides, "rejected": rejected}), 202
+    return jsonify({"accepted": overrides}), 202
 
 
 if __name__ == "__main__":

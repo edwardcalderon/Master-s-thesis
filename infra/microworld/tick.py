@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import random
 import sys
 from pathlib import Path
@@ -38,6 +39,11 @@ MODEL_VERSION = "infra-001-placeholder-0.1"
 TICKS_PER_RUN = 50
 HISTORY_LIMIT = 500
 ALLOWED_SCENARIO_OVERRIDES = {"no_arbitrage_band_log", "capacity_fraction", "shock_scale"}
+SCENARIO_LIMITS = {
+    "no_arbitrage_band_log": (0.0, 0.5),
+    "capacity_fraction": (0.0, 1.0),
+    "shock_scale": (0.0, 0.2),
+}
 
 DEFAULT_STATE: dict[str, Any] = {
     "model_version": MODEL_VERSION,
@@ -55,7 +61,34 @@ DEFAULT_STATE: dict[str, Any] = {
 def load_state(state_dir: Path) -> dict[str, Any]:
     state_path = state_dir / "state.json"
     if state_path.exists():
-        return json.loads(state_path.read_text())
+        state = json.loads(state_path.read_text())
+        if not isinstance(state, dict):
+            raise ValueError("saved state must be a JSON object")
+        if state.get("model_version") != MODEL_VERSION:
+            raise ValueError("saved state has an unsupported model_version")
+        for key, (low, high) in SCENARIO_LIMITS.items():
+            value = state.get(key)
+            if isinstance(value, bool) or not isinstance(value, (int, float)):
+                raise ValueError(f"saved state field {key} is not a finite number in [{low}, {high}]")
+            try:
+                numeric_value = float(value)
+            except (OverflowError, ValueError):
+                numeric_value = math.inf
+            if not math.isfinite(numeric_value) or not low <= numeric_value <= high:
+                raise ValueError(f"saved state field {key} is not a finite number in [{low}, {high}]")
+        for key in ("reserve_x", "reserve_y", "cex_price"):
+            value = state.get(key)
+            try:
+                numeric_value = float(value)
+            except (OverflowError, ValueError, TypeError):
+                numeric_value = math.inf
+            if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(numeric_value) or numeric_value <= 0:
+                raise ValueError(f"saved state field {key} must be finite and positive")
+        for key in ("tick", "seed"):
+            value = state.get(key)
+            if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+                raise ValueError(f"saved state field {key} must be a nonnegative integer")
+        return state
     return dict(DEFAULT_STATE)
 
 
@@ -65,15 +98,25 @@ def apply_scenario(state: dict[str, Any], scenario_json: str) -> dict[str, Any]:
     try:
         overrides = json.loads(scenario_json)
     except json.JSONDecodeError:
-        print(f"ignoring unparseable scenario_json: {scenario_json!r}", file=sys.stderr)
-        return state
+        raise ValueError("scenario_json must contain a valid JSON object") from None
     if not isinstance(overrides, dict):
-        return state
+        raise ValueError("scenario_json must contain a JSON object")
+
+    unknown = set(overrides) - ALLOWED_SCENARIO_OVERRIDES
+    if unknown:
+        raise ValueError(f"unsupported scenario field(s): {', '.join(sorted(unknown))}")
+
     for key, value in overrides.items():
-        if key in ALLOWED_SCENARIO_OVERRIDES and isinstance(value, (int, float)):
-            state[key] = float(value)
-        else:
-            print(f"ignoring disallowed/invalid scenario override: {key!r}", file=sys.stderr)
+        low, high = SCENARIO_LIMITS[key]
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            raise ValueError(f"{key} must be a finite number in [{low}, {high}]")
+        try:
+            numeric_value = float(value)
+        except (OverflowError, ValueError):
+            numeric_value = math.inf
+        if not math.isfinite(numeric_value) or not low <= numeric_value <= high:
+            raise ValueError(f"{key} must be a finite number in [{low}, {high}]")
+        state[key] = numeric_value
     return state
 
 
@@ -127,7 +170,10 @@ def main() -> int:
 
     args.state_dir.mkdir(parents=True, exist_ok=True)
     state = load_state(args.state_dir)
-    state = apply_scenario(state, args.scenario_json)
+    try:
+        state = apply_scenario(state, args.scenario_json)
+    except ValueError as exc:
+        parser.error(str(exc))
     rng = random.Random(state["seed"] + state["tick"])
 
     for _ in range(max(args.ticks, 0)):
