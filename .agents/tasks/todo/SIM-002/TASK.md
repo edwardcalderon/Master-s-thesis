@@ -4,6 +4,7 @@
 - **Status:** TODO — implementation has not started; this release records the plan.
 - **Priority:** Presentation follow-up to the manuscript evidence work.
 - **Planned:** 2026-11-25
+- **Updated:** 2026-11-26; current workspace v0.1.10 / manuscript v0.8.0.
 - **Dependencies:** SIM-001 browser model and bilingual UI; THESIS-003 evidence provenance;
   the v0.8.0 manuscript, frozen confirmation, engineering sensitivity, and hybrid-map export.
 

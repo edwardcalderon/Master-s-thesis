@@ -78,12 +78,19 @@ lightweight, versioned summaries before they are loaded.
   one-step/recursive errors, groups cells by depth and condition, and expands to the
   full 32-cell table. It labels the no-future-flow-input limit and synthetic scope.
 
+## Current state — workspace v0.1.10 / manuscript v0.8.0
+
+The deterministic E0/E1/E2 playground and bilingual L0/Hyb evidence panel are present
+in the static web app. No server, database, 3D scene, or continuously evolving world was
+added. The hybrid panel summarizes the frozen synthetic run; it does not execute that
+stochastic experiment in the browser.
+
 ## Remaining work
 
-- Review keyboard-only operation and focus states for both simulation tabs and controls.
+- Complete keyboard/focus and narrow-layout review; record the result.
 - Hand off E3/current confirmation views and their compact artifact schema to
   [SIM-002](../../todo/SIM-002/TASK.md). Use v0.6.0 data and visualise first recovery versus terminal tracking and later departures; keep the
   older H1c holdout labeled historical. SIM-002 also owns the illustrative event traces
   needed for faithful 3D playback. Do not load full trajectory sweeps by default.
-- Add scenario share/export metadata and document exact reproduction steps.
+- Add scenario share/export metadata and document exact reproduction steps and run provenance.
 - Review client bundle size and use a Web Worker only if profiling demonstrates a need.

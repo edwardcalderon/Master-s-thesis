@@ -2,8 +2,9 @@
 
 - **Owner:** `edcalderon`
 - **Status:** IN PROGRESS
-- **Focus:** Remains in progress; model-rigor work and formal CPMM properties are tracked
-  under THESIS-005.
+- **Focus:** CURRENT FOCUS for reconciling representative-agent and ODD assumptions
+  with v0.8.0 evidence. Formal CPMM proofs and the first held-out hybrid comparison are
+  complete under THESIS-005; model extensions are tracked under THESIS-006.
 - **Started:** 2026-11-12
 
 ## Goal
@@ -96,6 +97,20 @@ SIM-002 consumes the frozen confirmation evidence for presentation.
   Pages workflow built the site and copied both thesis PDFs, then stopped at Configure
   Pages because repository Pages is not enabled.
 
+## Current evidence update — workspace v0.1.10 / manuscript v0.8.0
+
+The deterministic, stochastic, H1c, confirmatory, engineering-sensitivity, formal CPMM,
+and first band-aware hybrid evidence are now documented in the bilingual v0.8.0
+manuscript and reproducible experiment artifacts. THESIS-005 closes the formal-mechanics
+and first hybrid-comparison scope. Representative-agent policies are still not validated
+as a heterogeneous population, and the preliminary manuscript's original outputs remain
+unavailable; the new run does not resolve those limits.
+
 ## Next action
 
-Next: advisor review of the remaining representative-agent gap, ODD/model contract, and whether a heterogeneous-agent extension is justified. Keep fees, calibrated provider rules, production latency, and external-market validation outside the current evidenced claim. Any adopted model extension must use a new model version, protocol and run; preserve all current run IDs and manuscript snapshots.
+Review the representative-role assumptions and ODD/model contract with the advisor and
+decide whether a heterogeneous-agent extension is justified. Feed that decision into
+THESIS-006 before changing agent rules. Keep fees, calibrated provider rules, production
+latency, and empirical validation outside the current evidenced claim. Any adopted
+extension must use a new model version, frozen protocol, disjoint evaluation seeds, and
+preserved run IDs/snapshots. Real-pair data and rights remain under DATA-001.

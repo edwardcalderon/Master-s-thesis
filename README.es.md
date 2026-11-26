@@ -22,6 +22,8 @@ La experiencia pública toma como referencia algunos elementos útiles de [GeoAu
 
 Consulta el [historial completo](./CHANGELOG.es.md) y las [versiones de GitHub](https://github.com/edwardcalderon/Master-s-thesis/releases). [English version](./README.md).
 
+El manuscrito bilingüe activo es v0.8.0. Conserva la evidencia confirmatoria H1–H3 y el análisis de sensibilidad de ingeniería; añade verificaciones formales del CPMM y una comparación retenida del mapa con banda. Los resultados son sintéticos y sus límites se describen en el manuscrito.
+
 ## Estructura del monorepo
 
 ```text

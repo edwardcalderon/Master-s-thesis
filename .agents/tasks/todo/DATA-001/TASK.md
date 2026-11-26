@@ -2,7 +2,7 @@
 
 - **Owner:** `edcalderon`
 - **Status:** TODO
-- **Goal:** Validate v0.6.0 monitoring and order-scaling requirements on one predeclared real CEX/DEX pair after access and data rights are established.
+- **Goal:** Validate selected v0.8.0 model findings and v0.6.0 monitoring/order-scaling requirements on one predeclared real CEX/DEX pair after access and data rights are established.
 
 ## Acceptance criteria
 
@@ -29,6 +29,16 @@ provider data rights. Evaluate first sustained return, terminal in-band status, 
 departure, order-to-reserve ratio and held-out surrogate performance. Keep these market
 observations separate from the synthetic 40,500-path study; do not transplant its
 thresholds to production.
+
+## v0.8.0 model extension handoff
+
+The hybrid map's 1.7% average recursive price-error gain is synthetic and concentrated
+in the low-capacity, depth-2 condition. It does not improve flow-pressure prediction and
+uses a known CEX shock path in recursive evaluation. If real data access is obtained,
+predeclare whether the evaluation targets CEX-to-DEX price discrepancy, signed price
+error, or flow pressure; document the inputs available at prediction time and avoid
+feeding future market observations into a claimed live forecast. Coordinate model
+robustness work with THESIS-006, but retain a separate real-data protocol and holdout.
 
 ## Dependencies
 
