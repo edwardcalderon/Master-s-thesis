@@ -52,3 +52,12 @@ thesis/versions/**/*.toc
 experiments/cex_dex_mvp/formal/.lake/
 experiments/cex_dex_mvp/output/
 experiments/refscan_evaluation/literature/
+
+# Azure infra: never commit credentials or deployment-local state
+infra/azure/**/*.env
+infra/azure/**/.secrets/
+infra/azure/**/sp-credentials*.json
+infra/azure/**/*.auto.tfvars
+infra/azure/**/.terraform/
+infra/azure/**/*.tfstate
+infra/azure/**/*.tfstate.*

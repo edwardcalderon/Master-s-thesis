@@ -17,6 +17,7 @@ maintained in English.
 | THESIS-004 | edcalderon | — | **DONE** | [`tasks/done/THESIS-004/TASK.md`](tasks/done/THESIS-004/TASK.md) | Replace generic pending-work language in the final manuscript with precise, findings-led statements. | Audit both language editions; replace vague future-work promises with claims grounded in available findings and specific evidence limits; maintain factual parity. | THESIS-003 evidence reconciliation and the latest versioned experiment outputs. |
 | THESIS-005 | edcalderon | — | **DONE** | [`tasks/done/THESIS-005/`](tasks/done/THESIS-005/TASK.md) | Formalize core CPMM mechanics and test a band-aware reduced-map extension under frozen held-out conditions. | Lean CPMM invariants, rational bridge, bounded reduced-map Lyapunov analysis, and first disjoint-seed hybrid comparison are recorded in v0.8.0 with explicit scope limits. | Follow-up open regimes and robustness under THESIS-006; real-market validation under DATA-001. |
 | THESIS-006 | edcalderon | — | **TODO** | [`tasks/todo/THESIS-006/`](tasks/todo/THESIS-006/TASK.md) | Assess robustness and regime-complete analysis of the hybrid map. | Freeze a new model/protocol; test capacity/withdrawal modes, deployable-input forecasts, fresh held-out conditions, and a carefully scoped stability analysis; update the bilingual manuscript only after validation. | THESIS-005 baseline; advisor review through THESIS-001; empirical source rights remain DATA-001. |
+| INFRA-001 | edcalderon | — | **IN PROGRESS** | [`tasks/in-progress/INFRA-001/`](tasks/in-progress/INFRA-001/TASK.md) | Stand up the separately-scoped persistent-world service SIM-002 defers: a periodically-ticking microworld engine (GitHub Actions, free) and the one small Azure backend needed to dispatch scenario requests to it, within an Azure for Students Starter subscription's confirmed Free/`brazilsouth`-only limits. | `az deployment group what-if` runs clean against the F1 App Service template; a POST to the deployed dispatcher produces a GitHub Actions run; the tick workflow has one confirmed manual run before relying on its schedule; SIM-002's deferred-extension requirements are met or explicitly tracked as open; SIM-001 remains independent of this infrastructure; no secret reaches Git history. | SIM-002's deferred persistent/evolutionary extension; THESIS-001's versioned model as the eventual source of live tick semantics; operator-side Azure login/bootstrap and GitHub token creation. |
 
 ## Current research work — 2026-11-26
 
@@ -33,8 +34,10 @@ and the ODD/model contract. THESIS-006 is TODO and issue #8 tracks explicit capa
 withdrawal modes, fresh robustness tests, deployable-input forecasting, and bounded
 stability analysis. DATA-001 remains TODO because no real-pair source and data rights
 have been selected. SIM-001 remains in progress for accessibility/provenance handoff;
-SIM-002 remains queued for 3D replay and bounded local scenarios. No shared persistent or
-evolutionary system is part of the current implementation.
+SIM-002 remains queued for 3D replay and bounded local scenarios. INFRA-001's periodic
+shared-world wiring is merged, but it remains a placeholder service: it has not had its
+first manual Actions run, and Azure deployment and scenario isolation remain open.
+Its synthetic output is not a thesis finding or a validated evolutionary model.
 
 ## Historical work note
 
