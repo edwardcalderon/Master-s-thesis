@@ -1,12 +1,12 @@
-# INFRA-001 — Microworld tick engine (GitHub Actions) + Azure dispatcher backend
+# INFRA-001 — Resilient microworld baseline + optional Azure compute tier
 
 - **Owner:** `edcalderon`
 - **Status:** IN PROGRESS
 - **Focus:** —
-- **Goal:** Stand up an autonomous, periodically-ticking microworld simulation whose
-  state the static playground can read, plus the one small live backend needed to
-  accept scenario requests from the frontend — all free, given this subscription's
-  constraints (below).
+- **Goal:** Keep the core thesis simulator usable without Azure credit or a running
+  service, while offering a separable hosted-world and higher-compute tier when
+  available. A cloud outage, disabled schedule, or expired student credit must never
+  block the browser-based core.
 
 ## Relationship to SIM-001 and SIM-002
 
@@ -30,13 +30,13 @@ scope. Checked against each requirement as actually built:
 
 | Requirement | Status |
 | --- | --- |
-| Authoritative simulation clock | Met — the `microworld-data` branch's `tick` counter is the single source of truth; the cron run is the only writer. |
-| Versioned state and RNG checkpoints | Partial — `state.json` carries `model_version` and `seed`, and resume is deterministic, but only the *current* state is kept; there is no retained history of earlier full checkpoints to roll back to. |
-| Append-only events | **Not met as specified** — `history.json` is a bounded rolling window (last 500 ticks), not append-only, to keep storage/compute bounded per the next requirement. This is a deliberate trade, not an oversight, but it means no full event history survives past that window. |
-| Restart recovery | Met — `tick.py` resumes from `state.json` if present; the workflow's worktree-checkout step reconstructs it from the branch on every run. |
-| Isolated scenario forks | **Not met** — the current design has one global, shared, mutable world; a scenario POST changes state for everyone, there is no forking. This is the biggest open gap against SIM-002's requirement and the main reason this should still be treated as a wiring demo, not a scenario-exploration surface. |
-| Bounded storage/compute | Met — F1's own quota, a single small state file, and a trimmed history enforce this by construction. |
-| Explicit owner/hosting budget | Met — $0; this subscription cannot accrue a bill (see below). |
+| Browser baseline | Met for compute — deterministic E0/E1/E2 runs locally after the static app loads; it does not call Azure. Static-site delivery itself still depends on its host or a cached copy. |
+| Free shared-world refresh | Partial — GitHub Actions advances a shared snapshot on a 15-minute schedule, but public-repository schedules can be disabled after 60 days without repository activity. This feed is optional and must show staleness/errors without disabling the local playground. |
+| Versioned state and RNG checkpoints | Partial — `state.json` stores model version and seed for the current state; there is no historic full-checkpoint rollback. |
+| Append-only events | Not met — the GitHub baseline retains a bounded 500-entry rolling history. |
+| Scenario isolation | Not met — current hosted state is shared and mutable. Per-run higher-compute jobs must use isolated run IDs and must not mutate the shared baseline. |
+| Azure cost independence | Met by design — no Azure resource may be required to open, run, save, or replay the core browser model. |
+| Bounded Azure ABM view | Implemented locally — App Service F1 API runs the reference ABM with hard caps and returns an isolated exploratory bundle. Deployment and live endpoint configuration remain pending. |
 
 SIM-002 also notes long-running dynamics need model rules for repeated shocks,
 depleted inventories, liquidity replenishment, termination, and observation windows,
@@ -45,57 +45,62 @@ research object and needs a new model version, hypotheses, and independent
 evaluation." `tick.py` deliberately doesn't attempt any of that; see its module
 docstring and THESIS-001 in Dependencies below.
 
-## What the subscription actually allows (confirmed empirically, 2026-11-25)
+## Current subscription check (2026-11-26)
 
-The Azure subscription available for this project is an **Azure for Students
-Starter** ("DreamSpark") grant, not the $100-credit "Azure for Students" offer
-originally assumed. Live checks against it showed:
+The signed-in subscription is enabled **Azure for Students**. `Microsoft.Web` was
+registered for deployment; `Microsoft.Storage` and `Microsoft.Compute` were already
+registered. The `rg-microworld` resource group now contains one F1 Linux plan and its
+API app in Brazil South. Credit and expiration remain unavailable in CLI; check the
+Sponsorships portal.
 
-- Only `Microsoft.Web` and `Microsoft.Sql` are usable among compute/storage-shaped
-  providers; `Microsoft.Compute`, `Microsoft.Storage`, `Microsoft.Network`,
-  `Microsoft.App`, container/registry, `Microsoft.KeyVault`,
-  `Microsoft.ManagedIdentity`, `Microsoft.DocumentDB`, `Microsoft.OperationalInsights`,
-  `Microsoft.Consumption` are all `DisallowedProvider` — a policy on the subscription
-  type, not a raisable quota.
-- App Service is capped at Free (F1): Basic (B1) fails with *"your DreamSpark
-  subscription can only create sites in the 'Free' SKU."*
-- Only `brazilsouth` accepted a deployment, of 11 regions tried.
+The previous **Azure for Students Starter** observations are historical and do not
+describe the active subscription. [`main.bicep`](../../../infra/azure/bicep/main.bicep)
+now describes only an optional Linux F1 API. The static core and scheduled shared
+world do not depend on it.
 
-F1 has no Always On and a small CPU-minute quota, so it cannot host a 24/7
-continuously-ticking process. Offered and **declined**: applying for the real
-"Azure for Students" $100-credit offer, or upgrading this subscription to
-pay-as-you-go with a card. Chosen instead: stay on Starter and move the actual
-engine off Azure entirely. See [`infra/azure/README.md`](../../../infra/azure/README.md)
-for the full writeup.
+## Two execution tiers
 
-## Architecture
+1. **Core — no service or student credit.** The static site runs the supported
+   deterministic model in the browser and keeps named inputs locally. This is the
+   durable fallback and remains fully usable if scheduled workflows or Azure stop.
+2. **Hosted world — free, best-effort refresh.** The existing public-repository
+   GitHub Actions workflow runs `tick.py` every 15 minutes and stores a compact,
+   synthetic snapshot on `microworld-data`. The UI may poll that snapshot, expose
+   its timestamp/model version, and fall back to Core on 404, stale data, or network
+   failure. GitHub currently makes standard hosted runner use free for public repos,
+   but scheduled workflows are auto-disabled after 60 days without repo activity;
+   this is therefore not the only baseline path.
+3. **Azure enhanced — optional and bounded.** The Flask API runs reference `abm.py`
+   model v0.4.0 for paired static/adaptive LP scenarios, using a shared random schedule
+   within each seed. Requests are capped at 100 seeds x 100 ticks, bounded shock and
+   capacity values, and a ten-minute best-effort process cooldown. The API returns an
+   isolated bundle and never writes to shared state or thesis artifacts. It uses App
+   Service F1, so it does not consume student credit but is quota-limited and has no
+   production availability guarantee. If the endpoint is unavailable, the static
+   browser and hosted snapshot remain usable.
 
-- **Tick engine:** [`infra/microworld/tick.py`](../../../infra/microworld/tick.py),
-  run by [`.github/workflows/microworld-tick.yml`](../../../.github/workflows/microworld-tick.yml)
-  on a 15-minute cron plus manual dispatch. Free and unlimited — this repo is public.
-  State lives on a dedicated `microworld-data` branch (one parentless rolling commit per run),
-  never touching `main` or its versioning/Pages tooling.
-- **Reads:** the static site can fetch `snapshot.json`/`history.json` straight from
-  `raw.githubusercontent.com` on that branch — no Azure involved.
-- **Web handler backend:** [`infra/azure/webapp/`](../../../infra/azure/webapp/), a
-  minimal Flask app deployed to the one resource this subscription allows
-  ([`infra/azure/bicep/main.bicep`](../../../infra/azure/bicep/main.bicep): F1 App
-  Service, `brazilsouth`). Its only job: accept a scenario POST from the frontend and
-  turn it into an authenticated `workflow_dispatch` call, since a public static
-  frontend can't hold that secret itself.
+The enhanced runs must use an explicitly versioned scientific model and reproducible
+seed/configuration manifests. The current `tick.py` dynamics remain a placeholder and
+must not be shown as thesis findings. Keep Lean verification and routine CI on GitHub.
 
 ## Acceptance criteria
 
-- `az deployment group what-if` runs clean against `main.bicep` with real parameters.
-- The dispatcher Web App is deployed, reachable over HTTPS, and a POST to
-  `/api/scenario` with a recognized field produces a corresponding GitHub Actions run.
-- `microworld-tick.yml` has at least one successful manually-triggered run, confirmed
-  by inspecting its log, before being left to the schedule.
-- The static playground (SIM-001) builds and runs with zero network dependency on
-  this infrastructure.
-- No secret (GitHub token, service-principal credentials) ever reaches Git history.
-- Each of SIM-002's seven deferred-extension requirements is either met or carries
-  an explicit, named follow-up (see the table above) — not silently unmet.
+- Core E0/E1/E2 runs without a backend, Azure config, or an account once the static
+  app is loaded; saved scenarios remain local and exportable.
+- The public snapshot feed shows model version, synthetic status, tick, and update
+  time; stale/missing snapshots never block Core.
+- Enhanced runs reproduce from seed/config inputs, display paired ABM outputs, retain
+  result JSON locally, and never alter shared state or frozen confirmation files.
+- The GitHub scheduled workflow is manually verified and has a documented re-enable
+  path if inactivity disables the schedule.
+- Azure resources are behind an explicit feature flag and can be removed/disabled
+  without changing the static baseline.
+- Enhanced jobs enforce parameter, seed-count, horizon, concurrency, and timeout caps;
+  isolated run outputs never mutate baseline state.
+- No secrets enter Git. F1 daily CPU quota and student-credit expiry remain visible
+  operational limits; the core does not depend on either.
+- Each remaining SIM-002 persistence/evolution requirement has a named status or
+  follow-up; visual realism and synthetic results remain clearly labeled.
 
 ## Dependencies
 
@@ -104,17 +109,16 @@ for the full writeup.
 - THESIS-001's versioned model as the eventual source of real tick semantics —
   `tick.py`'s current rule is an explicitly-labeled placeholder, not a reviewed
   extension (see its module docstring).
-- Operator-side steps outside this repo: `az login`, running
-  `infra/azure/scripts/bootstrap-service-principal.sh`, creating the fine-scoped
-  GitHub token and setting it as a Web App application setting.
+- Operator-side checks: view remaining student credit/expiry, confirm provider and
+  regional quotas, and set billing alerts before any Azure deployment.
 
 ## Progress
 
-- Confirmed via live, read-only `az` checks (and one reversible probe-create/delete)
-  exactly what this subscription allows; discarded the original VM/Storage/VNet plan
-  once it turned out to be built for a subscription type this isn't.
-- Rebuilt `infra/azure/` around the real constraint: `main.bicep` now creates only an
-  F1 App Service plan + Web App in `brazilsouth`.
+- Confirmed via read-only `az` checks that the Azure for Students subscription is
+  enabled. Registered `Microsoft.Web`, created the resource group, and deployed the
+  F1 app/plan after what-if showed exactly two creates.
+- Replaced the obsolete F1/Starter assumptions in Bicep and the deployment script with
+  the optional, bounded F1 ABM API template and a required what-if step.
 - Wrote and locally tested `infra/microworld/tick.py` (resume-from-state, scenario
   overrides, rejection of unrecognized fields all verified in a scratch directory)
   and `infra/azure/webapp/app.py` (all routes smoke-tested with Flask's test client).
@@ -134,23 +138,36 @@ for the full writeup.
   user-controlled input into shell source.
 - Workflow and application code were merged by PR #5 on 2026-11-26. The required
   first manual run has not happened yet.
-- Nothing has been deployed to Azure yet. No service principal exists yet. No GitHub
-  token has been created yet.
+- The F1 API health endpoint returned HTTP 200. A paired ABM v0.4.0 smoke run returned
+  HTTP 200; the maximum 100-seed/100-tick run returned HTTP 200 in 1.27 seconds in one
+  F1 observation. Timing is not an SLA.
+- Measured the local placeholder tick script at 50 ticks / 0.04 seconds on this host;
+  use this only as a sizing hint, not an Azure performance benchmark.
+- Added the live dashboard to the bilingual static playground. It polls snapshot and
+  history every 30 seconds, labels freshness/provenance, and falls back when absent.
+- Added `experiment.py` using reference ABM v0.4.0 with matched noise schedules,
+  bounded controls, provenance, percentile summaries, and aggregate trajectories. A
+  100-seed/100-tick local run took about 0.34 seconds on this host.
+- Added `/api/experiment` and its paired-run result visualization with local save and
+  JSON download. Frontend lint/build and Flask tests pass; a two-seed/five-tick API
+  smoke run returned model v0.4.0.
+- `apps/web/.env.production` points the static build to the deployed HTTPS API. The
+  website update is not published yet; the shared-world branch needs its first manual
+  tick.
+- The enhanced run endpoint computes directly in Azure and needs no GitHub token. The
+  legacy `/api/scenario` route remains unconfigured and is not called by the dashboard.
 
 ## Remaining work
 
-- Operator runs `bootstrap-service-principal.sh`, then `deploy-infra.sh` (what-if,
-  then `--apply`).
-- Deploy `infra/azure/webapp/` to the created Web App and set `GITHUB_DISPATCH_TOKEN`
-  / `GITHUB_REPO` as application settings (never committed).
-- Trigger the merged workflow once manually and read the run log — first-run branch
-  creation has only been exercised against a local bare remote, not the real remote.
-- Confirm `apps/web`'s intended fetch URL/CORS story against the real Pages origin,
-  then set `ALLOWED_ORIGIN` on the Web App accordingly (currently defaults to `*`).
+- Merge the dashboard/docs PR so Pages builds and deploys; verify the enhanced form
+  reaches the API and the static dashboard remains usable if the API is unset.
+- Trigger the merged shared-world workflow once manually; verify its first snapshot and
+  freshness display, then observe one scheduled refresh.
+- Check student credit/expiry in Sponsorships. F1 has a published $0 list price but a
+  daily CPU quota and no SLA; keep the endpoint optional and monitor quota usage.
 - Replace `tick.py`'s placeholder evolution rule with real, reviewed tick semantics
   once THESIS-001 has a view on what a "live" instance of the model should mean.
-- Decide and implement scenario isolation (per-request forks vs. one shared world)
-  before presenting scenario submission as anything but a shared demo toggle —
-  currently the biggest gap against SIM-002's deferred-extension requirements.
+- The legacy `/api/scenario` mutation/dispatch route remains unconfigured. Do not expose
+  it as scenario submission; the separate `/api/experiment` path is paired and isolated.
 - Decide whether any full, non-trimmed event history is worth retaining (e.g. as a
   periodic archival snapshot) given `history.json`'s bounded-window trade-off above.

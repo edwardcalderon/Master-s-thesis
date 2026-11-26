@@ -26,10 +26,22 @@ from __future__ import annotations
 import json
 import math
 import os
+import sys
+import tempfile
 import time
+import uuid
+from pathlib import Path
 
 import requests
 from flask import Flask, jsonify, request
+
+APP_DIR = Path(__file__).resolve().parent
+if (APP_DIR / "infra" / "microworld" / "experiment.py").exists():
+    PACKAGE_ROOT = APP_DIR
+else:
+    PACKAGE_ROOT = APP_DIR.parents[2]
+sys.path.insert(0, str(PACKAGE_ROOT))
+from infra.microworld.experiment import run_experiment  # noqa: E402
 
 app = Flask(__name__)
 
@@ -41,8 +53,8 @@ SCENARIO_LIMITS = {
     "shock_scale": (0.0, 0.2),
 }
 WORKFLOW_FILE = "microworld-tick.yml"
-
 _last_dispatch_at = 0.0
+_last_experiment_dispatch_at = 0.0
 
 
 def _cors_headers() -> dict[str, str]:
@@ -123,6 +135,73 @@ def scenario():
 
     _last_dispatch_at = now
     return jsonify({"accepted": overrides}), 202
+
+
+@app.route("/api/experiment", methods=["OPTIONS"])
+def experiment_preflight():
+    return "", 204
+
+
+@app.route("/api/experiment", methods=["POST"])
+def experiment():
+    """Run a bounded, isolated paired experiment and return its provenance bundle."""
+    global _last_experiment_dispatch_at
+
+    now = time.monotonic()
+    cooldown = max(60.0, float(os.environ.get("EXPERIMENT_COOLDOWN_SECONDS", "600")))
+    if now - _last_experiment_dispatch_at < cooldown:
+        return jsonify({"error": "enhanced runs are rate limited; try again later"}), 429
+
+    body = request.get_json(silent=True)
+    if not isinstance(body, dict):
+        return jsonify({"error": "expected a JSON object"}), 400
+    allowed = {"seed_start", "seed_count", "horizon", "shock", "capacity"}
+    unknown = sorted(set(body) - allowed)
+    if unknown:
+        return jsonify({"error": "unsupported parameter(s)", "fields": unknown}), 400
+
+    def bounded_integer(name: str, default: int, low: int, high: int) -> int | None:
+        value = body.get(name, default)
+        if isinstance(value, bool) or not isinstance(value, int) or not low <= value <= high:
+            return None
+        return value
+
+    seed_start = bounded_integer("seed_start", 0, 0, 1_000_000)
+    seed_count = bounded_integer("seed_count", 20, 2, 100)
+    horizon = bounded_integer("horizon", 40, 5, 100)
+    if None in (seed_start, seed_count, horizon):
+        return jsonify({"error": "seed_start 0-1000000, seed_count 2-100, horizon 5-100"}), 400
+
+    numeric: dict[str, float] = {}
+    for name, default, low, high in (("shock", 0.1, -0.2, 0.2), ("capacity", 0.03, 0.0, 0.1)):
+        value = body.get(name, default)
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            return jsonify({"error": f"{name} must be a finite number in [{low}, {high}]"}), 400
+        try:
+            number = float(value)
+        except (OverflowError, ValueError):
+            number = float("inf")
+        if not math.isfinite(number) or not low <= number <= high:
+            return jsonify({"error": f"{name} must be a finite number in [{low}, {high}]"}), 400
+        numeric[name] = number
+
+    run_id = str(uuid.uuid4())
+    try:
+        with tempfile.TemporaryDirectory(prefix="microworld-") as tmp:
+            result = run_experiment(
+                run_id,
+                seed_start,
+                seed_count,
+                horizon,
+                numeric["shock"],
+                numeric["capacity"],
+                Path(tmp) / "result.json",
+            )
+    except (ValueError, OSError, KeyError) as exc:
+        return jsonify({"error": f"experiment could not complete: {exc}"}), 422
+
+    _last_experiment_dispatch_at = now
+    return jsonify({"result": result}), 200
 
 
 if __name__ == "__main__":

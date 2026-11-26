@@ -1,40 +1,26 @@
-// Deploy at resource-group scope:
-//   az deployment group create -g rg-microworld -f main.bicep -p main.parameters.json
-//
-// Confirmed empirically against this subscription (an "Azure for Students Starter" /
-// DreamSpark grant, not the $100-credit "Azure for Students" offer) on 2026-11-25:
-//   - Only Microsoft.Web and Microsoft.Sql are usable among compute/storage-shaped
-//     providers. Microsoft.Compute, Microsoft.Storage, Microsoft.Network,
-//     Microsoft.App, Microsoft.ContainerInstance/Registry, Microsoft.KeyVault,
-//     Microsoft.ManagedIdentity, Microsoft.DocumentDB, Microsoft.OperationalInsights,
-//     and Microsoft.Consumption are all DisallowedProvider on this identity — not a
-//     quota that can be raised, a policy on the subscription type itself.
-//   - App Service is capped at the Free (F1) SKU: attempting Basic (B1) returned
-//     "your DreamSpark subscription can only create sites in the 'Free' SKU."
-//   - Only `brazilsouth` accepted a deployment among 11 regions tried; everything
-//     else (including eastus, westeurope, japaneast) was RequestDisallowedByAzure.
-//
-// There is therefore no 24/7 compute on Azure here: F1 has no Always On and a small
-// daily CPU-minute quota, so it cannot host a continuously-ticking engine. The engine
-// lives in free GitHub Actions (scheduled runs against the public repo, unlimited
-// minutes) and writes its state to a dedicated git branch read directly by the
-// static site. This template's only job is the one thing that genuinely needs a
-// live server: a small authenticated endpoint the frontend can POST a scenario
-// request to, which then dispatches a GitHub Actions run. See ../README.md.
+// Resource-group-scoped optional dispatcher and bounded ABM execution API.
+// The deterministic browser playground and GitHub snapshot feed do not depend on it.
 targetScope = 'resourceGroup'
 
-@description('Must be brazilsouth on this subscription — see the comment above.')
+@description('Deployment region. Confirm current subscription quota before deployment.')
 param location string = 'brazilsouth'
 
-@description('Short name used as a prefix for all resources.')
+@description('Short prefix used for the API resources.')
 param namePrefix string = 'microworld'
 
-@description('Globally-unique Web App name (becomes <name>.azurewebsites.net).')
+@description('Globally unique Linux Web App name.')
 param webAppName string = '${namePrefix}-api-${uniqueString(resourceGroup().id)}'
+
+@description('Allowed browser origin; configure this to the GitHub Pages origin.')
+param allowedOrigin string = 'https://edwardcalderon.github.io'
+
+@description('Repository identity used by the legacy workflow-dispatch endpoint.')
+param githubRepo string = 'edwardcalderon/Master-s-thesis'
 
 var tags = {
   project: 'master-thesis-microworld'
   managedBy: 'bicep'
+  role: 'optional-experiment-api'
 }
 
 resource plan 'Microsoft.Web/serverfarms@2023-01-01' = {
@@ -47,7 +33,7 @@ resource plan 'Microsoft.Web/serverfarms@2023-01-01' = {
   }
   kind: 'linux'
   properties: {
-    reserved: true // required for Linux plans
+    reserved: true
   }
 }
 
@@ -60,14 +46,26 @@ resource webApp 'Microsoft.Web/sites@2023-01-01' = {
     httpsOnly: true
     siteConfig: {
       linuxFxVersion: 'PYTHON|3.11'
-      alwaysOn: false // not available on F1; cold starts after ~20 min idle are expected
-      appCommandLine: 'gunicorn --bind=0.0.0.0 --timeout 600 app:app'
+      alwaysOn: false
+      appCommandLine: 'gunicorn --bind=0.0.0.0:8000 --timeout 60 app:app'
       ftpsState: 'Disabled'
       minTlsVersion: '1.2'
       appSettings: [
         {
           name: 'SCM_DO_BUILD_DURING_DEPLOYMENT'
           value: 'true'
+        }
+        {
+          name: 'ALLOWED_ORIGIN'
+          value: allowedOrigin
+        }
+        {
+          name: 'GITHUB_REPO'
+          value: githubRepo
+        }
+        {
+          name: 'EXPERIMENT_COOLDOWN_SECONDS'
+          value: '600'
         }
       ]
     }
