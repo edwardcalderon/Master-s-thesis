@@ -60,9 +60,7 @@ jobs:
             git -C state-branch checkout -B "${DATA_BRANCH}"
           elif [[ "${ref_status}" -eq 2 ]]; then
             echo "Remote branch ${DATA_BRANCH} does not exist; initializing it."
-            mkdir -p state-branch
-            git -C state-branch init -q
-            git -C state-branch checkout -q -b "${DATA_BRANCH}"
+            git worktree add --orphan -b "${DATA_BRANCH}" state-branch
           else
             echo "Failed to check whether remote branch ${DATA_BRANCH} exists (git ls-remote exit ${ref_status})." >&2
             exit "${ref_status}"

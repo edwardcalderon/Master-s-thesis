@@ -122,8 +122,11 @@ for the full writeup.
   invalid persisted state fails closed. Bounds are band `[0, 0.5]`, capacity
   `[0, 1]`, and shock scale `[0, 0.2]`.
 - Hardened branch recovery so remote lookup/fetch errors stop the run instead of
-  silently initializing a fresh world. Each published tick is a parentless Git
-  commit, keeping the public data branch from accumulating unbounded ancestry.
+  silently initializing a fresh world. First-run initialization uses an orphan
+  worktree of the authenticated checkout, so publishing the newly created data
+  branch retains the configured remote credentials. Each published tick is a
+  parentless Git commit, keeping the public data branch from accumulating unbounded
+  ancestry.
 - Passed 3 tick-engine unit tests and 2 Flask endpoint tests locally. A 2-tick
   scratch run succeeded; a NaN scenario was rejected with exit code 2 before state
   was changed. The workflow has not yet had its first real manual run.
