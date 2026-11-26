@@ -4,8 +4,9 @@
 - **Status:** TODO — implementation has not started; this release records the plan.
 - **Priority:** Presentation follow-up to the manuscript evidence work.
 - **Planned:** 2026-11-25
+- **Updated:** 2026-11-26; current workspace v0.1.10 / manuscript v0.8.0.
 - **Dependencies:** SIM-001 browser model and bilingual UI; THESIS-003 evidence provenance;
-  the v0.5.0 manuscript and confirmation exports.
+  the v0.8.0 manuscript, frozen confirmation, engineering sensitivity, and hybrid-map export.
 
 ## Outcome and scientific relevance
 
@@ -24,7 +25,7 @@ queues implementation. Creating this document does not complete SIM-002 or SIM-0
 
 ## Evidence and implementation baseline
 
-- Manuscript v0.5.0 uses confirmation run `cex-dex-confirm-5b06486d695e`, analysis
+- Manuscript v0.8.0 retains frozen confirmation run `cex-dex-confirm-5b06486d695e`, analysis
   version 0.5.0, and ABM model 0.4.0. There are 300 independent confirmation seeds,
   13,500 runs, three depths, three negative shocks, and five conditions. E1-max is
   extrapolation; the four primary conditions drive primary inference. Runs end at
@@ -36,6 +37,7 @@ queues implementation. Creating this document does not complete SIM-002 or SIM-0
   depths 1 and 2 in the tested cells. The panic ablation is exploratory.
 - Primary H3: the two-state map improves one-step MAE over persistence on average,
   but it does not beat scalar AR overall and its Schur regime classification is weak.
+- The v0.8.0 extension adds a held-out affine-vs-band-aware map comparison (`cex-dex-hybrid-1d1d9d2f8c5b`): the hybrid map improves recursive signed-price-error MAE by 1.7% on average, but the gain is concentrated in low-capacity arbitrage at depth 2 and flow-pressure errors do not improve. The bilingual web summary at `apps/web/src/features/playground/HybridEvidence.tsx` consumes the compact, checksummed `apps/web/src/data/hybrid-findings.json` bundle and exposes all 32 held-out cells. This evidence chart is part of the current SIM-001 browser surface; SIM-002's 3D playback implementation remains queued.
 - `thesis/figures/data/manifest.json` identifies the source run and checksums.
   `trajectories.csv` contains 420 aggregate tick rows (about 28 KB), including mean
   absolute excess and DEX deviation. These means do not identify individual trades,
@@ -216,3 +218,8 @@ risks. H3 should remain legible as a conventional prediction comparison even whe
 Next action: implement the compact bundle and paired trace export in phase 1, then
 review a single faithful replay before expanding the visual scope. Implementation is
 queued; no 3D feature, persistence service, or new research result ships with this plan.
+
+
+## v0.6.0 findings handoff — 2026-11-25
+
+Include supplementary run cex-dex-engineering-9438e194aa7e, with three order-size/panic variants and 40,500 synthetic paths. Show first sustained recovery, terminal in-band status, later departures and order size relative to reserves. The adaptive fixed-order paths recover at least once in 97.4% of cases, finish in-band in 81.9%, and 31.2% of recovered paths later leave the band. The shallow-depth response effect vanishes under reserve-proportional orders. Mark these as synthetic sensitivities; do not display them as production thresholds or live-world states. The 3D scene is an explanatory evidence view, not proof of external validity.

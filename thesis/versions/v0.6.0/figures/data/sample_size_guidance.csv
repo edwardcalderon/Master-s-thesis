@@ -1,0 +1,5 @@
+contrast,source,sd_delta,required_n_for_target,achieved_half_width,target_half_width
+H1_primary,exploration pilot,0.08108190289939302,253,0.009175281059212843,0.01
+H1_primary,confirmation (achieved),0.7213584567937753,19991,0.08162939384557144,0.01
+H2_primary,exploration pilot,1.0328717599088912e-16,1,1.1688044256986511e-17,0.01
+H2_primary,confirmation (achieved),0.006146937866328758,2,0.0006955915014360951,0.01

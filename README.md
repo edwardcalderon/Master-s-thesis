@@ -6,16 +6,21 @@ The public web app, project documentation, notebooks, changelog, and release his
 
 The public experience is inspired by the useful parts of [GeoAuPredict](https://github.com/edwardcalderon/GeoAuPredict): a clear research overview, a notebook explorer, a docs surface, and an artifact-oriented GitHub Pages deployment. Application-specific gold-prediction code and heavyweight services are intentionally left out until the thesis needs them.
 
-## 📋 Latest Changes (v0.1.8)
+## 📋 Latest Changes (v0.1.10)
 
 ### Added
 
-- Added the SIM-002 implementation plan for a 3D microworld findings replay, paired event traces, bounded scenario exploration, and browser-local saved scenarios. The feature is queued for implementation.
-- Defined evidence, accessibility, bilingual UI, reproducibility, and performance gates, plus the separate research scope required for shared persistent worlds and evolutionary agents.
+- Added the reproducible band-aware hybrid-map experiment, frozen selection and held-out protocol, seed-level findings, and checksummed exports for the bilingual manuscript and interactive web evidence view.
+- Added Lean verification and an exact-rational bridge for the CPMM mechanism, with the proof scope and full-simulator stability limitations documented.
+
+### Changed
+
+- Updated the English and Spanish manuscript to v0.8.0 with the nonlinear/hybrid methodology, condition-specific results, a bounded Lyapunov analysis, and practical implications constrained by the synthetic evidence.
+- Updated simulation and thesis task records to match the current evidence and remaining validation work.
 
 ### Fixed
 
-- Reconciled the task ledger and simulation handoff with the v0.5.0 confirmatory evidence and corrected stale manuscript-version notes. Manuscript and experiment versions are unchanged.
+- Clarified that the hybrid result is concentrated in the low-capacity, depth-2 regime and does not improve flow-pressure prediction or establish real-market performance.
 
 For full version history, see [CHANGELOG.md](./CHANGELOG.md) and [GitHub releases](https://github.com/edwardcalderon/Master-s-thesis/releases).
 
@@ -27,7 +32,7 @@ For full version history, see [CHANGELOG.md](./CHANGELOG.md) and [GitHub release
 
 ## Earlier preliminary manuscript — 29 Oct 2026
 
-This earlier mechanism-first draft studied CEX/DEX price tracking, bounded arbitrage, and liquidity fragility. It has been revised; the active bilingual manuscript is v0.5.1, with confirmatory H1–H3 results; earlier sources are preserved in the version archive.
+This earlier mechanism-first draft studied CEX/DEX price tracking, bounded arbitrage, and liquidity fragility. The active bilingual manuscript is v0.8.0. It retains the confirmatory H1–H3 and engineering sensitivity evidence, adds formal CPMM checks and a held-out band-aware map comparison, and records the limits of synthetic findings; earlier sources are preserved in the version archive.
 
 - The public site publishes the final English and required Spanish PDFs after the paired build.
 - [Current reproducible MVP](experiments/cex_dex_mvp/README.md)
@@ -99,7 +104,7 @@ See [`docs/language-policy.md`](docs/language-policy.md) for the source and publ
 [`@edcalderon/versioning`](https://www.npmjs.com/package/@edcalderon/versioning) handles workspace SemVer bumps and the English changelog. The repository synchronizer projects the version into `VERSION`, both release histories, both app locale files, both LaTeX workspace-version macros, and the release blocks in both READMEs. `pnpm readme:update` copies the populated English and Spanish changelog entries into their matching README summaries. A separate manuscript-revision macro keeps the thesis editions paired.
 
 <!-- versioning:release:start -->
-**Current release:** [`v0.1.8`](https://github.com/edwardcalderon/Master-s-thesis/releases/tag/v0.1.8)
+**Current release:** [`v0.1.10`](https://github.com/edwardcalderon/Master-s-thesis/releases/tag/v0.1.10)
 **Tracker:** [GitHub releases](https://github.com/edwardcalderon/Master-s-thesis/releases) · synchronized with `@edcalderon/versioning`
 <!-- versioning:release:end -->
 

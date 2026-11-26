@@ -1,0 +1,23 @@
+{
+  "run_id": "cex-dex-engineering-9438e194aa7e",
+  "analysis_version": "0.6.0",
+  "model_version": "0.4.0",
+  "run_count": 40500,
+  "seed_range": [
+    2000,
+    2299
+  ],
+  "source_sha256": {
+    "engineering.py": "beeb920c35b4f0203ae403874451fe502b342aab615f76fe3985469f895f73fd",
+    "abm.py": "f15c666856519b8264c1c3ad183f7ca4062f43a457b3a6bbeeb16bdcfab59260",
+    "confirm.py": "9b2c7df09f49bd2fb247ad97b25253ebc06423010050e76890df701132df9a0e",
+    "run.py": "1530471be964587e226d3a995d2bef90f84deef6ace8207b52e65bfca90186a2",
+    "ENGINEERING_PROTOCOL.md": "761488ab78744e38a81eadb1688d797592c40ca4f2af74d269784a93a5a25970"
+  },
+  "files": {
+    "condition_summary.csv": "cb6cafc78bb1eb1850de18368464d19d7ce68578d22a1152892c9399b95b0262",
+    "cell_summary.csv": "68ca82800fff937abdc5616fdc827e8d122e14ea900e0c9168f16f08104b7b1f",
+    "depth_effects.csv": "6ef317e860219866cd0c21756fc4e13905631a5e6321b378e55d0a293af1f429"
+  },
+  "interpretation": "Supplementary synthetic sensitivity; no external validation; cell intervals are descriptive."
+}

@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import type { Locale } from "@tesis/content";
 import { MODEL_VERSION, SUSTAINED_BAND_TICKS, runFixedSale, runTracking } from "./model";
+import HybridEvidence from "./HybridEvidence";
 
 type Copy = {
   kicker: string;
@@ -220,5 +221,6 @@ export default function Playground({ locale, copy }: Props) {
 
       <div className="playground-footnote"><span className="mono">{copy.config} · cex-dex-mvp 0.3.0</span><p>{copy.assumptionsText}</p></div>
     </div>
+    <HybridEvidence locale={locale} />
   </section>;
 }

@@ -1,10 +1,37 @@
-## [Sin publicar]
+## [0.1.10] - 2026-11-26
+
+### Añadido
+
+- Se añadió el experimento reproducible de mapa híbrido con banda, el protocolo congelado de selección y evaluación, hallazgos por semilla y exportaciones con hashes para el manuscrito bilingüe y el resumen interactivo del sitio.
+- Se añadió verificación en Lean y un puente de aritmética racional exacta para el mecanismo CPMM, documentando el alcance de las pruebas y sus límites respecto de la estabilidad del simulador completo.
+
+### Cambiado
+
+- Se actualizó el manuscrito en inglés y español a v0.8.0 con la metodología no lineal/híbrida, resultados por condición, un análisis acotado de Lyapunov e implicaciones prácticas limitadas por la evidencia sintética.
+- Se actualizaron las tareas de simulación y tesis para reflejar la evidencia y el trabajo de validación pendiente.
 
 ### Corregido
 
-- Se eliminó de ambos anexos una nota editorial sobre la sustitución de una fuente bibliográfica.
-- Se corrigió la paginación de la pregunta de investigación en el manuscrito v0.5.1: el título y la pregunta completa permanecen juntos y la tabla de antecedentes queda antes de esta sección en ambas ediciones. La pregunta y los hallazgos se conservan.
-- Se añadió una comprobación de la maquetación de los PDF a la compilación bilingüe y al flujo de Pages para detectar una pregunta dividida o interrumpida antes de la publicación.
+- Se aclaró que la mejora híbrida se concentra en arbitraje de baja capacidad y profundidad 2, no mejora la predicción de presión de flujo y no demuestra rendimiento en mercados reales.
+
+## [0.1.9] - 2026-11-25
+
+### Añadido
+
+- Se añadió el manuscrito v0.6.0 con una sensibilidad de ingeniería preregistrada de 40.500 trayectorias con semillas nuevas, hashes de exportación e implicaciones acotadas para monitoreo y pruebas de estrés.
+- Se añadieron comandos reproducibles de ejecución/exportación y pruebas para plazos de recuperación, salidas posteriores, escala de órdenes y ablación de pánico.
+- Se repitieron los cinco flujos de experimentos existentes; los artefactos numéricos se reprodujeron byte por byte y pasaron las nueve invariantes mecánicas.
+
+### Cambiado
+
+- Se actualizaron en ambas ediciones las conclusiones, resúmenes, resultados, objetivos y trabajos futuros con los hallazgos actuales y una ruta concreta de validación con un par real. Se actualizaron los resúmenes bilingües del sitio y las tareas pendientes.
+
+### Corregido
+
+- Se mantuvo completa la pregunta de investigación junto a su título, se añadió una comprobación de maquetación renderizada y se eliminó de ambos anexos la nota editorial sobre sustitución de una fuente.
+- Se distinguió el primer retorno del seguimiento terminal y de las salidas posteriores; se condicionó el efecto de poca profundidad a la escala de órdenes y la conducta de pánico.
+
+## [Sin publicar]
 
 ## [0.1.8] - 2026-11-25
 

@@ -4,18 +4,25 @@ Un espacio de investigación abierto y reproducible para una tesis de maestría.
 
 La experiencia pública toma como referencia algunos elementos útiles de [GeoAuPredict](https://github.com/edwardcalderon/GeoAuPredict): una presentación clara de la investigación, un explorador de cuadernos, una superficie de documentación y una publicación orientada a artefactos mediante GitHub Pages. El código específico para predicción de oro y los servicios pesados se dejan fuera hasta que la tesis los necesite.
 
-## 📋 Últimos cambios (v0.1.8)
+## 📋 Últimos cambios (v0.1.10)
 
 ### Añadido
 
-- Se añadió el plan de implementación SIM-002 para la reproducción visual 3D de los hallazgos del micromundo, trazas pareadas de eventos, exploración acotada de escenarios y escenarios guardados en el navegador. La función queda pendiente de implementación.
-- Se definieron criterios de evidencia, accesibilidad, interfaz bilingüe, reproducibilidad y rendimiento, además del alcance de investigación independiente que requieren los mundos persistentes compartidos y los agentes evolutivos.
+- Se añadió el experimento reproducible de mapa híbrido con banda, el protocolo congelado de selección y evaluación, hallazgos por semilla y exportaciones con hashes para el manuscrito bilingüe y el resumen interactivo del sitio.
+- Se añadió verificación en Lean y un puente de aritmética racional exacta para el mecanismo CPMM, documentando el alcance de las pruebas y sus límites respecto de la estabilidad del simulador completo.
+
+### Cambiado
+
+- Se actualizó el manuscrito en inglés y español a v0.8.0 con la metodología no lineal/híbrida, resultados por condición, un análisis acotado de Lyapunov e implicaciones prácticas limitadas por la evidencia sintética.
+- Se actualizaron las tareas de simulación y tesis para reflejar la evidencia y el trabajo de validación pendiente.
 
 ### Corregido
 
-- Se concilió el registro de tareas y la transición de simulación con la evidencia confirmatoria de v0.5.0 y se corrigieron notas desactualizadas sobre la versión del manuscrito. Las versiones del manuscrito y del experimento se conservan.
+- Se aclaró que la mejora híbrida se concentra en arbitraje de baja capacidad y profundidad 2, no mejora la predicción de presión de flujo y no demuestra rendimiento en mercados reales.
 
 Consulta el [historial completo](./CHANGELOG.es.md) y las [versiones de GitHub](https://github.com/edwardcalderon/Master-s-thesis/releases). [English version](./README.md).
+
+El manuscrito bilingüe activo es v0.8.0. Conserva la evidencia confirmatoria H1–H3 y el análisis de sensibilidad de ingeniería; añade verificaciones formales del CPMM y una comparación retenida del mapa con banda. Los resultados son sintéticos y sus límites se describen en el manuscrito.
 
 ## Estructura del monorepo
 
@@ -80,7 +87,7 @@ Consulta la [política de idiomas](docs/es/language-policy.md) para conocer las 
 [`@edcalderon/versioning`](https://www.npmjs.com/package/@edcalderon/versioning) gestiona los incrementos SemVer del espacio de trabajo y el changelog en inglés. El sincronizador del repositorio proyecta la versión en `VERSION`, ambos historiales, los dos archivos de idioma de la aplicación, las dos macros LaTeX de versión y los bloques de versión de ambos README. `pnpm readme:update` copia las entradas completas en inglés y español del changelog a los resúmenes correspondientes del README. Una macro distinta identifica la revisión del manuscrito y mantiene vinculadas las dos ediciones.
 
 <!-- versioning:release:start -->
-**Versión actual:** [`v0.1.8`](https://github.com/edwardcalderon/Master-s-thesis/releases/tag/v0.1.8)
+**Versión actual:** [`v0.1.10`](https://github.com/edwardcalderon/Master-s-thesis/releases/tag/v0.1.10)
 **Registro:** [Versiones de GitHub](https://github.com/edwardcalderon/Master-s-thesis/releases) · sincronizado con `@edcalderon/versioning`
 <!-- versioning:release:end -->
 

@@ -68,12 +68,12 @@ and the executed order is $\min\{q^{\ast},\,c\,x\}$, further limited by the arbi
 
 \section{Agents}
 
-The state of the system at tick $t$ is
+The compact accounting state recorded at tick $t$ is
 \begin{equation}
   S_t = \bigl(x_t,\,y_t,\,\pC_t,\,W_t\bigr),
   \label{eq:estado}
 \end{equation}
-where $W_t$ gathers the agents' inventories. Each agent operates with a finite inventory; the noise and trend agents have twice the initial reserves and the arbitrageur five times. In the confirmation runs no order was capital-limited (0 of 13\,500).
+where $W_t$ gathers the agents' inventories. This vector is a compact accounting state, not a claim that $S_t$ alone is Markov-complete. The trend rule depends on the AMM's previous-tick price change; a transition state must therefore retain that price or equivalent agent memory. Any one-time rule flags not inferable from inventories must also be carried forward. In a stochastic formulation, the next random order can be represented as an explicit input; deterministic replay additionally needs the random-stream state or pre-generated-order index. The present analysis does not formalize this augmented full-simulator state. Each agent operates with a finite inventory; the noise and trend agents have twice the initial reserves and the arbitrageur five times. In the confirmation runs no order was capital-limited (0 of 13\,500).
 
 \paragraph{Noise.} With probability $0.7$ per tick, it issues an order of random side for $0.4\,\%$ of the initial reserve of the input asset. The order schedule is generated before the simulation from the seed, so that paired designs share the same flow.
 
@@ -105,9 +105,36 @@ The autonomous part has matrix $A=\begin{pmatrix} a & \beta\\ c & \rho\end{pmatr
 \end{equation}
 The stability of the estimated matrix describes the autonomous linear dynamics and does not imply stability of the stochastic simulator.
 
+\subsection{Non-exhaustive Lyapunov analysis of the reduced map}
+
+For each fitted condition, let $A$ be the matrix of the autonomous reduced map and set $Q=I$. Since the fitted matrices satisfy the Schur conditions, the discrete Lyapunov equation
+\begin{equation}
+  A^{\mathsf T}PA-P=-I
+  \label{eq:lyap-reduced}
+\end{equation}
+has a unique positive-definite solution $P$. One construction is $P=\sum_{j=0}^{\infty}(A^j)^{\mathsf T}A^j$, which converges when the spectral radius of $A$ is below one. Because the fitted map has no intercept, its zero-input equilibrium is $w^*=0$. With $w_t=(d_t,z_t)^{\mathsf T}$ and $V(w_t)=w_t^{\mathsf T}Pw_t$, this gives
+\begin{equation}
+  V(w_{t+1})-V(w_t)=-\lVert w_t\rVert_2^2.
+  \label{eq:lyap-decrease}
+\end{equation}
+Thus the origin is asymptotically stable for each fitted autonomous reduced map. This is a condition-specific linear certificate: it sets the shock input to zero and omits the simulator's stochastic innovations and model-fit residuals. It does not prove stability of the nonlinear, piecewise, stochastic simulator or its full state.
+
 \subsection{Estimation and held-out evaluation}
 
 Each condition has its own fit, estimated only with the exploration runs (seeds 0 to 299, depth 1, shocks $\pm0.1$). The evaluation uses the mean absolute one-step error over the 20 transitions of each confirmation run, in the held-out cells. The baseline models are persistence, $\hat d_{t+1}=d_t+u_{t+1}$, and a scalar autoregression $d_{t+1}-u_{t+1}=a_s d_t$ fitted per condition with the exploration data. In addition, each run receives an observed label: \emph{in-band} if $|d_t|<10^{-9}$ at ticks 1 to 5 and 16 to 20; \emph{contractive} if it is not and the mean value of $|d_t|$ at ticks 16 to 20 is smaller than at ticks 1 to 5; \emph{persistent} otherwise.
+
+\subsection{Band-aware hybrid-map comparison}
+\label{sec:hybrid-method}
+
+A separate analysis (model 0.5.0, analysis 0.1.0) compares the affine map L0 with a hybrid candidate Hyb. This comparison is distinct from H1, the thesis hypothesis about arbitrage. It uses signed tracking error $e_t=\log(p_t^D/p_t^C)$ and the same normalized flow variable $z_t$. The known external input is $u_{t+1}=-\Delta\log p^C_{t+1}$. Define the signed excess $\phi_\gamma(e)=\operatorname{sgn}(e)\max(|e|-\gamma,0)$ and indicator $I_t=\mathbf{1}(|e_t|>\gamma)$, with the configured band $\gamma=0.003$. The equations are
+\begin{align}
+  \text{L0:}\quad e_{t+1}&=e_t+u_{t+1}+a e_t+b z_t,& z_{t+1}&=c e_t+\rho z_t,\\
+  \text{Hyb:}\quad e_{t+1}&=e_t+u_{t+1}+a e_t+b z_t+g\phi_\gamma(e_t)+h z_t I_t,&
+  z_{t+1}&=c e_t+\rho z_t+k\phi_\gamma(e_t)+m z_t I_t.
+\end{align}
+Coefficients are fitted without an intercept and separately for each of the four shared operating conditions. Hyb therefore adds two band-dependent terms per predicted variable; it does not add capacity or withdrawal state branches. The selection grid is seeds 3000--3299, depth 1 and shocks $\pm0.10$. The untouched evaluation uses seeds 4000--4299, depths 0.5 and 2, and shocks $\pm0.05$ and $\pm0.20$. Its primary metric is the seed-level mean rollout MAE in $e$, averaged over the 32 held-out cells per seed and 20 transitions. Rollout prediction receives the known exogenous CEX path and recursively feeds back predicted $(e,z)$. The paired percentile-bootstrap interval uses 10,000 resamples of the 300 seed units; per-cell contrasts and other state metrics are descriptive secondary outcomes. This is a test of reduced-map prediction against the specified synthetic simulator, not market validation or a stability proof for the full hybrid system. The exact config, source checksums and output contract are in \code{experiments/cex\_dex\_mvp/hybrid\_config.json}.
+
+The $z_{t+1}$ equation does not receive the next tick's realized stochastic order flow as an input. Its target includes future noise/trend draws that are unobserved by this state-only map; flow-pressure errors are therefore a diagnostic of an incomplete input model, not evidence that the simulator flow is deterministic.
 
 \section{Experimental design}
 
@@ -196,3 +223,5 @@ As a sample-size guide, $n\approx(1.96\,s/h)^2$ is used, with $s$ the standard d
 Verification comprises nine automatic invariant checks (annex~\ref{sec:verificacion}): conservation of the product and positivity of the reserves in zero-fee sales and purchases, preservation of the price under proportional withdrawal, positive and finite configured states, reduction of the error by arbitrage in both directions, activation of the adaptive threshold, swapping of shocks and common ticks in the pairs, increasing impact as liquidity is reduced, and conservation of assets with paired orders. Validation against market data is outside the scope (chapter~\ref{cap:discusion}).
 
 Traceability rests on an execution contract that records identifier, code version, scenario, seed, parameters, series, metrics and checksums (annex~\ref{sec:contrato}). The code and the data of the figures are in the repository of the work \cite{calderon2026repository}. The full results of the confirmatory run are not versioned: they are cited by their identifier, their checksums and the command that regenerates them.
+
+The hybrid-map comparison can be reproduced with \code{pnpm experiment:mvp:hybrid}; its compact web and thesis exports are regenerated with \code{pnpm experiment:mvp:hybrid:export}. Run \code{\HybridRunID} records the exact model and analysis configs, seed ranges, Python version, source hashes, and output checksums.

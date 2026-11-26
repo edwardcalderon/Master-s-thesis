@@ -2,7 +2,9 @@
 
 - **Owner:** `edcalderon`
 - **Status:** IN PROGRESS
-- **Focus:** CURRENT FOCUS — paired deterministic and stochastic model development
+- **Focus:** CURRENT FOCUS for reconciling representative-agent and ODD assumptions
+  with v0.8.0 evidence. Formal CPMM proofs and the first held-out hybrid comparison are
+  complete under THESIS-005; model extensions are tracked under THESIS-006.
 - **Started:** 2026-11-12
 
 ## Goal
@@ -20,6 +22,8 @@ from explicit, versioned configurations and traceable run artifacts.
   random schedules are checked before results are promoted to the manuscript.
 - Agent policies are reviewed and extended to the intended heterogeneous model; H1c is
   tested on held-out configurations across the agreed operating regions.
+- The current two-state reduced map is described as affine/linear. A nonlinear claim
+  requires a separate candidate specification and held-out comparison.
 
 ## Dependencies and limits
 
@@ -93,9 +97,20 @@ SIM-002 consumes the frozen confirmation evidence for presentation.
   Pages workflow built the site and copied both thesis PDFs, then stopped at Configure
   Pages because repository Pages is not enabled.
 
+## Current evidence update — workspace v0.1.10 / manuscript v0.8.0
+
+The deterministic, stochastic, H1c, confirmatory, engineering-sensitivity, formal CPMM,
+and first band-aware hybrid evidence are now documented in the bilingual v0.8.0
+manuscript and reproducible experiment artifacts. THESIS-005 closes the formal-mechanics
+and first hybrid-comparison scope. Representative-agent policies are still not validated
+as a heterogeneous population, and the preliminary manuscript's original outputs remain
+unavailable; the new run does not resolve those limits.
+
 ## Next action
 
-Review this task's acceptance criteria against v0.5.0 and reconcile the ODD with the
-executed confirmation protocol before closure. Scope any heterogeneous populations,
-new policies, or evolutionary/long-running dynamics as subsequent model revisions.
-Preserve the original selection artifacts and all released manuscript snapshots.
+Review the representative-role assumptions and ODD/model contract with the advisor and
+decide whether a heterogeneous-agent extension is justified. Feed that decision into
+THESIS-006 before changing agent rules. Keep fees, calibrated provider rules, production
+latency, and empirical validation outside the current evidenced claim. Any adopted
+extension must use a new model version, frozen protocol, disjoint evaluation seeds, and
+preserved run IDs/snapshots. Real-pair data and rights remain under DATA-001.

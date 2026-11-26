@@ -1,0 +1,38 @@
+{
+  "analysis_version": "0.1.0",
+  "model_version": "0.5.0",
+  "experiment": "regime-aware-hybrid-map-vs-affine",
+  "description": "Selection and held-out evaluation of a band-aware reduced map against the affine reduced map.",
+  "seeds": {
+    "selection_start": 3000,
+    "selection_count": 300,
+    "confirmation_start": 4000,
+    "confirmation_count": 300
+  },
+  "selection": {
+    "depth_scales": [1.0],
+    "shock_log_returns": [-0.1, 0.1]
+  },
+  "confirmation": {
+    "depth_scales": [0.5, 2.0],
+    "shock_log_returns": [-0.2, -0.05, 0.05, 0.2]
+  },
+  "candidates": {
+    "L0": "signed e and z predict corrections to e+u and z; two coefficients per output per condition.",
+    "Hyb": "L0 plus signed excess e beyond the configured band and z times the outside-band indicator; four coefficients per output per condition."
+  },
+  "metrics": {
+    "primary": "per-seed mean absolute rollout error in signed log-price error e across held-out cells and ticks 1..20; positive paired difference means Hyb improves on L0.",
+    "secondary": ["one-step MAE in signed log-price error e", "one-step MAE in normalized net-buy pressure z", "rollout MAE in z"],
+    "uncertainty": {
+      "method": "paired percentile bootstrap over independent seeds",
+      "resamples": 10000,
+      "confidence_level": 0.95,
+      "rng_seed": 20261125
+    }
+  },
+  "input_convention": "u(t+1) = - CEX log return at t+1; e(t+1) includes the negative external reference move.",
+  "flow_forecast_limit": "No next-tick stochastic order-flow realization is supplied as an input; z(t+1) is a state-only prediction of realized future noise/trend pressure.",
+  "scope": "synthetic representative-agent simulator only; confirmation cells are unseen in both selection grid and seed range; no external-market or full-system stability claim",
+  "freeze_note": "Freeze before running selection or confirmation. Any equation, feature, seed, cell, metric, or threshold change requires analysis_version 0.2.0 and a new untouched seed range."
+}

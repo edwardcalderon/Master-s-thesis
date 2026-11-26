@@ -1,10 +1,37 @@
-## [Unreleased]
+## [0.1.10](https://github.com/edwardcalderon/Master-s-thesis/compare/v0.1.9...v0.1.10) (2026-11-26)
+
+### Added
+
+- Added the reproducible band-aware hybrid-map experiment, frozen selection and held-out protocol, seed-level findings, and checksummed exports for the bilingual manuscript and interactive web evidence view.
+- Added Lean verification and an exact-rational bridge for the CPMM mechanism, with the proof scope and full-simulator stability limitations documented.
+
+### Changed
+
+- Updated the English and Spanish manuscript to v0.8.0 with the nonlinear/hybrid methodology, condition-specific results, a bounded Lyapunov analysis, and practical implications constrained by the synthetic evidence.
+- Updated simulation and thesis task records to match the current evidence and remaining validation work.
 
 ### Fixed
 
-- Removed an editorial note about replacing a literature source from both annex editions.
-- Corrected research-question pagination in manuscript v0.5.1: keep the heading and full quotation together and finish the preceding literature table before this section in both editions. The question and findings are unchanged.
-- Added a rendered-PDF layout check to the paired thesis build and Pages publishing workflow to catch a split or interrupted research question before publication.
+- Clarified that the hybrid result is concentrated in the low-capacity, depth-2 regime and does not improve flow-pressure prediction or establish real-market performance.
+
+## [0.1.9](https://github.com/edwardcalderon/Master-s-thesis/compare/v0.1.8...v0.1.9) (2026-11-25)
+
+### Added
+
+- Added manuscript v0.6.0 with a preregistered supplementary engineering sensitivity over 40,500 fresh-seed paths, export hashes, and evidence-bounded implications for monitoring and stress testing.
+- Added reproducible engineering run/export commands and tests for recovery deadlines, later departures, order scaling, and the panic ablation.
+- Replayed the five existing experiment pipelines; numeric result artifacts reproduced byte for byte, with all nine mechanism invariants passing.
+
+### Changed
+
+- Updated both manuscript conclusions, abstracts, results, objectives, and future-work sections with the current findings and a concrete real-pair validation path. Refreshed the bilingual site abstracts and task handoffs.
+
+### Fixed
+
+- Kept the complete research question with its heading, added a rendered layout check, and removed the editorial source-replacement note from both annexes.
+- Distinguished first recovery from terminal tracking and subsequent departures; qualified the shallow-depth effect by order scaling and panic behavior.
+
+## [Unreleased]
 
 ## [0.1.8](https://github.com/edwardcalderon/Master-s-thesis/compare/v0.1.6...v0.1.8) (2026-11-25)
 

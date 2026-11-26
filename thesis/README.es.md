@@ -7,9 +7,19 @@ La edición en inglés es la principal. Cada revisión del manuscrito debe inclu
 - PDF en inglés: `main.pdf`
 - PDF en español: `es/main.pdf`
 
-La revisión actual del manuscrito es v0.5.1. Esta corrección de maquetación mantiene juntos el título y la pregunta de investigación e impide que la tabla anterior los interrumpa en ambas ediciones. También elimina de ambos anexos una nota editorial sobre la sustitución de una fuente. La pregunta y los hallazgos de v0.5.0 se conservan. El manuscrito estructura la tesis según la retroalimentación de la dirección (introducción en seis párrafos; planteamiento del problema y estado del arte; justificación; hipótesis; objetivos; metodología; resultados; discusión y conclusiones; trabajos futuros; bibliografía; anexos) e informa una ejecución confirmatoria (`cex-dex-confirm-5b06486d695e`) con semillas de exploración y de confirmación disjuntas. La versión del espacio de trabajo se registra por separado en el archivo raíz `VERSION` y se sincroniza en ambas entradas LaTeX. Las instantáneas `versions/v0.4.0/` y anteriores conservan las fuentes previas; v0.2.0 conserva el borrador del 29 de octubre y sus cifras preliminares no verificadas.
+La revisión actual del manuscrito es v0.8.0. Conserva los hallazgos confirmatorios
+congelados de v0.5.0, corrige la paginación bilingüe y elimina de ambos anexos la nota
+editorial sobre la sustitución de una fuente. Añade una sensibilidad de ingeniería con
+semillas nuevas: al retorno puede seguirle otra salida de la banda, y el efecto con poca
+profundidad cambia según el tamaño de las órdenes relativo a las reservas y la regla
+de pánico. Las conclusiones derivan requisitos de monitoreo y pruebas de estrés, pero
+mantienen el carácter sintético de los hallazgos y requieren validación con un par real
+antes de cualquier uso operativo. La revisión v0.6.1 añadió un glosario técnico bilingüe después de las tablas de notación. La revisión v0.7.0 incorpora un análisis cuadrático no exhaustivo de Lyapunov para los mapas afines ajustados y aclara que el estado contable registrado no se considera completo de Markov. No demuestra estabilidad del simulador estocástico completo ni cambia los hallazgos experimentales. El manuscrito estructura la tesis según la retroalimentación de la dirección (introducción en seis párrafos; planteamiento del problema y estado del arte; justificación; hipótesis; objetivos; metodología; resultados; discusión y conclusiones; trabajos futuros; bibliografía; anexos) e informa una ejecución confirmatoria (`cex-dex-confirm-5b06486d695e`) con semillas de exploración y de confirmación disjuntas. La versión del espacio de trabajo se registra por separado en el archivo raíz `VERSION` y se sincroniza en ambas entradas LaTeX. Las instantáneas `versions/v0.4.0/` y anteriores conservan las fuentes previas; v0.2.0 conserva el borrador del 29 de octubre y sus cifras preliminares no verificadas.
 
-Los datos de figuras y tablas de `figures/data/` se exportan de la ejecución confirmatoria con `experiments/cex_dex_mvp/export_thesis_data.py`; `figures/data/manifest.json` registra la ejecución de origen y los hashes. La bibliografía (87 entradas) se verificó entrada por entrada; véase `literature-audit/REFERENCE_AUDIT.md`.
+La revisión v0.8.0 incorpora una comparación reservada de un mapa híbrido sensible a la banda frente al mapa afín, con 300 semillas nuevas. La mejora predictiva del error de precio es pequeña y depende de la condición; no mejora la presión de flujo ni demuestra estabilidad del simulador completo o validez en mercados reales.
+
+Los datos confirmatorios originales de figuras y tablas de `figures/data/` se exportan de la ejecución congelada con `experiments/cex_dex_mvp/export_thesis_data.py`; `figures/data/manifest.json` registra la ejecución de origen y los hashes. Los datos suplementarios de `figures/engineering/` provienen del análisis 0.6.0 e
+incluyen el identificador y hashes de la nueva ejecución. La bibliografía (87 entradas) se verificó entrada por entrada; véase `literature-audit/REFERENCE_AUDIT.md`.
 
 ## Compilar ambos PDF
 
