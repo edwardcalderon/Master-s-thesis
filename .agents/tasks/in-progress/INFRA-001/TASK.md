@@ -132,7 +132,8 @@ for the full writeup.
   was changed. The workflow has not yet had its first real manual run.
 - Kept scenario JSON in a workflow environment variable to avoid interpolating
   user-controlled input into shell source.
-- Workflow and application code are prepared in PR #5; it has not yet been merged.
+- Workflow and application code were merged by PR #5 on 2026-11-26. The required
+  first manual run has not happened yet.
 - Nothing has been deployed to Azure yet. No service principal exists yet. No GitHub
   token has been created yet.
 
@@ -142,8 +143,8 @@ for the full writeup.
   then `--apply`).
 - Deploy `infra/azure/webapp/` to the created Web App and set `GITHUB_DISPATCH_TOKEN`
   / `GITHUB_REPO` as application settings (never committed).
-- Merge the workflow, trigger it once manually, read the run log — the branch-create
-  step on first run in particular hasn't been exercised against the real remote.
+- Trigger the merged workflow once manually and read the run log — first-run branch
+  creation has only been exercised against a local bare remote, not the real remote.
 - Confirm `apps/web`'s intended fetch URL/CORS story against the real Pages origin,
   then set `ALLOWED_ORIGIN` on the Web App accordingly (currently defaults to `*`).
 - Replace `tick.py`'s placeholder evolution rule with real, reviewed tick semantics
