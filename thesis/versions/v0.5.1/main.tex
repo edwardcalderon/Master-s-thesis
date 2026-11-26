@@ -1,0 +1,159 @@
+\documentclass[11pt,letterpaper]{report}
+
+% English edition, synchronised with manuscript revision v0.5.1 (Spanish: es/main.tex).
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\DeclareUnicodeCharacter{2212}{\ensuremath{-}}% U+2212 minus sign used in the abstracts
+\usepackage{mathptmx}
+\usepackage{microtype}
+\usepackage[letterpaper,left=3cm,right=2.5cm,top=2.7cm,bottom=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs,tabularx,array,multirow,makecell}
+\usepackage{enumitem}
+\usepackage{setspace}
+\usepackage[font=small,labelfont=bf,labelsep=period,position=top]{caption}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{xurl}
+\usepackage{hyperref}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=blue,
+  pdflang={en-US},
+  pdftitle={Price Tracking and Liquidity Fragility in Hybrid CEX/DEX Crypto Markets},
+  pdfauthor={Edward Calderón},
+  pdfsubject={Master's thesis with a synthetic confirmatory test of H1, H2 and H3, November 25, 2026, manuscript v0.5.1}
+}
+
+\newcommand{\languageCode}{en}
+\newcommand{\versionTesis}{v0.1.8}
+\newcommand{\revisionManuscrito}{v0.5.1}
+\newcommand{\datadir}{figures/data}
+\newcommand{\RunID}{cex-dex-confirm-5b06486d695e}
+
+\tolerance=1600
+\emergencystretch=3em
+
+% Notation common to both editions.
+\newcommand{\pD}{p^{\mathrm{D}}}
+\newcommand{\pC}{p^{\mathrm{C}}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\code}[1]{\texttt{#1}}
+
+\setlength{\parskip}{0.35em}
+\setlength{\parindent}{0pt}
+\setlength{\headheight}{14pt}
+\renewcommand{\arraystretch}{1.12}
+\setlist{leftmargin=*,itemsep=0.15em,topsep=0.3em}
+\setcounter{tocdepth}{2}
+\numberwithin{equation}{chapter}
+\captionsetup{skip=6pt}
+\titleformat{\chapter}[hang]{\Large\bfseries}{\thechapter.}{0.6em}{}
+\titlespacing*{\chapter}{0pt}{-8pt}{16pt}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection.}{0.5em}{}
+\renewcommand{\bibsection}{\chapter{\bibname}}
+\setlength{\bibsep}{3pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small CEX/DEX: price tracking and liquidity}
+\fancyhead[R]{\small Manuscript \revisionManuscrito{} · 25 Nov 2026}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\fancypagestyle{plain}{%
+  \fancyhf{}
+  \fancyhead[L]{\small CEX/DEX: price tracking and liquidity}
+  \fancyhead[R]{\small Manuscript \revisionManuscrito{} · 25 Nov 2026}
+  \fancyfoot[C]{\small\thepage}
+  \renewcommand{\headrulewidth}{0.3pt}
+}
+
+\begin{document}
+
+% ---------------------------------------------------------------- Cover page
+\begin{titlepage}
+  \thispagestyle{empty}
+  \centering
+  \singlespacing
+  {\large\bfseries Universidad Nacional de Colombia\\[2pt]
+  Facultad de Minas\\[2pt]
+  Sede Medellín\par}
+  \vspace{3.2cm}
+  {\LARGE\bfseries Price Tracking and Liquidity Fragility\\
+  in Hybrid CEX/DEX Crypto Markets\par}
+  \vspace{0.9cm}
+  {\Large An agent-based experimental framework\\
+  and a reduced dynamical model\par}
+  \vspace{2.6cm}
+  {\Large Edward Calderón Aristizábal\par}
+  \vspace{1.6cm}
+  {\large Master in Engineering -- Systems and Computer Engineering\\[2pt]
+  In-depth (profundización) modality\par}
+  \vspace{0.8cm}
+  {\large Advisor: Prof. Juan David Ospina Arango\par}
+  \vfill
+  {\large Medellín, Colombia\\[2pt]
+  November 25, 2026\par}
+  \vspace{0.3cm}
+  {\small Working manuscript for advisor review --- revision \revisionManuscrito{} (edition \versionTesis{})\par}
+\end{titlepage}
+
+\pagenumbering{roman}
+\setcounter{page}{1}
+
+% ---------------------------------------------------------------- Abstract / Resumen
+\begingroup
+\setcounter{secnumdepth}{-1}
+\addtocontents{toc}{\protect\setcounter{tocdepth}{0}}
+\titleformat{\section}{\Large\bfseries}{}{0pt}{}
+\singlespacing
+\input{chapters/00-abstract}
+\clearpage
+\input{chapters/00-abstract-translation}
+\addtocontents{toc}{\protect\setcounter{tocdepth}{2}}
+\endgroup
+\setcounter{secnumdepth}{2}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.5em}{}
+
+\clearpage
+\tableofcontents
+\clearpage
+\listoftables
+\clearpage
+\listoffigures
+\clearpage
+\input{chapters/00-notation}
+\onehalfspacing
+
+% ---------------------------------------------------------------- Body
+\clearpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\input{chapters/01-introduction}
+\input{chapters/02-problem-and-state-of-the-art}
+\input{chapters/03-justification}
+\input{chapters/04-hypotheses}
+\input{chapters/05-objectives}
+\input{chapters/06-methodology}
+\input{chapters/07-results}
+\input{chapters/08-discussion-and-conclusions}
+\input{chapters/09-future-work}
+
+\bibliographystyle{unsrtnat}
+\bibliography{references}
+
+\input{chapters/11-annexes}
+\end{document}

@@ -1,0 +1,104 @@
+\chapter{Problem Statement and State of the Art}
+\label{cap:problema}
+
+\section{Delimitation of the problem}
+
+A CEX allows participants to enter buy and sell orders whose execution depends on the orders available in the book. A constant-product AMM, by contrast, allows swaps against a two-asset pool. In the ideal representation of the latter, the marginal price is obtained from the ratio between reserves, and the available depth determines the difference between that price and the average price at which a transaction is executed. A change in the centralized market does not directly modify the AMM's reserves: for its price to adjust, transactions must take place.
+
+A pair of assets $X/Y$ traded in two mechanisms is considered. The CEX is represented by a series of external prices in units of $Y$ per unit of $X$; the DEX, by an AMM. This simplification makes it possible to control the perturbation applied to the reference and to observe only the decentralized response. A full order book and a bidirectional feedback between markets are not studied; the choice deliberately excludes CEX depth and block synchronization, which would require a different experimental infrastructure.
+
+The tracking error is $e_t=\log(\pD_t/\pC_t)$. Its sign indicates whether the AMM's marginal price is above or below the reference. Transaction costs prevent interpreting every difference as an executable opportunity, so the gross error is distinguished from the excess outside an operating band. The duration of the discrepancy is measured over an explicit horizon. That the error returns to the band does not, by itself, demonstrate global stability of a stochastic system.
+
+The problem has two levels. At the microscopic level, the interest is in how arbitrage, agents' orders and withdrawal decisions alter the reserves. At the reduced level, the interest is in whether a transition relation of a few variables can describe the response of the full model. Different configurations can produce a similar aggregate error; in that case, a reduced description does not necessarily identify the mechanism that generated it. That is why the experiments intervene on one mechanism at a time and keep the other conditions fixed.
+
+\section{Complex systems and artificial markets}
+
+Complex adaptive systems comprise heterogeneous components that interact with their environment and with each other. Holland \cite{holland1995hidden} highlights adaptation and organization arising from local rules; his work is used here only as a conceptual framework and does not support claims about markets. In finance this perspective is useful because observed prices modify subsequent decisions, and the aggregation of orders can produce feedbacks that do not appear when an isolated decision is studied.
+
+Agent-based computational economics studies economic processes through executable rules and heterogeneous populations \cite{tesfatsion2003agent}, and its application to finance has established reviews \cite{lebaron2006agent,hommes2006heterogeneous,axtell2025agent}. An agent-based model (ABM) does not require all participants to share an expectation or the system to reach equilibrium immediately. Unlike an aggregate representation, it retains individual states and allows counterfactual interventions on particular policies. However, more detail does not equal more explanatory power: with too many free rules, multiple configurations can explain the same observations.
+
+The artificial market of Palmer and coauthors \cite{palmer1994artificial} and the model of Brock and Hommes \cite{brock1998heterogeneous} are antecedents for studying endogenous dynamics produced by heterogeneous strategies; Lux and Marchesi \cite{lux1999scaling} examine financial regularities in a stochastic agent model. The implication for this work is not that an AMM automatically reproduces those results, but that comparing noise and trend policies makes it possible to inquire how much of the dynamics depends on heterogeneity and how much on institutional structure. In addition, zero-intelligence agents \cite{gode1993allocative,farmer2005predictive} justify that a random order flow, with no information or objective, is a legitimate minimal representation of noise traders.
+
+The stylized facts of financial markets, such as the heavy tails of returns and the persistence of volatility \cite{cont2001empirical}, provide comparison criteria. Reproducing them in isolation is insufficient as validation, because similar distributions can emerge from different mechanisms, and a short simulation horizon does not allow tail characteristics to be estimated precisely. That is why price tracking and the response to a perturbation are the primary outcomes here, and the stylized facts remain as secondary diagnostics subject to data sufficiency.
+
+\section{Artificial cryptoasset markets}
+
+Cocco, Concas and Marchesi \cite{cocco2017artificial} transfer the agent-based approach to the study of an artificial Bitcoin market, and Cocco, Tonelli and Marchesi \cite{cocco2019agent} extend it to the trading of that asset. Those works show that ABM research on cryptoassets predates the current DeFi infrastructure. The mechanism of interest here is neither the issuance of the asset nor mining, but trading against reserves, and those models do not represent an AMM.
+
+Comparing works requires distinguishing the price-formation mechanism, the origin of the orders and the validation procedure. An artificial market that forms prices with an order book and one that uses a conservation function are not interchangeable. A mathematical property of the AMM, such as the increase in impact as its reserves decrease, must not be confused with a statistical property produced by the behavior of agents. This work keeps both levels and assigns a different test to each.
+
+\section{Decentralized exchanges and AMMs}
+
+Schär \cite{schar2021defi} describes the financial infrastructure based on smart contracts, and Xu and coauthors \cite{xu2023sok} systematize the exchange mechanisms with AMMs; Bartoletti, Chiang and Lluch-Lafuente \cite{bartoletti2022theory} offer a formal theory of AMMs. The constant-product case is simple enough to derive the relation between the size of an order and the change in price. A concentrated-liquidity AMM, by contrast, distributes positions over price intervals and cannot be represented simply with a single pair of global reserves.
+
+The Uniswap v2 whitepaper \cite{adams2020uniswap} makes it possible to distinguish the ideal swap without fee from the swap with a fee retained by the pool. The condition $xy=k$ is an identity during a swap without costs; when fees or inflows and outflows of liquidity providers are incorporated, the reserve product changes. An implementation must record those changes in an accounting manner and must not use as an invariant an equality that holds only under specific assumptions. Lehar and Parlour \cite{lehar2025uniswap} and Capponi and Jia \cite{capponi2025liquidity} analyze liquidity provision and the behavior of providers on DEXs, which places the withdrawal rule of this work in an established field of study.
+
+Angeris and Chitra \cite{angeris2020cfmm} study constant-function market makers and their properties as price oracles. Angeris and coauthors \cite{angeris2020uniswap} formally analyze constant-product markets, show that under certain conditions they closely follow the price of a reference market and verify it with a large-scale agent-based simulation. The antecedent is directly relevant: it shows that the tracking of an external price by an AMM, with arbitrageurs and heterogeneous agents, is not by itself an original gap. Its approach is used as a starting point to define the tracking tests and to delimit the use of the reduced map.
+
+\section{Arbitrage, costs and adaptive liquidity}
+
+Arbitrage brings the AMM price closer to the external price when the discrepancy allows a profitable operation. With a fee, arbitrage is profitable only if the discrepancy exceeds a threshold \cite{milionis2025fees}; with finite capital, risk aversion or settlement frictions, the adjustment is incomplete \cite{shleifer1997limits}. In cryptoassets, price deviations between markets persist because of capital constraints and settlement times \cite{makarov2020trading,hautsch2024building}, and the cost of arbitrage falls on liquidity providers, who lose to arbitrageurs when the reference price moves \cite{milionis2022lvr}. The magnitude of the adjustment depends on the size of the operation and on the available capacity. A rule that always adjusts the price to its target is equivalent to assuming sufficient capacity and immediate execution; introducing a maximum trading capacity makes it possible to study the cases in which the adjustment requires several steps.
+
+Campbell and coauthors \cite{campbell2025optimal} analyze the choice of fees and the profitability of passive providers in a model in which an AMM operates in parallel with a CEX, with simulations and calibration with data. Their object is the profitability of provision and the determination of fees, whereas here the tracking error and the descriptive scope of a local map are studied. This distinction is a thematic delimitation, not a proof that no other works on the same object exist. It should also be noted that the work of Campbell and coauthors is a preprint, as is that of Bergault and coauthors \cite{bergault2025exit} discussed below; Dean and coauthors \cite{dean2022arbitrage} present an arbitrage model with an AMM in a working paper that has not been refereed. The three are cited as antecedents, not as established results.
+
+Palit \cite{palit2022shuffled} randomly reorders historical Uniswap events and replays them through the AMM mechanism, which reduces the real market to zero intelligence and makes it possible to measure its effect on impermanent loss, slippage and price efficiency. The methodological lesson is to preserve a flow and modify a single dimension to isolate its effect. Here the idea is applied to pairs of simulations with common perturbations and exogenous flows that change an arbitrage or liquidity-provision rule; it is not claimed to have replicated the historical study. Other agent-based models of AMMs are scarce: Sabaté-Vidales and Šiška \cite{sabatevidales2023variable} simulate variable fees in constant-product markets, and Cohen and coauthors \cite{cohen2023inefficiency} combine a hedging perspective with multi-agent simulations and conclude that, on average, fees do not compensate for market risk. No earlier ABM representing a liquidity withdrawal that depends on the tracking error was found.
+
+Bergault, Bieber and Sánchez-Betancourt \cite{bergault2025exit} treat the exit of a liquidity provider as an optimal stopping problem, in which the moment of withdrawal depends on the state of the pool and on the reference price. These antecedents delimit H2: the aim is not to discover that withdrawal depends on the state, but to evaluate a specific heuristic rule and its effect on the price response under controlled interventions. The rule does not reproduce the optimal policy of those authors and is a modeling decision of this work, supported by that antecedent and by the analysis of Lehar and Parlour \cite{lehar2025uniswap}; the analogy with bank runs \cite{diamond1983bank} is used only as intuition and not as evidence about AMMs.
+
+The proportional exit of reserves does not immediately change the marginal price, but it reduces the size of the pool relative to a subsequent order. This distinction separates a verifiable mechanical property from a hypothesis about adaptive behavior. The mechanical effect is established with an identity; the adaptive one requires comparing trajectories in which the withdrawal decision responds to prior observations.
+
+On price formation between CEX and DEX, Capponi, Jia and Yu \cite{capponi2026price} study price discovery on decentralized exchanges, and Alexander and coauthors \cite{alexander2025price} the price discovery and efficiency of Uniswap pools. That literature is empirical and supports the pertinence of the topic; this work uses no market data and does not reproduce those results.
+
+\section{Reduced dynamical models}
+
+The ABM can be represented as a discrete transformation of its full state. Reducing it to two variables implies discarding information on inventories, reserves and agents' memory. The result does not necessarily have the Markov property: the same pair of observables can correspond to different internal states and, therefore, to different transitions. That is why the reduced map is formulated as a local approximation and not as a global identity. Fitting coarse-grained maps to the output of microscopic simulators has methodological antecedents \cite{gear2003equationfree}, and so does the use of statistical surrogates of an ABM \cite{lamperti2018surrogates}.
+
+Linearization around an operating point requires declaring the domain and the meaning of the variables \cite{roubal2010linearization}. With a no-arbitrage band, the function that converts the gross error into excess is not differentiable at the edges of the band, so it is convenient to distinguish the positive active, negative active and inactive regions; combining local linear submodels by regions has precedents in system identification \cite{takagi1985fuzzy}. A Schur stability criterion \cite{schur1917potenzreihen,jury1962simplified,elaydi2005difference} applied to a local matrix makes it possible to study an autonomous linear dynamics, but it does not establish stability of the full stochastic system.
+
+Comparing the full model with its approximation must go beyond in-sample fit. If the coefficients are estimated with the same configurations on which the error is evaluated, performance is overestimated. That is why the contrast is made on held-out configurations and seeds, with simple baseline models and metrics fixed before the evaluation.
+
+\section{Validation and reproducibility}
+
+Fagiolo, Moneta and Windrum \cite{fagiolo2007critical} and Windrum, Fagiolo and Moneta \cite{windrum2007empirical} discuss the difficulties of empirically validating economic ABMs. Verification seeks to establish whether the implementation respects the specification; validation considers whether the specification is adequate for the phenomenon it represents \cite{sargent2013verification}. The distinction is indispensable in a financial model: a well-implemented conservation identity does not prove that a trading policy represents real participants.
+
+Grimm and coauthors \cite{grimm2020odd} propose the ODD protocol for describing agent-based models. Its use makes it possible to specify entities, variables, scales, process schedule, initialization and available information (annex~\ref{sec:odd}). The protocol does not replace experimental design; it is complemented by a record of scenarios, parameters, seeds and results so that the comparisons can be repeated \cite{railsback2019agent,thiele2014facilitating}.
+
+\section{Comparative synthesis and delimited gap}
+
+Table~\ref{tab:antecedentes} summarizes what each group of antecedents contributes to the problem and what it implies for the study.
+
+\begin{table}[htbp]
+\centering
+\caption{Focused comparison of antecedents.}
+\label{tab:antecedentes}
+\small
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X@{}}
+\toprule
+Antecedent & Contribution to the problem & Implication for the study \\
+\midrule
+Brock and Hommes \cite{brock1998heterogeneous}; Lux and Marchesi \cite{lux1999scaling} & Heterogeneity and financial dynamics. & Compare noise and trend rules; do not attribute all the dynamics to emergence. \\
+Cocco et al. \cite{cocco2017artificial,cocco2019agent} & Artificial Bitcoin markets. & Acknowledge the ABM antecedents in cryptoassets; distinguish the AMM mechanism. \\
+Angeris et al. \cite{angeris2020uniswap} & Price tracking and agent simulation in Uniswap. & Use the arbitrage band and acknowledge the similarity with the proposed system. \\
+Xu et al. \cite{xu2023sok}; Bartoletti et al. \cite{bartoletti2022theory} & Taxonomy and formal theory of AMMs. & Limit the domain to constant product. \\
+Palit \cite{palit2022shuffled} & Controlled alteration of the order of historical events. & Separate the effects of rules and of sequences with common flows. \\
+Campbell et al. \cite{campbell2025optimal} & CEX/DEX, provider profitability and fees. & Distinguish the purpose of the reduced map from the optimal-fee problem. \\
+Bergault et al. \cite{bergault2025exit} & Liquidity withdrawal as optimal stopping. & Evaluate a heuristic rule, not the optimal policy. \\
+Gear et al. \cite{gear2003equationfree}; Roubal et al. \cite{roubal2010linearization} & Coarse-grained maps and local linearization. & Declare the domain of validity and compare out of sample. \\
+Grimm et al. \cite{grimm2020odd}; Fagiolo et al. \cite{fagiolo2007critical} & Documentation and validation of ABMs. & Separate verification, experimentation and validation. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The focused review makes it possible to sharpen the question without asserting a universal absence of earlier models. The specific problem is to establish, for the defined micro-world, the relation between arbitrage constraints, depth and adaptive response, and to evaluate whether a low-order discrete map characterizes the correction or persistence of the error in configurations different from those used to estimate it. The potential contribution is methodological: an explicit comparison of representations, with falsification conditions and regions of disagreement. The originality with respect to the whole literature remains subject to an expanded literature review.
+
+% Finish the literature table before the question and keep its heading and text together.
+\FloatBarrier
+\begin{samepage}
+\section{Research question}
+
+\begin{quote}
+\emph{Under what conditions of arbitrage capacity and liquidity depth does a constant-product AMM track an exogenous CEX price after a perturbation, and with what precision does a reduced dynamical map describe the tracking regimes obtained in a micro-world with heterogeneous agents?}
+\end{quote}
+\end{samepage}
+
+The question does not include predicting the CEX nor does it aim to establish causality about real markets. The universe of inference consists of the configurations of an explicitly specified computational model. Extending the conclusions would require external evidence.

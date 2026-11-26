@@ -2,9 +2,13 @@ TEX=pdflatex
 MAIN=main.tex
 BIB=bibtex
 
-.PHONY: pdf pdf-en pdf-es language-check clean
+.PHONY: pdf pdf-en pdf-es language-check layout-check clean
 
 pdf: language-check pdf-en pdf-es
+	$(MAKE) layout-check
+
+layout-check:
+	python3 ../scripts/check-thesis-layout.py
 
 language-check:
 	node ../scripts/check-language-pair.mjs

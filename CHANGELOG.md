@@ -1,3 +1,11 @@
+## [Unreleased]
+
+### Fixed
+
+- Removed an editorial note about replacing a literature source from both annex editions.
+- Corrected research-question pagination in manuscript v0.5.1: keep the heading and full quotation together and finish the preceding literature table before this section in both editions. The question and findings are unchanged.
+- Added a rendered-PDF layout check to the paired thesis build and Pages publishing workflow to catch a split or interrupted research question before publication.
+
 ## [0.1.8](https://github.com/edwardcalderon/Master-s-thesis/compare/v0.1.6...v0.1.8) (2026-11-25)
 
 ### Added

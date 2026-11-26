@@ -27,7 +27,7 @@ For full version history, see [CHANGELOG.md](./CHANGELOG.md) and [GitHub release
 
 ## Earlier preliminary manuscript — 29 Oct 2026
 
-This earlier mechanism-first draft studied CEX/DEX price tracking, bounded arbitrage, and liquidity fragility. It has been revised; the active bilingual manuscript is v0.5.0, with confirmatory H1–H3 results; earlier sources are preserved in the version archive.
+This earlier mechanism-first draft studied CEX/DEX price tracking, bounded arbitrage, and liquidity fragility. It has been revised; the active bilingual manuscript is v0.5.1, with confirmatory H1–H3 results; earlier sources are preserved in the version archive.
 
 - The public site publishes the final English and required Spanish PDFs after the paired build.
 - [Current reproducible MVP](experiments/cex_dex_mvp/README.md)

@@ -7,7 +7,7 @@ La edición en inglés es la principal. Cada revisión del manuscrito debe inclu
 - PDF en inglés: `main.pdf`
 - PDF en español: `es/main.pdf`
 
-La revisión actual del manuscrito es v0.5.0. Reestructura la tesis según la retroalimentación de la dirección (introducción en seis párrafos; planteamiento del problema y estado del arte; justificación; hipótesis; objetivos; metodología; resultados; discusión y conclusiones; trabajos futuros; bibliografía; anexos) e informa una ejecución confirmatoria (`cex-dex-confirm-5b06486d695e`) con semillas de exploración y de confirmación disjuntas. La versión del espacio de trabajo se registra por separado en el archivo raíz `VERSION` y se sincroniza en ambas entradas LaTeX. Las instantáneas `versions/v0.4.0/` y anteriores conservan las fuentes previas; v0.2.0 conserva el borrador del 29 de octubre y sus cifras preliminares no verificadas.
+La revisión actual del manuscrito es v0.5.1. Esta corrección de maquetación mantiene juntos el título y la pregunta de investigación e impide que la tabla anterior los interrumpa en ambas ediciones. También elimina de ambos anexos una nota editorial sobre la sustitución de una fuente. La pregunta y los hallazgos de v0.5.0 se conservan. El manuscrito estructura la tesis según la retroalimentación de la dirección (introducción en seis párrafos; planteamiento del problema y estado del arte; justificación; hipótesis; objetivos; metodología; resultados; discusión y conclusiones; trabajos futuros; bibliografía; anexos) e informa una ejecución confirmatoria (`cex-dex-confirm-5b06486d695e`) con semillas de exploración y de confirmación disjuntas. La versión del espacio de trabajo se registra por separado en el archivo raíz `VERSION` y se sincroniza en ambas entradas LaTeX. Las instantáneas `versions/v0.4.0/` y anteriores conservan las fuentes previas; v0.2.0 conserva el borrador del 29 de octubre y sus cifras preliminares no verificadas.
 
 Los datos de figuras y tablas de `figures/data/` se exportan de la ejecución confirmatoria con `experiments/cex_dex_mvp/export_thesis_data.py`; `figures/data/manifest.json` registra la ejecución de origen y los hashes. La bibliografía (87 entradas) se verificó entrada por entrada; véase `literature-audit/REFERENCE_AUDIT.md`.
 
@@ -20,6 +20,8 @@ make pdf
 ```
 
 El objetivo comprueba primero que ambas fuentes declaren los idiomas requeridos, la misma revisión del manuscrito, la misma versión del espacio de trabajo y el mismo orden de capítulos. Después compila ambos PDF. CI publica el par como `master-thesis.pdf` y `master-thesis.es.pdf`.
+
+La compilación ejecuta también `python3 ../scripts/check-thesis-layout.py`. Requiere Poppler (`pdftotext`) y rechaza una pregunta dividida entre páginas o separada de su título. El flujo de Pages aplica la misma comprobación antes de publicar los archivos.
 
 ## Mantenimiento de la traducción
 
