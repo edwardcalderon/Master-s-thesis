@@ -53,8 +53,9 @@ The API is deployed at
 [`https://microworld-api-c4fbpfkm5xvvq.azurewebsites.net`](https://microworld-api-c4fbpfkm5xvvq.azurewebsites.net).
 Its health endpoint returned HTTP 200, a small paired ABM request returned model v0.4.0,
 and the maximum configured 100-seed/100-tick request returned HTTP 200 in 1.27 seconds
-in one F1 observation. That timing is an observation, not an SLA. The static frontend's
-production build points to this endpoint.
+in one F1 observation. That timing is an observation, not an SLA. The dashboard is
+published at [`https://edwardcalderon.github.io/Master-s-thesis/`](https://edwardcalderon.github.io/Master-s-thesis/)
+and its production build points to this endpoint.
 
 The App Service API currently has no persistent server database. The shared world is
 persisted in its bounded Git branch; each optional experiment result is returned to the
@@ -71,8 +72,8 @@ API as an always-running process. No secrets are embedded in the static app.
    `abm_config.json`; deploy the ZIP and confirm `/` returns `{"status":"ok"}`.
 4. `apps/web/.env.production` sets `VITE_MICROWORLD_API_URL` to the deployed HTTPS hostname for the Pages build.
    The CORS origin is the GitHub Pages origin (`https://edwardcalderon.github.io`).
-5. Trigger `microworld-tick.yml` once manually; verify the first `microworld-data`
-   branch has a timestamped snapshot, then observe scheduled refreshes and stale fallback.
+5. The first manual `microworld-tick.yml` run succeeded on 2026-11-26 and published
+   snapshot tick 50 with a UTC timestamp. Observe scheduled refreshes and stale fallback.
 6. If the optional endpoint reaches its F1 limit or is removed, clear the frontend API
    setting and redeploy the site; the browser and hosted-snapshot views continue.
 

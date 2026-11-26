@@ -35,11 +35,11 @@ withdrawal modes, fresh robustness tests, deployable-input forecasting, and boun
 stability analysis. DATA-001 remains TODO because no real-pair source and data rights
 have been selected. SIM-001 remains in progress for accessibility/provenance handoff;
 SIM-002 remains queued for 3D replay and bounded local scenarios. INFRA-001's periodic
-shared-world wiring is merged, but it remains a placeholder service and has not had its
-first manual Actions run. The enabled Azure for Students subscription now has the
+shared-world wiring is merged, and its first manual Actions run published tick 50.
+The tick rule remains a labeled placeholder. The enabled Azure for Students subscription now has the
 optional Linux F1 ABM API; a two-resource what-if was applied and the health plus
 maximum bounded ABM request succeeded. The new dashboard/API wiring is in a feature
-branch and awaits Pages deployment. The architecture remains tiered: browser core,
+PR #10 is merged and its GitHub Pages deployment succeeded. The architecture remains tiered: browser core,
 best-effort hosted snapshots, and optional bounded Azure runs. Public-repo Actions
 schedules can be disabled after 60 days without repository activity. Synthetic shared
 world output is not a thesis finding or validated evolutionary model.

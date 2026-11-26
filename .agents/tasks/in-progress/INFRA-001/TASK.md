@@ -91,8 +91,8 @@ must not be shown as thesis findings. Keep Lean verification and routine CI on G
   time; stale/missing snapshots never block Core.
 - Enhanced runs reproduce from seed/config inputs, display paired ABM outputs, retain
   result JSON locally, and never alter shared state or frozen confirmation files.
-- The GitHub scheduled workflow is manually verified and has a documented re-enable
-  path if inactivity disables the schedule.
+- The GitHub scheduled workflow has a successful first manual run; a later scheduled
+  refresh and the documented re-enable path remain to be observed.
 - Azure resources are behind an explicit feature flag and can be removed/disabled
   without changing the static baseline.
 - Enhanced jobs enforce parameter, seed-count, horizon, concurrency, and timeout caps;
@@ -133,11 +133,12 @@ must not be shown as thesis findings. Keep Lean verification and routine CI on G
   ancestry.
 - Passed 3 tick-engine unit tests and 2 Flask endpoint tests locally. A 2-tick
   scratch run succeeded; a NaN scenario was rejected with exit code 2 before state
-  was changed. The workflow has not yet had its first real manual run.
+  was changed.
 - Kept scenario JSON in a workflow environment variable to avoid interpolating
   user-controlled input into shell source.
-- Workflow and application code were merged by PR #5 on 2026-11-26. The required
-  first manual run has not happened yet.
+- Workflow and application code were merged by PR #5. The first real manual tick
+  succeeded on 2026-11-26 and published tick 50 with a UTC timestamp to
+  `microworld-data`.
 - The F1 API health endpoint returned HTTP 200. A paired ABM v0.4.0 smoke run returned
   HTTP 200; the maximum 100-seed/100-tick run returned HTTP 200 in 1.27 seconds in one
   F1 observation. Timing is not an SLA.
@@ -151,18 +152,19 @@ must not be shown as thesis findings. Keep Lean verification and routine CI on G
 - Added `/api/experiment` and its paired-run result visualization with local save and
   JSON download. Frontend lint/build and Flask tests pass; a two-seed/five-tick API
   smoke run returned model v0.4.0.
-- `apps/web/.env.production` points the static build to the deployed HTTPS API. The
-  website update is not published yet; the shared-world branch needs its first manual
-  tick.
+- `apps/web/.env.production` points the deployed Pages site to the HTTPS API. PR #10
+  is merged, Pages run 45882604351 succeeded, and the published site/asset include the
+  dashboard and API URL.
 - The enhanced run endpoint computes directly in Azure and needs no GitHub token. The
   legacy `/api/scenario` route remains unconfigured and is not called by the dashboard.
 
 ## Remaining work
 
-- Merge the dashboard/docs PR so Pages builds and deploys; verify the enhanced form
-  reaches the API and the static dashboard remains usable if the API is unset.
-- Trigger the merged shared-world workflow once manually; verify its first snapshot and
-  freshness display, then observe one scheduled refresh.
+- In a browser, confirm the live snapshot/trajectory and submit an enhanced paired run;
+  static fetch, API preflight, health, and maximum-run response have been verified, but
+  an interactive browser session is not available in this environment.
+- Observe one later scheduled shared-world refresh and preserve the fallback path if
+  the feed is disabled or stale.
 - Check student credit/expiry in Sponsorships. F1 has a published $0 list price but a
   daily CPU quota and no SLA; keep the endpoint optional and monitor quota usage.
 - Replace `tick.py`'s placeholder evolution rule with real, reviewed tick semantics
