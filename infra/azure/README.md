@@ -1,121 +1,82 @@
-# Azure deployment plan — microworld tick engine + dispatcher backend
+# Live microworld service tiers
 
-Status: tracked as [`INFRA-001`](../../.agents/tasks/in-progress/INFRA-001/TASK.md),
-which is the separately-scoped service
-[`SIM-002`](../../.agents/tasks/todo/SIM-002/TASK.md)'s "Deferred persistent and
-evolutionary research extension" section requires before any shared world may keep
-evolving while browsers are closed — see INFRA-001's task record for how this design
-checks against each of that section's requirements. One empty resource group exists
-in the subscription from before this task; nothing else has been deployed.
+Status checked 2026-11-26. Work is tracked in
+[`INFRA-001`](../../.agents/tasks/in-progress/INFRA-001/TASK.md). The UI and simulation
+are split into a durable browser core, a periodic shared snapshot, and an optional
+Azure-hosted exploratory runner. The static site must remain usable when either hosted
+layer is unavailable.
 
-## What changed from the first draft
+## Runtime layers
 
-The first draft of this plan assumed the full "Azure for Students" offer ($100
-credit, normal resource providers/regions). Live, read-only checks against the real
-subscription on 2026-11-25 showed it is actually an **Azure for Students Starter**
-("DreamSpark") grant, which is a different and far more restricted thing:
+| Layer | Execution and storage | Failure behavior |
+| --- | --- | --- |
+| Browser core | Static GitHub Pages app; deterministic E0/E1/E2 controls and evidence charts run in the browser. | No simulation API is needed after the page loads. Initial page delivery still depends on GitHub Pages or a cached copy. |
+| Shared microworld | Public GitHub Actions workflow advances `infra/microworld/tick.py` every 15 minutes and publishes `snapshot.json` plus bounded `history.json` to `microworld-data`. | The page shows offline/stale state and retains the browser core. This branch currently uses a placeholder random-walk rule, clearly labeled synthetic. |
+| Exploratory run | Optional App Service F1 API runs paired ABM v0.4.0 scenarios with bounded seed/horizon controls. Its JSON result is returned to the page and retained locally/exportable. | API errors disable this feature only. It never mutates the shared tick branch or confirmation evidence. |
 
-- Only `Microsoft.Web` and `Microsoft.Sql` are usable among anything compute- or
-  storage-shaped. `Microsoft.Compute` (VMs), `Microsoft.Storage`, `Microsoft.Network`,
-  `Microsoft.App`, `Microsoft.ContainerInstance`/`ContainerRegistry`,
-  `Microsoft.KeyVault`, `Microsoft.ManagedIdentity`, `Microsoft.DocumentDB`,
-  `Microsoft.OperationalInsights`, and `Microsoft.Consumption` are all
-  `DisallowedProvider` on this identity — a policy on the subscription type itself,
-  not a quota that can be requested up.
-- App Service is capped at the **Free (F1)** SKU. Attempting Basic (B1) returned:
-  *"your DreamSpark subscription can only create sites in the 'Free' SKU. You can
-  upgrade your subscription to a pay-as-you-go subscription to create sites in any
-  SKU."*
-- Only **`brazilsouth`** accepted a deployment, out of 11 regions tried (including
-  `eastus`, `eastus2`, `westeurope`, `japaneast` — all `RequestDisallowedByAzure`).
+GitHub's standard hosted runners are free for public repositories
+([billing](https://docs.github.com/en/billing/concepts/product-billing/github-actions)).
+However, GitHub may disable public-repository scheduled workflows after 60 days with
+no repository activity ([schedule behavior](https://docs.github.com/en/enterprise-cloud%40latest/actions/how-tos/manage-workflow-runs/disable-and-enable-workflows?tool=webui));
+the schedule may also be delayed. Treat its shared snapshot as best-effort and re-enable
+or manually dispatch it if needed. The browser simulator remains the fallback.
 
-F1 App Service has no "Always On" and a small daily CPU-minute quota — by design, it
-cannot host a process that ticks continuously in real time. No IaC or architecture
-choice routes around that; it's a platform restriction on this subscription tier, not
-a sizing problem. Options that would lift it (a separate verified "Azure for
-Students" signup with the $100 credit, or upgrading this subscription to
-pay-as-you-go with a card) were offered and **declined** — the chosen direction is to
-stay on Starter and redesign around its limits.
+The shared tick's `infra-001-placeholder-0.1` Gaussian shock process is a wiring/demo
+mechanism, **not the thesis ABM and not evidence**. The enhanced endpoint instead calls
+the reference `experiments/cex_dex_mvp/abm.py` model v0.4.0. Each request compares static
+LP and adaptive LP scenarios using the same exogenous schedule per seed. Caps are 100
+seeds, 100 ticks, shock log-return [-0.2, 0.2], capacity [0, 0.1], and a ten-minute
+best-effort process cooldown. Enhanced runs are exploratory web output, not frozen
+confirmation, statistical validation, or empirical market evidence.
 
-## Architecture actually being built
+## Azure status and cost boundary
 
-Three pieces, none of them a 24/7 Azure compute resource:
+Read-only CLI checks on 2026-11-26 showed the signed-in subscription is enabled and
+named **Azure for Students**. `Microsoft.Web` is now registered for the deployment;
+`Microsoft.Storage` and `Microsoft.Compute` were already registered. Container Apps,
+managed identity, and Log Analytics are not needed by this design. The resource group
+`rg-microworld` now contains only the F1 plan and API app. The remaining student credit
+and expiry were not exposed by `az account show`; check them in the Sponsorships portal.
 
-1. **Tick engine — GitHub Actions, not Azure.** A scheduled workflow
-   ([`.github/workflows/microworld-tick.yml`](../../.github/workflows/microworld-tick.yml))
-   runs on a cron (every ~15 minutes) plus `workflow_dispatch`. Each run advances the
-   microworld by a batch of simulated ticks and writes the result. This repo is
-   public, so Actions minutes are unlimited/free regardless of how often it runs.
-   "Perpetual, real-time" becomes **"autonomous and periodic, refreshed every ~15
-   minutes, simulated time advances faster than wall-clock time within each run"** —
-   an explicit, honest downgrade from literal continuous ticking, not a disguised one.
+The optional dispatcher and bounded ABM endpoint use Linux App Service **F1**. Microsoft's
+published price is $0, with shared compute (60 CPU minutes/day), 1 GB storage, no SLA,
+and a statement that Free is intended for trials/learning rather than production
+([App Service pricing](https://azure.microsoft.com/en-us/pricing/details/app-service/linux/)).
+This is an experimental convenience endpoint only. It is not an availability guarantee;
+F1 quota exhaustion or the end of the student subscription must not affect the core or
+the hosted snapshot. The Azure for Students offer advertises $100 for 12 months
+([offer](https://azure.microsoft.com/en-us/free/students)); those credits are not
+required by the F1 API. Subscription services can be disabled at credit/term end unless
+the offer is upgraded ([subscription behavior](https://learn.microsoft.com/en-us/azure/cost-management-billing/manage/azurestudents-subscription-disabled)).
 
-2. **State and reads — a dedicated git branch, not Azure Storage.** The workflow
-   keeps `state.json` (full internal state), `snapshot.json` (compact, checksummed,
-   versioned — matching [`SIM-001`](../../.agents/tasks/in-progress/SIM-001/TASK.md)'s
-   own conventions), and a bounded `history.json` (last N ticks only) on a
-   `microworld-data` branch, replacing its parentless root commit each run rather than
-   growing history forever. Failed remote-branch lookups abort instead of silently
-   initializing over saved state. Scenario inputs are finite and range checked before
-   they reach persisted state. `main` and its versioning/changelog tooling are untouched —
-   [`pages.yml`](../../.github/workflows/pages.yml) only triggers on pushes to `main`.
-   The static site (`apps/web`, GitHub Pages) can fetch `snapshot.json`/`history.json`
-   straight from `raw.githubusercontent.com`, with zero Azure dependency for reads.
+The API is deployed at
+[`https://microworld-api-c4fbpfkm5xvvq.azurewebsites.net`](https://microworld-api-c4fbpfkm5xvvq.azurewebsites.net).
+Its health endpoint returned HTTP 200, a small paired ABM request returned model v0.4.0,
+and the maximum configured 100-seed/100-tick request returned HTTP 200 in 1.27 seconds
+in one F1 observation. That timing is an observation, not an SLA. The static frontend's
+production build points to this endpoint.
 
-3. **Web handler backend — Azure, F1, and genuinely needed for exactly one thing.**
-   A public static frontend can't hold the secret needed to trigger a GitHub Actions
-   run safely. [`webapp/`](webapp/) is a minimal Flask app, deployed to the one App
-   Service this subscription allows (`main.bicep`, F1, `brazilsouth`), whose only job
-   is: accept a scenario-parameter POST from the frontend, validate it, and call
-   GitHub's `workflow_dispatch` API with it as input. Sparse, bursty traffic — F1's
-   cold-start-after-20-min-idle and tiny CPU quota are fine for this; they would not
-   be fine for the engine itself, which is why the engine doesn't live here.
+The App Service API currently has no persistent server database. The shared world is
+persisted in its bounded Git branch; each optional experiment result is returned to the
+browser, saved in browser storage, and can be downloaded as JSON. Do not represent the
+API as an always-running process. No secrets are embedded in the static app.
 
-```
-apps/web (GitHub Pages) ──reads──▶ raw.githubusercontent.com/.../microworld-data/*.json
-        │
-        └──POST scenario──▶ Azure App Service (F1, brazilsouth) ──dispatch──▶ GitHub Actions
-                                                                                   │
-                                                                      microworld-tick.yml
-                                                                      (cron + dispatch)
-                                                                                   │
-                                                                     writes state to
-                                                                     microworld-data branch
-```
+## Deploy and operate
 
-## Cost posture
+1. Log in with `az login` and confirm the selected subscription name/state.
+2. The 2026-11-26 deployment registered `Microsoft.Web`, created `rg-microworld` in
+   Brazil South, and applied a what-if with exactly two F1 creates (plan + app).
+3. Package `infra/azure/webapp/app.py` and requirements together with
+   `infra/microworld/experiment.py` and the reference `abm.py`, `run.py`, and
+   `abm_config.json`; deploy the ZIP and confirm `/` returns `{"status":"ok"}`.
+4. `apps/web/.env.production` sets `VITE_MICROWORLD_API_URL` to the deployed HTTPS hostname for the Pages build.
+   The CORS origin is the GitHub Pages origin (`https://edwardcalderon.github.io`).
+5. Trigger `microworld-tick.yml` once manually; verify the first `microworld-data`
+   branch has a timestamped snapshot, then observe scheduled refreshes and stale fallback.
+6. If the optional endpoint reaches its F1 limit or is removed, clear the frontend API
+   setting and redeploy the site; the browser and hosted-snapshot views continue.
 
-Zero, by construction: GitHub Actions on a public repo is free regardless of
-frequency; the `microworld-data` branch is git storage, not a billable resource; F1
-App Service is free and this subscription cannot create anything that bills. There is
-nothing to budget or alert on — `Microsoft.Consumption` (where Azure Budgets live) is
-blocked anyway, and is moot here: Starter has no payment method attached, so there is
-no bill to overrun.
-
-## Run order
-
-1. `az login` as yourself (human, one-time).
-2. `./scripts/bootstrap-service-principal.sh` — creates the resource group and a
-   service principal scoped to it only. If this fails on the app-registration step,
-   see the troubleshooting note in the script (EDU tenants sometimes restrict who can
-   register applications, separately from anything about the subscription).
-3. Log in as that service principal (the bootstrap script prints the command).
-4. `./scripts/deploy-infra.sh rg-microworld` (what-if only), review, then
-   `./scripts/deploy-infra.sh rg-microworld --apply`.
-5. Deploy `webapp/` to the created Web App (e.g. `az webapp up` or a GitHub Actions
-   CD step using the `azure/webapps-deploy` action) and set its one required secret —
-   a fine-scoped GitHub token with `actions:write` on this repo — as an App Service
-   application setting, never committed.
-6. The workflow is merged. Trigger it once by hand (`workflow_dispatch`) and read
-   the run log before trusting the schedule — the branch-creation step in particular
-   should be watched on its first run.
-
-## Identity: letting an agent apply changes here
-
-Unchanged in spirit: a service principal scoped to one resource group, never
-subscription-wide. See
-[`scripts/bootstrap-service-principal.sh`](scripts/bootstrap-service-principal.sh).
-The one addition from Starter's AAD tenant: if app-registration creation turns out to
-be restricted, the fallback is `az login` interactively each session rather than an
-unattended service principal — az's on-disk token cache still persists across tool
-calls within a session even though shell environment variables don't.
+The F1 plan and API deployment plus health and max-bound smoke checks are complete.
+The static Pages build has the API URL configured, but the feature branch still needs
+to reach `main` before the site points readers to it. F1 avoids consuming the 12-month
+student credit; upgrading to a paid SKU needs a separate budget decision.

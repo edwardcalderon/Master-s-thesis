@@ -176,10 +176,36 @@ and limitations; any claim of measured educational benefit requires a separate s
 Frozen confirmation artifacts -> compact versioned bundle -> static evidence charts
 Reference ABM + fixed seed -> paired event traces -> synchronized 3D replay
 User inputs -> bounded browser model -> exploratory scenario -> local saves/export
+Optional GitHub snapshot -> freshness-checked shared-world view -> browser fallback
+Optional Azure job API -> isolated bounded runs -> versioned result bundles
 ```
 
-The core remains deployable to static GitHub Pages without a required compute service.
-The rendering loop consumes states; it does not determine market outcomes.
+The browser-local deterministic model and published evidence view are the permanent
+no-backend baseline. Once the static app and its assets have loaded, calculations must
+not require a network connection, Azure configuration, or a simulation service; initial
+page delivery still depends on GitHub Pages or a cached copy. Local scenarios remain
+on the user's device and can be exported. The rendering loop consumes states; it does
+not determine market outcomes.
+
+The shared persistent world is an optional layer. Its GitHub-hosted snapshot may be
+polled and presented with model version, synthetic-data label, tick, and update time.
+The view must show stale/unavailable status and continue to the local baseline when
+the snapshot is absent or old. Public GitHub scheduled workflows may be auto-disabled
+after 60 days without repository activity, so this feed is a convenience rather than
+the availability guarantee.
+
+An optional higher-compute layer submits bounded, reproducible exploratory scenarios
+to an Azure App Service F1 API using the reference ABM v0.4.0. Each response carries a
+run ID, model/configuration version, seed range, finite horizon, paired scenario
+summaries, and aggregate trajectory. The UI stores the returned JSON locally and
+offers a download; runs never modify the shared-world branch. F1 has a daily CPU quota
+and no SLA, and the subscription can expire, so failures disable only this layer.
+Interactive results remain exploratory and do not update the frozen thesis evidence.
+
+This service tier is not part of SIM-002's initial 3D replay gate. INFRA-001 owns its
+hosting, cost, lifecycle, and recovery contract; SIM-002 owns the presentation and
+fallback behavior. Longer-run persistence or evolutionary agents remain a new research
+model with explicit rules and validation, not a runtime switch on the current ABM.
 
 ## Deferred persistent and evolutionary research extension
 

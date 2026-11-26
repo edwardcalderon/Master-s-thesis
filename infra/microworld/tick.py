@@ -22,6 +22,7 @@ import json
 import math
 import random
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -139,6 +140,7 @@ def build_snapshot(state: dict[str, Any]) -> dict[str, Any]:
     body = {
         "model_version": state["model_version"],
         "synthetic": True,
+        "updated_at": datetime.now(timezone.utc).isoformat(),
         "tick": state["tick"],
         "cex_price": state["cex_price"],
         "dex_price": price(state["reserve_x"], state["reserve_y"]),
