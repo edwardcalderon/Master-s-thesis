@@ -106,9 +106,9 @@ no bill to overrun.
    CD step using the `azure/webapps-deploy` action) and set its one required secret —
    a fine-scoped GitHub token with `actions:write` on this repo — as an App Service
    application setting, never committed.
-6. Merge `.github/workflows/microworld-tick.yml`, then trigger it once by hand
-   (`workflow_dispatch`) and read the run log before trusting the schedule — the
-   branch-creation step in particular should be watched on its first run.
+6. The workflow is merged. Trigger it once by hand (`workflow_dispatch`) and read
+   the run log before trusting the schedule — the branch-creation step in particular
+   should be watched on its first run.
 
 ## Identity: letting an agent apply changes here
 
