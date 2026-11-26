@@ -19,6 +19,25 @@ the reduced map on held-out configurations without concealing disagreement.
   in both English and Spanish editions.
 - The bilingual editions carry the same manuscript revision and compile together.
 
+## Manuscript layout correction — 2026-11-25
+
+Active manuscript v0.5.1 corrects the Spanish research-question page split. The full
+question was present in the source, but its quotation broke after three lines and the
+preceding floating literature table appeared before the last line. Both editions now
+flush earlier floats before the section and keep its heading and quotation together.
+The research-question wording and v0.5.0 confirmation evidence are unchanged. The
+author also requested removal of an editorial source-replacement note; it was removed
+from both annex editions. Corrected sources are preserved in `thesis/versions/v0.5.1/`;
+earlier archived sources remain
+immutable. The paired PDF build and Pages workflow now enforce the rendered layout
+with `scripts/check-thesis-layout.py` (requires Poppler's `pdftotext`).
+
+Validation: the checker rejects the old Spanish v0.5.0 PDF and accepts the rebuilt
+v0.5.1 English and Spanish PDFs. `make -C thesis pdf` succeeds, and the question is
+complete on printed page 8 (PDF page 17) in both editions. The Spanish preceding page,
+table/question page, and English question page were visually reviewed. No release tag
+or existing release asset is replaced by this correction.
+
 ## Current evidence update — 2026-11-25
 
 Manuscript v0.5.0 now reports `cex-dex-confirm-5b06486d695e` (analysis 0.5.0,

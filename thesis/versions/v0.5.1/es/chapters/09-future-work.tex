@@ -1,0 +1,15 @@
+\chapter{Trabajos futuros}
+\label{cap:futuro}
+
+Las líneas siguientes se derivan de las limitaciones del capítulo~\ref{cap:discusion}.
+
+\begin{enumerate}
+  \item \textbf{Niveles de comisión, latencia y volatilidad externa.} El simulador debe incorporar el intercambio con comisión de la ecuación~\eqref{eq:comision}, un retraso en la ejecución del arbitraje y una referencia con volatilidad, para convertir en resultados los factores que hoy son candidatos de diseño (tabla~\ref{tab:factores}). Con comisión, la banda de no arbitraje deja de ser un parámetro libre y queda determinada por $\gamma=-\log(1-f)$.
+  \item \textbf{CEX con profundidad y latencia.} Sustituir la referencia exógena por un libro de órdenes que responda a las operaciones del AMM permitiría estudiar la realimentación bidireccional.
+  \item \textbf{Liquidez concentrada.} Extender el AMM a posiciones por intervalos de precio, que cambian la relación entre reserva e impacto.
+  \item \textbf{Reglas alternativas de los proveedores.} Comparar la regla de retiro de un disparo con una de parada óptima \cite{bergault2025exit} y con retiros graduales, y repetir H2 con y sin agente de pánico de manera preregistrada.
+  \item \textbf{Diseño con la precisión adecuada.} Preparar el piloto con el mismo diseño de choques que la confirmación, para que la guía de tamaño de muestra sea representativa.
+  \item \textbf{Mapa reducido.} Probar mapas con más variables o con términos no lineales, y evaluar si mejoran al autorregresivo escalar; explorar otros criterios de clasificación de regímenes.
+  \item \textbf{Validación externa.} Contrastar la tasa de contracción del error y la relación entre profundidad e impacto con datos de un par negociado en un CEX y un DEX.
+  \item \textbf{Evaluación pedagógica.} Medir con estudiantes si la interfaz interactiva mejora la comprensión de los mecanismos.
+\end{enumerate}

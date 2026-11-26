@@ -56,10 +56,14 @@ jobs:
           root_file: main.tex
           working_directory: thesis/es
 
-      - name: Verify bilingual thesis PDFs
+      - name: Install PDF layout checker dependency
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y poppler-utils
+
+      - name: Verify bilingual thesis PDFs and research-question layout
         run: |
           test -s thesis/main.pdf
           test -s thesis/es/main.pdf
+          python3 scripts/check-thesis-layout.py
 
       - name: Copy research assets and final PDFs into Pages artifact
         run: |

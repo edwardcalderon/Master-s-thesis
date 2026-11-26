@@ -19,7 +19,8 @@ maintained in English.
 
 ## Current work note
 
-As of 2026-11-25, the active bilingual manuscript is v0.5.0. Its evidence comes from
+As of 2026-11-25, the active bilingual manuscript is v0.5.1 (research-question
+pagination correction; the question and v0.5.0 evidence are unchanged). Its evidence comes from
 `cex-dex-confirm-5b06486d695e` (analysis 0.5.0, model 0.4.0), with 300 confirmation
 seeds and 13,500 runs. `thesis/figures/data/manifest.json` identifies the source and
 checksums. H1 reduces excess-error area but missed its precision target; H2's maximum-

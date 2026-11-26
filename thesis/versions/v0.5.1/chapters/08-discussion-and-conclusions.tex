@@ -1,0 +1,49 @@
+\chapter{Discussion and Conclusions}
+\label{cap:discusion}
+
+\section{Discussion of the results}
+
+\subsection{Price tracking and arbitrage capacity (OE2, H1)}
+
+The result for H1 is the most solid of the work: active arbitrage reduces the excess-error area in all seeds and in all cells, and capacity grades the recovery, from $4.6\,\%$ without arbitrage to $56.8\,\%$ with low capacity and to $100\,\%$ with high capacity. It is an expected result from the mechanics of the model, because the arbitrageur is the only agent that moves the AMM price toward the reference, and for that reason the contribution lies not in the sign of the effect but in its grading. The recovery rate with low capacity depends on the combination of the size of the shock and the depth (table~\ref{tab:recuperacion}): a large shock requires several bounded steps, and the horizon of 20 ticks may not suffice. That dependence suggests that, in this model, the relevant arbitrage capacity is not a threshold but a ratio between the size of the discrepancy and the capacity per tick.
+
+The design lesson is precision. The target half-width for H1 was not reached because the pilot combined positive and negative shocks whose effects cancel almost completely within each seed (correlation $-0.981$). A pilot built with the same design as the confirmation would have anticipated a deviation nine times larger. The conclusion that arbitrage reduces the excess does not depend on this, but the estimate of the effect size is less precise than planned.
+
+\subsection{Adaptive liquidity (OE3, H2)}
+
+H2 holds on average, but not uniformly. The withdrawal was activated in all E3 runs and, nevertheless, the maximum response increases only at the lowest depth. With depths 1 and 2 the maximum is the same in E1-high and in E3. With depth 0.5, the exploratory check without the panic agent retains approximately half of the effect, so that the effect depends on the withdrawal and, to an equal extent, on the interaction between the withdrawal and the panic agent. What the experiment allows asserting is that, in this micro-world, a one-shot withdrawal rule does not amplify the maximum response when orders are small relative to the reserve, and that amplification appears when the pool is shallow enough for a noise order to trigger the panic reaction.
+
+It is not claimed that real providers amplify perturbations. The withdrawal rule is a modeling decision, without calibration and without empirical support of its own. Its theoretical support is indirect: the literature treats the exit of providers as a decision problem \cite{bergault2025exit} and documents their behavior on decentralized exchanges \cite{lehar2025uniswap}, but none of those works validates the rule used here.
+
+\subsection{Reduced dynamical map (OE4, H3)}
+
+The result for H3 is mixed. The two-variable map predicts better than persistence, with a substantial improvement in the conditions with active arbitrage (15 to 21 percent in E1-high and E3), but it does not beat a scalar autoregression and it is slightly worse than persistence without arbitrage. Two observations limit its interpretation. First, the second state, the net buying pressure, does not improve the one-step prediction relative to the excess error alone; the advantage of the map over persistence comes from the contraction coefficient $a$, which a scalar model captures equally. Second, the coefficient $\beta$ of E3 has the opposite sign to that of the other conditions and the equation of the excess is degenerate in E1-max, which shows that the two-variable structure is not stable across conditions.
+
+The regime classification with the Schur criterion does not discriminate: all fitted matrices are stable, including that of E0, whose spectral radius is $0.998$ and whose runs are persistent in $57\,\%$ of the cases. This is consistent with what the criterion can say (the stability of an autonomous linear dynamics at a point) and not with the finite horizon and the noise of the simulator. The map serves as a description of the error contraction rate, not as a regime classifier.
+
+\section{Conclusions by objective}
+
+\begin{description}
+  \item[OE1.] A discrete simulator was formulated and verified with nine invariants and a reproducible record: the confirmatory run is regenerated with identical identifier and checksums, except for the timestamp. The verification shows that the implementation respects its specification, not that the specification is realistic.
+  \item[OE2.] Active arbitrage reduces the excess-error area from $2.36$ to $0.10$, and capacity grades the recovery rate in the simulated conditions.
+  \item[OE3.] Adaptive withdrawal increases the maximum response by $0.011$ on average, but only at the lowest depth tested, and approximately half of that effect is attributed to the panic agent. Amplification at greater depths is not concluded.
+  \item[OE4.] The reduced map beats persistence, does not beat a scalar autoregression, and its out-of-sample regime classification is weak. It is a local description, and its usefulness is limited to the error contraction rate.
+\end{description}
+
+\section{General conclusion}
+
+In the micro-world studied, arbitrage capacity is the main determinant of how a constant-product AMM tracks the reference price. Depth modifies the impact of orders analytically and, together with a reaction rule of the agents, can amplify the response. A two-variable map describes the error contraction better than persistence, but a one-variable model describes it equally well. These conclusions hold for the model and are not extended to real markets.
+
+\section{Limitations and threats to validity}
+
+\begin{itemize}
+  \item \textbf{Exogenous reference.} The CEX does not respond to the AMM, nor does it have depth, latency or fees. Feedback effects between markets are left out.
+  \item \textbf{No fees.} The simulator implements only zero-fee swaps. The no-arbitrage band is a parameter and not a consequence of a cost. The levels of fee, latency and external volatility are candidates for later work.
+  \item \textbf{Schedule.} The order of actions within a tick affects the results (for example, the panic agent observes the price before the provider and the arbitrageur act). Alternative schedules were not evaluated.
+  \item \textbf{Definition of depth.} Depth scales the reserves and keeps the absolute size of the orders constant. Another definition, with orders proportional to the reserve, could change the conclusion on H2.
+  \item \textbf{Inventories.} Inventories are ample and no order was capital-limited; real capital constraints are not represented.
+  \item \textbf{Single-type agents.} Each agent class is representative and there is no heterogeneity within a class.
+  \item \textbf{Synthetic data only.} There are no market data and no external validation. The coherence between the simulated series and the stylized facts of real markets was not evaluated.
+  \item \textbf{Exploratory check.} The repetition of H2 without the panic agent was not pre-registered.
+  \item \textbf{Generalization of H3.} The out-of-sample evaluation covers unseen cells and seeds, but within the same simulator and the same family of shocks.
+\end{itemize}

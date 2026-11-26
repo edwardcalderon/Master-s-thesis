@@ -1,0 +1,24 @@
+\chapter{Justification}
+\label{cap:justificacion}
+
+\section{Scientific justification}
+
+The tracking of a reference price by an AMM has already been studied through formal analysis and simulation \cite{angeris2020uniswap}, and so has the profitability of liquidity provision relative to a CEX \cite{campbell2025optimal,milionis2022lvr}. What this work adds is not the phenomenon but the way of examining it: it separates the effect of arbitrage capacity from that of providers' reaction through paired comparisons with common order flows, and it contrasts a reduced two-variable description with the simulator from which it comes.
+
+The scientific relevance lies in delimiting what each representation can claim. An analytical identity, such as the increase in impact as reserves decrease, requires no experimentation; a claim about limited arbitrage or adaptive withdrawal does, because it depends on behavioral rules and on a horizon. Distinguishing the two levels avoids presenting an algebraic consequence as an empirical finding and also avoids dismissing as trivial an effect that appears only at certain depths. The result of chapter~\ref{cap:resultados} illustrates the point: the effect of adaptive liquidity on the maximum response is not uniform but depends on the depth tested.
+
+Moreover, the formulation as a confirmatory contrast, with hypotheses, metrics and rejection criteria fixed before simulating the confirmation seeds, answers a frequent criticism of ABMs: that they are adjusted a posteriori until they show the desired phenomenon \cite{fagiolo2007critical}. The protocol does not eliminate that criticism, but it makes explicit what was decided before observing the results and what was not. The sign that the protocol is useful is that it also documents results that run against the initial expectation: the reduced map does not beat a scalar autoregression, and the target precision for H1 was not reached with the planned number of seeds.
+
+\section{Methodological justification}
+
+A simple comparison between a scenario with arbitrage and one without it does not allow the difference to be attributed to arbitrage if the order flows differ between the two. The paired comparison, with the same exogenous shocks and the same pre-generated noise orders, isolates the modified rule, and it is the logic that Palit \cite{palit2022shuffled} applies when reproducing historical events under a zero-intelligence agent. Inference with the seed as the independent unit avoids treating the cells of a single flow as distinct samples, and Holm control limits the risk of false positives when several hypotheses are evaluated at once.
+
+The use of held-out configurations and seeds to evaluate the reduced map answers a known problem in model identification: in-sample fit overestimates descriptive ability \cite{lamperti2018surrogates}. Fitting the map with an exploration set and evaluating it on another makes it possible to distinguish between a description that generalizes and one that merely reproduces the trajectories from which it was estimated. The comparison against persistence and against a scalar autoregressive model establishes what the second state of the map contributes. Without those references, a small error would not be interpretable, because persistence is already a competitive one-step prediction.
+
+Finally, the recording of each run with identifier, seed, parameters and verification of invariants \cite{grimm2020odd,railsback2019agent} allows another person to repeat the experiment and check the published figures. The full reproducibility of the confirmatory experiment (run identifier, checksums and command) is documented in annex~\ref{cap:anexos}.
+
+\section{Applied and pedagogical justification}
+
+The results are not intended to prescribe investment strategies or to calibrate a real protocol. Their usefulness is of a different kind. First, for the design of decentralized markets, they show that initial depth and arbitrage capacity condition the speed of correction, and that providers' reaction amplifies a perturbation only under certain conditions; this information guides which parameters are worth observing in a later analysis with data. Second, in the training of systems engineers, the micro-world offers a case in which the relation between local mechanisms, constraints and aggregate behavior can be explored with small, verifiable code. Third, the website associated with the work reproduces the scenario with an interactive interface, designed for studying intuitively the effects of reducing depth or limiting arbitrage; its pedagogical value has not been evaluated with students, so it is mentioned as a line of future work (chapter~\ref{cap:futuro}).
+
+The limits of these applications are stated: the model is synthetic, uses no market data and represents a single pair with a constant-product AMM. Any use outside that domain requires additional evidence.

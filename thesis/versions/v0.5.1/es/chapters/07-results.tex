@@ -1,0 +1,344 @@
+\chapter{Resultados}
+\label{cap:resultados}
+
+\section{Alcance de los resultados}
+
+Este capítulo informa dos clases de resultados. La primera son identidades analíticas que no dependen de la simulación (sección~\ref{sec:res-analitico}). La segunda son los contrastes confirmatorios sobre 13\,500 ejecuciones del simulador, con el protocolo descrito en el capítulo~\ref{cap:metodologia}. Todos los resultados son sintéticos: provienen de un micromundo sin datos de mercado y sin comisión, y no se validaron contra observaciones externas. La ejecución confirmatoria tiene el identificador \code{\RunID}; sus sumas de verificación y el comando que la regenera figuran en el anexo~\ref{cap:anexos}.
+
+\section{Resultados analíticos: profundidad e impacto}
+\label{sec:res-analitico}
+
+Para una venta fija de $q=500$ unidades de $X$, el impacto $I(q,\kappa x)$ de la ecuación~\eqref{eq:impacto} crece al reducir la reserva (tabla~\ref{tab:impacto}). Con $x=10\,000$, reducir la reserva a la cuarta parte multiplica el impacto por 3.7 y el deslizamiento por 3.5.
+
+\begin{table}[htbp]
+\centering
+\caption{Impacto de una venta de $q=500$ unidades según la reserva (resultado analítico).}
+\label{tab:impacto}
+\small
+\begin{tabular}{@{}rrrr@{}}
+\toprule
+Factor de reserva & Reserva $x$ & Impacto $I$ & Deslizamiento (\%) \\
+\midrule
+1.00 & 10\,000 & 0.09758 & 4.76 \\
+0.75 & 7500 & 0.12908 & 6.25 \\
+0.50 & 5000 & 0.19062 & 9.09 \\
+0.25 & 2500 & 0.36464 & 16.67 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+La figura~\ref{fig:impacto} muestra la curva completa. Con $I(q,\kappa x)=2\log(1+q/(\kappa x))$ y $\kappa<1$ se cumple $I(q,\kappa x)>I(q,x)$ para todo $q>0$, y la derivada de la ecuación~\eqref{eq:dI} es negativa. Este resultado no se contrasta estadísticamente: es una consecuencia algebraica de la regla de producto constante y funciona como control de la implementación (verificación 8 del anexo).
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.78\textwidth,height=6cm,xlabel={Factor de reserva $\kappa$},ylabel={Impacto logarítmico $I$},grid=major,xmin=0.1,xmax=1.05]
+\addplot[thick,blue!70!black] table[col sep=comma,x=reserve_factor,y=log_impact] {\datadir/impact_curve.csv};
+\end{axis}
+\end{tikzpicture}
+\caption{Impacto logarítmico de una venta de $q=500$ unidades según el factor de reserva.}
+\label{fig:impacto}
+\end{figure}
+
+\section{Panorama de las condiciones}
+
+La tabla~\ref{tab:resumen} resume las cinco condiciones, con 2700 ejecuciones cada una (300 semillas por 9 celdas). Las cuatro primeras condiciones son primarias; E1-máx es una extrapolación fuera de los niveles contrastados y no entra en la inferencia.
+
+\begin{table}[htbp]
+\centering
+\caption{Resumen de las condiciones de confirmación (2700 ejecuciones por condición).}
+\label{tab:resumen}
+\small
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+Condición & Área $A$ & Resp. máx. $M$ & Recup. & Retorno\,$^{a}$ & Prof. mín. & Retiro \\
+\midrule
+E0 & 2.363 & 0.1012 & 4.6\,\% & 20.47 & 11667 & 0\,\% \\
+E1-baja & 1.056 & 0.1305 & 56.8\,\% & 14.82 & 11667 & 0\,\% \\
+E1-alta & 0.100 & 0.1220 & 100.0\,\% & 2.54 & 11667 & 0\,\% \\
+E3 & 0.180 & 0.1335 & 96.6\,\% & 4.27 & 6417 & 100\,\% \\
+E1-máx & 0.005 & 0.1197 & 100.0\,\% & 1.22 & 11667 & 0\,\% \\
+\bottomrule
+\multicolumn{7}{@{}l}{\footnotesize $^{a}$ Media restringida con censura en 21 ticks.}
+\end{tabular}
+\end{table}
+
+El error pico medio es $0.176$ en E0, $0.127$ en E1-baja, $0.064$ en E1-alta, $0.073$ en E3 y $0.008$ en E1-máx. Ninguna orden estuvo limitada por capital en las 13\,500 ejecuciones.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.9\textwidth,height=6.4cm,xlabel={Tick},ylabel={$|d_t|$ medio},grid=major,legend pos=north east,legend style={font=\scriptsize},xmin=0,xmax=20,ymin=0]
+\addplot[thick,red!70!black] table[col sep=comma,x=tick,y=mean_abs_excess,restrict expr to domain={\thisrow{series_id}}{10:10}] {\datadir/trajectories.csv};
+\addplot[thick,orange!85!black] table[col sep=comma,x=tick,y=mean_abs_excess,restrict expr to domain={\thisrow{series_id}}{20:20}] {\datadir/trajectories.csv};
+\addplot[thick,blue!70!black] table[col sep=comma,x=tick,y=mean_abs_excess,restrict expr to domain={\thisrow{series_id}}{30:30}] {\datadir/trajectories.csv};
+\addplot[thick,dashed,green!50!black] table[col sep=comma,x=tick,y=mean_abs_excess,restrict expr to domain={\thisrow{series_id}}{40:40}] {\datadir/trajectories.csv};
+\legend{E0,E1-baja,E1-alta,E3}
+\end{axis}
+\end{tikzpicture}
+\caption{Exceso de error medio $|d_t|$ por tick, promediado sobre todas las celdas y semillas.}
+\label{fig:trayectorias}
+\end{figure}
+
+\section{H1: el arbitraje activo reduce el exceso de error}
+\label{sec:res-h1}
+
+El contraste primario compara E1-alta con E0. La diferencia media del área de exceso es $\Delta_1=-2.263$ (mediana $-2.078$; intervalo del 95\,\% $[-2.345,\,-2.182]$) y el $p$ unilateral con corrección de Holm es $1.5\times10^{-4}$; las 300 semillas van en la dirección prevista (tabla~\ref{tab:inferencia}). Se rechaza la hipótesis nula. La comparación de capacidades (E1-alta frente a E1-baja) arroja $\Delta=-0.956$ (intervalo $[-1.003,\,-0.909]$), también en las 300 semillas, de modo que la capacidad gradúa el efecto y no solo su presencia.
+
+\begin{table}[htbp]
+\centering
+\caption{Inferencia confirmatoria (300 semillas, contrastes pareados por semilla).}
+\label{tab:inferencia}
+\small
+\begin{tabular}{@{}lrrrrrl@{}}
+\toprule
+Contraste & Media $\Delta$ & Mediana & IC 95\,\% & Semillas & $p$ Holm & Rechazo \\
+\midrule
+H1 primario & $-2.2629$ & $-2.0784$ & $[-2.3448,-2.1820]$ & 100\,\% & $1.5\times10^{-4}$ & sí \\
+H1 capacidad & $-0.9560$ & $-0.8456$ & $[-1.0034,-0.9091]$ & 100\,\% & --- & --- \\
+H2 primario & $+0.01143$ & $0.01140$ & $[0.01074,0.01212]$ & 99.67\,\% & $1.5\times10^{-4}$ & sí \\
+H3 vs. persistencia & $-0.000808$ & $-0.000960$ & $[-0.000917,-0.000692]$ & 84.67\,\% & $1.5\times10^{-4}$ & sí \\
+H3 vs. AR escalar & $+0.0000822$ & $0.0000844$ & $[0.0000780,0.0000864]$ & 2.33\,\% & --- & no \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Tasa de recuperación}
+
+La recuperación sostenida depende de la capacidad y de la celda (tabla~\ref{tab:recuperacion}). Sin arbitraje apenas ocurre. Con capacidad baja varía entre 20 y 100\,\%, y es más baja cuanto mayor es el choque: un choque grande exige más pasos acotados por $c\,x$. Con capacidad alta y máxima es total en todas las celdas.
+
+\begin{table}[htbp]
+\centering
+\caption{Tasa de recuperación sostenida (\%) por celda y condición.}
+\label{tab:recuperacion}
+\small
+\begin{tabular}{@{}rrrrrrr@{}}
+\toprule
+$\kappa$ & Choque & E0 & E1-baja & E1-alta & E3 & E1-máx \\
+\midrule
+0.5 & $-0.05$ & 21.7 & 54.7 & 100.0 & 87.0 & 100.0 \\
+0.5 & $-0.10$ & 1.3 & 45.3 & 100.0 & 86.7 & 100.0 \\
+0.5 & $-0.20$ & 5.3 & 29.3 & 100.0 & 95.7 & 100.0 \\
+1 & $-0.05$ & 0.0 & 72.0 & 100.0 & 100.0 & 100.0 \\
+1 & $-0.10$ & 3.7 & 59.3 & 100.0 & 100.0 & 100.0 \\
+1 & $-0.20$ & 0.0 & 20.3 & 100.0 & 100.0 & 100.0 \\
+2 & $-0.05$ & 9.7 & 100.0 & 100.0 & 100.0 & 100.0 \\
+2 & $-0.10$ & 0.0 & 99.0 & 100.0 & 100.0 & 100.0 \\
+2 & $-0.20$ & 0.0 & 31.0 & 100.0 & 100.0 & 100.0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Desglose por celda}
+
+El efecto de H1 es negativo en todas las celdas (tabla~\ref{tab:celdas}); su magnitud crece con el choque, porque sin arbitraje el exceso se acumula durante los 20 ticks. La heterogeneidad entre semillas es grande (figura~\ref{fig:cuantiles}): el contraste va de $-4.60$ a $-1.38$.
+
+\begin{table}[htbp]
+\centering
+\caption{Diferencia media por celda de los contrastes H1 (primario y de capacidad) y H2.}
+\label{tab:celdas}
+\small
+\begin{tabular}{@{}rrrrrc@{}}
+\toprule
+$\kappa$ & Choque & H1 primario & H1 capacidad & H2 & Reservada \\
+\midrule
+0.5 & $-0.05$ & $-1.630$ & $-0.832$ & $+0.0523$ & sí \\
+0.5 & $-0.10$ & $-1.873$ & $-0.941$ & $+0.0361$ & sí \\
+0.5 & $-0.20$ & $-3.128$ & $-1.703$ & $+0.0146$ & sí \\
+1 & $-0.05$ & $-1.222$ & $-0.294$ & $0.0000$ & sí \\
+1 & $-0.10$ & $-2.023$ & $-0.652$ & $0.0000$ & no \\
+1 & $-0.20$ & $-3.784$ & $-1.883$ & $0.0000$ & sí \\
+2 & $-0.05$ & $-1.007$ & $-0.116$ & $0.0000$ & sí \\
+2 & $-0.10$ & $-1.951$ & $-0.450$ & $0.0000$ & sí \\
+2 & $-0.20$ & $-3.748$ & $-1.732$ & $0.0000$ & sí \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.8\textwidth,height=6cm,xlabel={Cuantil},ylabel={Contraste por semilla},grid=major,legend pos=south east,legend style={font=\scriptsize}]
+\addplot[thick,blue!70!black,mark=*,mark size=1.5pt] table[col sep=comma,x=quantile,y=value,restrict expr to domain={\thisrow{contrast_id}}{1:1}] {\datadir/delta_quantiles.csv};
+\addplot[thick,orange!85!black,mark=square*,mark size=1.5pt] table[col sep=comma,x=quantile,y=value,restrict expr to domain={\thisrow{contrast_id}}{2:2}] {\datadir/delta_quantiles.csv};
+\legend{H1 primario,H1 capacidad}
+\end{axis}
+\end{tikzpicture}
+\caption{Cuantiles del contraste por semilla de H1 ($\Delta_1$ y comparación de capacidades).}
+\label{fig:cuantiles}
+\end{figure}
+
+\subsection{Precisión alcanzada}
+
+La guía de tamaño de muestra se calculó con el piloto de exploración (tabla~\ref{tab:muestra}). Para H1 el piloto indicaba $n=253$ semillas para una semiamplitud de $0.01$. Con 300 semillas de confirmación la semiamplitud alcanzada es $0.0816$, no $0.0092$: \textbf{la precisión objetivo de H1 no se alcanzó} y habría requerido unas 19\,991 semillas. La causa es de diseño y no de azar: en la exploración los choques $+0.1$ y $-0.1$ se promediaron dentro de cada semilla, y sus contrastes tienen correlación $-0.981$ (desviaciones $0.790$ y $0.822$), de modo que se cancelan casi por completo y el promedio tiene desviación $0.081$. En la confirmación solo hay choques negativos, y la desviación es $0.721$. El piloto subestimó la varianza por una diferencia entre diseños y no por falta de semillas. Esto no afecta el rechazo de la hipótesis nula, cuyo intervalo está lejos de cero, pero sí la precisión de la estimación del tamaño del efecto. Para H2 el piloto tenía varianza nula (el efecto es cero con profundidad 1) y el diseño de confirmación sí logró la precisión: $0.0007$ frente a $0.01$.
+
+\begin{table}[htbp]
+\centering
+\caption{Guía de tamaño de muestra y precisión alcanzada.}
+\label{tab:muestra}
+\small
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+Contraste & Fuente & Desv. & $n$ requerido & Semiamplitud & Objetivo \\
+\midrule
+H1 primario & piloto & 0.0811 & 253 & 0.00918 & 0.01 \\
+H1 primario & confirmación & 0.7214 & 19\,991 & 0.0816 & 0.01 \\
+H2 primario & piloto & $10^{-16}$ & 1 & $10^{-17}$ & 0.01 \\
+H2 primario & confirmación & 0.00615 & 2 & 0.00070 & 0.01 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{H2: efecto del retiro adaptativo}
+\label{sec:res-h2}
+
+El contraste E3 frente a E1-alta da $\Delta_2=+0.0114$ (intervalo $[0.0107,\,0.0121]$), con el 99.67\,\% de las semillas en la dirección prevista y $p$ de Holm $1.5\times10^{-4}$. En promedio se rechaza la hipótesis nula. Sin embargo, la tabla~\ref{tab:celdas} muestra que el efecto está concentrado en la menor profundidad: $+0.052$, $+0.036$ y $+0.015$ con $\kappa=0.5$ y nulo con $\kappa=1$ y $2$. La media global de $0.0114$ resulta de promediar tres celdas de efecto positivo con seis de efecto nulo.
+
+La tabla~\ref{tab:respuesta} explica por qué. Con $\kappa=1$ y $2$ la respuesta máxima de E1-alta y E3 coincide con el valor $|\text{choque}|+\gamma$ ($0.053$, $0.103$, $0.203$ para choques de $-0.05$, $-0.10$, $-0.20$), idéntico en ambas condiciones: el desplazamiento del precio del AMM queda acotado por el nuevo nivel de la referencia y el retiro de liquidez no lo aumenta. En una ejecución de revisión (semilla 1000, choque $-0.10$, $\kappa=1$) ese valor se alcanzó en el tick 3 en ambas condiciones. Solo con $\kappa=0.5$ el movimiento supera ese nivel, porque las órdenes posteriores al choque, de tamaño absoluto fijo, desplazan más el precio de una piscina menos profunda; en esa misma semilla la respuesta máxima fue $0.109$ en E1-alta y $0.149$ en E3.
+
+\begin{table}[htbp]
+\centering
+\caption{Respuesta máxima media $M$ por celda y condición.}
+\label{tab:respuesta}
+\small
+\begin{tabular}{@{}rrrrrrr@{}}
+\toprule
+$\kappa$ & Choque & E0 & E1-baja & E1-alta & E3 & E1-máx \\
+\midrule
+0.5 & $-0.05$ & 0.1741 & 0.1266 & 0.0668 & 0.1190 & 0.0530 \\
+0.5 & $-0.10$ & 0.1741 & 0.1542 & 0.1105 & 0.1466 & 0.1030 \\
+0.5 & $-0.20$ & 0.1741 & 0.2091 & 0.2030 & 0.2176 & 0.2030 \\
+1 & $-0.05$ & 0.0859 & 0.0681 & 0.0530 & 0.0530 & 0.0530 \\
+1 & $-0.10$ & 0.0859 & 0.1103 & 0.1030 & 0.1030 & 0.1030 \\
+1 & $-0.20$ & 0.0859 & 0.1700 & 0.2030 & 0.2030 & 0.2030 \\
+2 & $-0.05$ & 0.0437 & 0.0530 & 0.0530 & 0.0530 & 0.0530 \\
+2 & $-0.10$ & 0.0437 & 0.1028 & 0.1030 & 0.1030 & 0.1030 \\
+2 & $-0.20$ & 0.0437 & 0.1801 & 0.2030 & 0.2030 & 0.2030 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Mecanismo}
+
+El retiro se activó en el 100\,\% de las ejecuciones de E3 en todas las celdas, normalmente en el tick 1 (tick medio 1.47 con $\kappa=0.5$ y choque $-0.10$). Por tanto, que el efecto sea nulo con $\kappa=1$ y $2$ no se debe a que el retiro no ocurra, sino a que no cambia la respuesta máxima. La tabla~\ref{tab:mecanismo} muestra además que la venta de pánico, que el agente de tendencia ejecuta si el retorno del AMM cae por debajo de $-1.5\,\%$, solo se activa con $\kappa=0.5$, donde la orden de ruido tiene un impacto mayor ($0.016$) y basta para superar ese umbral.
+
+\begin{table}[htbp]
+\centering
+\caption{Mecanismo: tasa de venta de pánico (\%) por condición y tasa y tick medio del retiro en E3.}
+\label{tab:mecanismo}
+\small
+\begin{tabular}{@{}rrrrrrr@{}}
+\toprule
+$\kappa$ & Choque & Pánico E0 & Pánico E1-alta & Pánico E3 & Retiro E3 (\%) & Tick retiro \\
+\midrule
+0.5 & $-0.05$ & 100.0 & 100.0 & 100.0 & 100 & 1.00 \\
+0.5 & $-0.10$ & 100.0 & 100.0 & 100.0 & 100 & 1.47 \\
+0.5 & $-0.20$ & 100.0 & 81.3 & 100.0 & 100 & 1.00 \\
+1 & todos & 0.0 & 0.0 & 0.0 & 100 & 1.00 \\
+2 & todos & 0.0 & 0.0 & 0.0 & 100 & 1.00 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Una comprobación no preregistrada}
+
+Para saber cuánto del efecto de $\kappa=0.5$ proviene de la venta de pánico y cuánto del retiro de liquidez, se repitió la comparación E3 frente a E1-alta con $\kappa=0.5$, las 300 semillas y los tres choques, con y sin agente de pánico (\code{panic\_max\_orders\_per\_run}$=0$). Con pánico la diferencia es $0.0343$ (99.67\,\% de las semillas positivas); sin pánico es $0.0153$ (96.67\,\%). Esta comprobación no formaba parte del protocolo confirmatorio y se informa como exploratoria. Sugiere que aproximadamente la mitad del efecto con la menor profundidad se debe a la interacción con el agente de pánico, y no al retiro por sí solo.
+
+\section{H3: mapa reducido y modelos de referencia}
+\label{sec:res-h3}
+
+\subsection{Ajuste en exploración}
+
+La tabla~\ref{tab:ajustes} presenta los coeficientes estimados en exploración (12\,000 transiciones por condición). Todas las matrices son estables en el sentido de Schur. El coeficiente $a$ de persistencia es $0.998$ sin arbitraje y disminuye a $0.869$ con capacidad baja y a $0.083$ con capacidad alta: el arbitraje convierte una dinámica casi integradora en una contractiva. En E1-máx la ecuación de $d$ es degenerada (el exceso es nulo casi siempre) y solo se estima la ecuación de $z$. En E3 el coeficiente $\beta$ es negativo ($-0.064$), a diferencia de las demás condiciones, lo que indica que la presión neta de compra tiene en esa condición un efecto sobre el exceso de signo opuesto al esperado; no se interpreta causalmente.
+
+\begin{table}[htbp]
+\centering
+\caption{Coeficientes del mapa ajustados con las semillas de exploración.}
+\label{tab:ajustes}
+\small
+\begin{tabular}{@{}lrrrrrrr@{}}
+\toprule
+Condición & $a$ & $\beta$ & $c$ & $\rho$ & Traza & Det. & Radio esp. \\
+\midrule
+E0 & 0.9979 & 0.0470 & $-0.00113$ & 0.0246 & 1.0225 & 0.02459 & 0.9978 \\
+E1-baja & 0.8690 & 0.0437 & 0.00060 & 0.0235 & 0.8925 & 0.02037 & 0.8690 \\
+E1-alta & 0.0828 & 0.0086 & 0.00640 & 0.0280 & 0.1108 & 0.00226 & 0.0838 \\
+E3 & 0.2091 & $-0.0638$ & 0.02427 & $-0.0027$ & 0.2064 & 0.00099 & 0.2015 \\
+E1-máx$^{\ast}$ & 0 & 0 & 0 & 0.0291 & 0.0291 & 0 & 0.0291 \\
+\bottomrule
+\multicolumn{8}{@{}l}{\footnotesize $^{\ast}$ Ecuación de $d$ degenerada.}
+\end{tabular}
+\end{table}
+
+\subsection{Error fuera de muestra}
+
+El mapa supera a la persistencia en conjunto, pero no en todas las condiciones (tabla~\ref{tab:h3}). En E0 el mapa es ligeramente peor ($+0.8\,\%$), ya que sin arbitraje el exceso casi no cambia y la persistencia es difícil de mejorar. En E1-alta y E3 la mejora es de $20.6\,\%$ y $15.2\,\%$. Respecto de un autorregresivo escalar, el mapa de dos variables no mejora: es peor en E0, E1-baja, E1-alta y E3 por $0.4$ a $1.3\,\%$ y mejor solo en E1-máx ($-1.9\,\%$, condición de extrapolación). El contraste de H3 contra el AR escalar no es primario, pero es informativo: la mayor parte de la mejora sobre la persistencia puede lograrse con un solo estado, y el segundo (la presión de compra) no añade capacidad predictiva a un paso.
+
+\begin{table}[htbp]
+\centering
+\caption{Error absoluto medio a un paso en celdas reservadas.}
+\label{tab:h3}
+\small
+\begin{tabular}{@{}lrrrc@{}}
+\toprule
+Condición & Mapa & Persistencia & AR escalar & Mapa mejor que persistencia \\
+\midrule
+E0 & 0.01765 & 0.01751 & 0.01757 & no \\
+E1-baja & 0.01573 & 0.01615 & 0.01566 & sí \\
+E1-alta & 0.00493 & 0.00620 & 0.00486 & sí \\
+E3 & 0.00929 & 0.01096 & 0.00916 & sí \\
+E1-máx$^{\ast}$ & 0.00567 & 0.00594 & 0.00578 & sí \\
+\bottomrule
+\multicolumn{5}{@{}l}{\footnotesize $^{\ast}$ Condición de extrapolación, no primaria.}
+\end{tabular}
+\end{table}
+
+El contraste primario, promediado sobre las cuatro condiciones primarias y las celdas reservadas, da $\Delta_3=-0.000808$ (intervalo $[-0.000917,\,-0.000692]$), con el 84.67\,\% de las semillas en la dirección prevista y $p$ de Holm $1.5\times10^{-4}$. Se rechaza la hipótesis nula. La magnitud es pequeña en términos absolutos, porque los errores de una transición son pequeños en todos los modelos.
+
+\subsection{Clasificación de regímenes}
+
+La clasificación observada de las ejecuciones en celdas reservadas (tabla~\ref{tab:regimenes}) muestra el cambio de régimen con la capacidad: sin arbitraje domina la etiqueta persistente (57\,\%), con capacidad baja la contractiva (86\,\%) y con capacidad alta y máxima aparece la etiqueta en banda (28\,\% y 75\,\%). Todas las matrices ajustadas son estables en el sentido de Schur, de modo que el criterio no discrimina entre condiciones; en particular, E0 resulta estable aunque su radio espectral es $0.998$ y el 57\,\% de sus ejecuciones es persistente. La clasificación de regímenes a partir del mapa es, por tanto, débil: el criterio de Schur no distingue los regímenes observados.
+
+\begin{table}[htbp]
+\centering
+\caption{Etiquetas observadas en celdas reservadas y estabilidad de Schur de la matriz ajustada.}
+\label{tab:regimenes}
+\small
+\begin{tabular}{@{}lrrrc@{}}
+\toprule
+Condición & Contractiva & Persistente & En banda & Schur estable \\
+\midrule
+E0 & 1035 & 1365 & 0 & sí \\
+E1-baja & 2057 & 343 & 0 & sí \\
+E1-alta & 1715 & 1 & 684 & sí \\
+E3 & 1750 & 178 & 472 & sí \\
+E1-máx$^{\ast}$ & 603 & 0 & 1797 & sí \\
+\bottomrule
+\multicolumn{5}{@{}l}{\footnotesize $^{\ast}$ Extrapolación. Cada condición suma 2400 ejecuciones reservadas.}
+\end{tabular}
+\end{table}
+
+\section{Trayectorias por profundidad}
+
+La figura~\ref{fig:prof} compara E1-alta y E3 con $\kappa=0.5$. Con la menor profundidad, E3 parte del mismo exceso inicial y se corrige más despacio. Una explicación compatible es que el retiro deja una piscina más pequeña y que la orden de arbitraje, acotada por $c\,x$, es entonces menor; esta explicación no se contrastó por separado. Con $\kappa=1$ y $2$ las dos trayectorias son casi idénticas. El retorno sostenido ocurre en promedio en el tick $7.8$ para E3 con $\kappa=0.5$ frente a $2.8$ para E1-alta, mientras que con $\kappa=1$ y $2$ las diferencias son de $0.1$ ticks o menos.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.9\textwidth,height=6.2cm,xlabel={Tick},ylabel={$|d_t|$ medio},grid=major,legend style={font=\scriptsize},xmin=0,xmax=20,ymin=0]
+\addplot[thick,blue!70!black] table[col sep=comma,x=tick,y=mean_abs_excess,restrict expr to domain={\thisrow{series_id}}{31:31}] {\datadir/trajectories.csv};
+\addplot[thick,dashed,green!50!black] table[col sep=comma,x=tick,y=mean_abs_excess,restrict expr to domain={\thisrow{series_id}}{41:41}] {\datadir/trajectories.csv};
+\legend{E1-alta,E3}
+\end{axis}
+\end{tikzpicture}
+\caption{Exceso de error medio con $\kappa=0.5$: arbitraje alto estático (E1-alta) y con retiro adaptativo (E3).}
+\label{fig:prof}
+\end{figure}
+
+\section{Resumen de los resultados}
+
+\begin{itemize}
+  \item \textbf{H1:} se rechaza la nula; el arbitraje activo reduce el área de exceso en $2.26$ en promedio y la capacidad gradúa la recuperación. La precisión objetivo no se alcanzó con 300 semillas.
+  \item \textbf{H2:} se rechaza la nula en promedio, con $\Delta_2=0.0114$, pero el efecto existe solo con $\kappa=0.5$ y la mitad aproximada del efecto depende del agente de pánico.
+  \item \textbf{H3:} se rechaza la nula frente a la persistencia, pero el mapa no supera a un autorregresivo escalar, no mejora a la persistencia en E0 y su clasificación de regímenes es débil.
+\end{itemize}
