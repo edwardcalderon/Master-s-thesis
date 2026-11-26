@@ -34,7 +34,7 @@ jobs:
           build: true
           use-mathlib-cache: true
           axiom-audit: true
-          axiom-audit-root: CexDex
+          axiom-audit-root: AmmVerification
 
       - name: Check Python implementation against exact-rational reference
         run: python3 -m unittest discover -s experiments/cex_dex_mvp -p "test_formal_bridge.py"
