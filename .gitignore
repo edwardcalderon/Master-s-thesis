@@ -8,6 +8,7 @@ dist-docs/
 .DS_Store
 __pycache__/
 *.py[cod]
+.lake/
 
 # Local data and generated thesis artifacts
 data/raw/*
@@ -39,5 +40,15 @@ thesis/es/*.lof
 thesis/es/*.lot
 thesis/es/*.pdf
 thesis/literature/
+thesis/versions/**/*.aux
+thesis/versions/**/*.bbl
+thesis/versions/**/*.blg
+thesis/versions/**/*.lof
+thesis/versions/**/*.log
+thesis/versions/**/*.lot
+thesis/versions/**/*.out
+thesis/versions/**/*.pdf
+thesis/versions/**/*.toc
+experiments/cex_dex_mvp/formal/.lake/
 experiments/cex_dex_mvp/output/
 experiments/refscan_evaluation/literature/

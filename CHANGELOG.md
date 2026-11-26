@@ -1,3 +1,19 @@
+## [0.1.10](https://github.com/edwardcalderon/Master-s-thesis/compare/v0.1.9...v0.1.10) (2026-11-26)
+
+### Added
+
+- Added the reproducible band-aware hybrid-map experiment, frozen selection and held-out protocol, seed-level findings, and checksummed exports for the bilingual manuscript and interactive web evidence view.
+- Added Lean verification and an exact-rational bridge for the CPMM mechanism, with the proof scope and full-simulator stability limitations documented.
+
+### Changed
+
+- Updated the English and Spanish manuscript to v0.8.0 with the nonlinear/hybrid methodology, condition-specific results, a bounded Lyapunov analysis, and practical implications constrained by the synthetic evidence.
+- Updated simulation and thesis task records to match the current evidence and remaining validation work.
+
+### Fixed
+
+- Clarified that the hybrid result is concentrated in the low-capacity, depth-2 regime and does not improve flow-pressure prediction or establish real-market performance.
+
 ## [0.1.9](https://github.com/edwardcalderon/Master-s-thesis/compare/v0.1.8...v0.1.9) (2026-11-25)
 
 ### Added

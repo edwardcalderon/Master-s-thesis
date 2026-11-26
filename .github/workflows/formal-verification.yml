@@ -1,0 +1,40 @@
+name: Verify CPMM mathematics
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "experiments/cex_dex_mvp/formal/**"
+      - "experiments/cex_dex_mvp/formal_bridge.py"
+      - "experiments/cex_dex_mvp/test_formal_bridge.py"
+      - ".github/workflows/formal-verification.yml"
+  pull_request:
+    paths:
+      - "experiments/cex_dex_mvp/formal/**"
+      - "experiments/cex_dex_mvp/formal_bridge.py"
+      - "experiments/cex_dex_mvp/test_formal_bridge.py"
+      - ".github/workflows/formal-verification.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  proofs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Lean proofs and audit axioms
+        uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: experiments/cex_dex_mvp/formal
+          auto-config: false
+          build: true
+          use-mathlib-cache: true
+          axiom-audit: true
+          axiom-audit-root: CexDex
+
+      - name: Check Python implementation against exact-rational reference
+        run: python3 -m unittest discover -s experiments/cex_dex_mvp -p "test_formal_bridge.py"

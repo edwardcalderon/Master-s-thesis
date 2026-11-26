@@ -2,7 +2,8 @@
 
 - **Owner:** `edcalderon`
 - **Status:** IN PROGRESS
-- **Focus:** CURRENT FOCUS — next model-design review beyond representative-agent evidence
+- **Focus:** Remains in progress; model-rigor work and formal CPMM properties are tracked
+  under THESIS-005.
 - **Started:** 2026-11-12
 
 ## Goal
@@ -20,6 +21,8 @@ from explicit, versioned configurations and traceable run artifacts.
   random schedules are checked before results are promoted to the manuscript.
 - Agent policies are reviewed and extended to the intended heterogeneous model; H1c is
   tested on held-out configurations across the agreed operating regions.
+- The current two-state reduced map is described as affine/linear. A nonlinear claim
+  requires a separate candidate specification and held-out comparison.
 
 ## Dependencies and limits
 

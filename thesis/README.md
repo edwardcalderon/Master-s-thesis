@@ -9,13 +9,23 @@ together.
 - English PDF: `main.pdf`
 - Spanish PDF: `es/main.pdf`
 
-The current manuscript revision is v0.6.0. It retains the frozen v0.5.0 confirmatory
+The current manuscript revision is v0.8.0. It retains the frozen v0.5.0 confirmatory
 findings, corrects bilingual pagination and removes the editorial source-replacement
 note from both annexes. It adds a fresh-seed engineering sensitivity: recovery can be
 followed by a later departure, and the shallow-depth effect changes with order size
 relative to reserves and with the panic rule. The new conclusions derive monitoring
 and stress-test requirements while keeping all findings explicitly synthetic and
 requiring real-pair validation before operational use.
+
+Revision v0.6.1 added a bilingual technical glossary after the notation tables,
+including ABM and the market, dynamical-systems, experimental-design, and inference
+terms used throughout the thesis. Revision v0.7.0 adds a non-exhaustive quadratic
+Lyapunov check for the fitted affine maps and clarifies that the recorded accounting
+state is not claimed to be Markov-complete. Revision v0.8.0 adds a frozen, held-out
+comparison of a band-aware hybrid reduced map with the affine baseline, reports its
+condition-dependent predictive gain and limits, and links the finding to empirical
+monitoring requirements. It does not establish stability of the full stochastic
+simulator or validate a market model.
 
 The manuscript follows the structure introduced in response to the advisor's feedback (introduction in six paragraphs; problem and state of the art;
 justification; hypotheses; objectives; methodology; results; discussion and

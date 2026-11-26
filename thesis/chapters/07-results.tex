@@ -3,7 +3,7 @@
 
 \section{Scope of the results}
 
-This chapter reports analytical identities, confirmatory contrasts over 13\,500 simulator runs, and a separate engineering sensitivity over 40\,500 paths (section~\ref{sec:engineering-sensitivity}). The confirmatory protocol is described in chapter~\ref{cap:metodologia}. All results are synthetic: they come from a micro-world without market data and without fees, and they were not validated against external observations. The confirmatory run has the identifier \code{\RunID}; its checksums and the command that regenerates it appear in annex~\ref{cap:anexos}.
+This chapter reports analytical identities, confirmatory contrasts over 13\,500 simulator runs, an engineering sensitivity over 40\,500 paths (section~\ref{sec:engineering-sensitivity}), and a held-out comparison of affine and hybrid reduced maps over 9\,600 paths (section~\ref{sec:hybrid-results}). The confirmatory protocol is described in chapter~\ref{cap:metodologia}. All results are synthetic: they come from a micro-world without market data and without fees, and they were not validated against external observations. The confirmatory run has the identifier \code{\RunID}; its checksums and the command that regenerates it appear in annex~\ref{cap:anexos}.
 
 \section{Analytical results: depth and impact}
 \label{sec:res-analitico}
@@ -270,6 +270,31 @@ E1-max$^{\ast}$ & 0 & 0 & 0 & 0.0291 & 0.0291 & 0 & 0.0291 \\
 \end{tabular}
 \end{table}
 
+\subsection{Quadratic Lyapunov check}
+
+For a bounded analytical check, equation~\eqref{eq:lyap-reduced} was solved numerically for each condition using the full-precision coefficients in \code{figures/data/exploration\_fits.csv}. Table~\ref{tab:lyapunov} reports the symmetric solution $P$ and its extreme eigenvalues. The positive minimum eigenvalues confirm $P\succ0$ for each fitted matrix; the entries shown are rounded.
+
+\begin{table}[htbp]
+\centering
+\caption{Numerical quadratic Lyapunov certificates for the fitted autonomous maps.}
+\label{tab:lyapunov}
+\small
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Condition & $P_{11}$ & $P_{12}$ & $P_{22}$ & $\lambda_{\min}(P)$ & $\lambda_{\max}(P)$ \\
+\midrule
+E0 & 228.6032 & 10.9876 & 1.5310 & 1.000608 & 229.1336 \\
+E1-low & 4.0853 & 0.1582 & 1.0087 & 1.000549 & 4.0935 \\
+E1-high & 1.0069 & 0.0009 & 1.0009 & 1.000729 & 1.0071 \\
+E3 & 1.0462 & $-0.0140$ & 1.0043 & 1.000020 & 1.0504 \\
+E1-max$^{\ast}$ & 1.0000 & 0.0000 & 1.0009 & 1.000000 & 1.0009 \\
+\bottomrule
+\multicolumn{6}{@{}l}{\footnotesize $^{\ast}$ Extrapolation condition with a degenerate excess-error equation.}
+\end{tabular}
+\end{table}
+
+Since $V_{t+1}=V_t-\lVert w_t\rVert_2^2$, each autonomous fitted map also satisfies $V_{t+1}\le r_V V_t$, where $r_V=1-1/\lambda_{\max}(P)$. The resulting bounds are $0.9956$ for E0, $0.7557$ for E1-low, $0.0070$ for E1-high and $0.0480$ for E3 (and $0.0008$ for E1-max). E0's bound is close to one, consistent with slow contraction in its near-unit spectral-radius matrix. These are point-fit bounds in the quadratic norm, not uncertainty-adjusted estimates, finite-horizon guarantees for the simulator, or evidence of stochastic stability.
+
 \subsection{Out-of-sample error}
 
 The map beats persistence overall, but not in all conditions (table~\ref{tab:h3}). In E0 the map is slightly worse ($+0.8\,\%$), since without arbitrage the excess barely changes and persistence is hard to improve on. In E1-high and E3 the improvement is $20.6\,\%$ and $15.2\,\%$. Relative to a scalar autoregression, the two-variable map does not improve: it is worse in E0, E1-low, E1-high and E3 by $0.4$ to $1.3\,\%$ and better only in E1-max ($-1.9\,\%$, an extrapolation condition). The H3 contrast against the scalar AR is not primary, but it is informative: most of the improvement over persistence can be achieved with a single state, and the second (buying pressure) adds no one-step predictive ability.
@@ -317,6 +342,58 @@ E1-max$^{\ast}$ & 603 & 0 & 1797 & yes \\
 \multicolumn{5}{@{}l}{\footnotesize $^{\ast}$ Extrapolation. Each condition sums to 2400 held-out runs.}
 \end{tabular}
 \end{table}
+
+\section{Held-out comparison of affine and hybrid maps}
+\label{sec:hybrid-results}
+
+The new comparison uses analysis 0.1.0, run \code{\HybridRunID}, and signed price error. On 9\,600 held-out trajectories from 300 new seeds, the hybrid map reduced mean recursive price-error MAE from 0.030807 to 0.030291. The paired mean improvement was 0.000516 (95\,\% seed-bootstrap interval [0.000499, 0.000533]); 99.7\,\% of seed-averaged contrasts favored Hyb. Relative to L0, the average improvement is about 1.7\,\%. This is a small predictive gain inside the specified simulator.
+
+Each condition contributed 12\,000 selection transitions. Both sides of the band were represented (table~\ref{tab:hybrid-regimes}), although the low-arbitrage model had fewer in-band observations. The fit remains condition-specific, and this count does not establish that the two-variable state captures all transition-relevant memory.
+
+\begin{table}[htbp]
+\centering
+\caption{Selection transitions on each side of the configured band.}
+\label{tab:hybrid-regimes}
+\small
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Condition & In band & Outside band & Total \\
+\midrule
+E0 & 681 & 11\,319 & 12\,000 \\
+E1-low & 1\,466 & 10\,534 & 12\,000 \\
+E1-high & 3\,776 & 8\,224 & 12\,000 \\
+E3 & 2\,834 & 9\,166 & 12\,000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The gain is not distributed across operating conditions. It is concentrated in low-capacity arbitrage, especially at depth 2, where the cell-averaged gain across the four held-out shocks is 0.003943. At depth 0.5 the corresponding gain is 0.000354. The other condition/depth averages are between approximately $-0.000101$ and $-0.000002$, slightly favoring L0. The secondary one-step MAE for $e$ improves from 0.014882 to 0.014800, while the one-step and recursive errors for flow pressure $z$ are slightly worse under Hyb. The result therefore supports a limited, condition-dependent advantage for the band terms in predicting price error; it does not show that the hybrid representation is uniformly superior or that the state variables suffice to capture the complete process.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  xbar, width=0.93\textwidth, height=6.1cm,
+  xmin=-0.0002, xmax=0.0045,
+  xlabel={Mean held-out rollout MAE gain, L0 minus Hyb},
+  symbolic y coords={C1,C2,C3,C4,C5,C6,C7,C8}, ytick=data,
+  yticklabels={E0, E1-low, E1-high, E3, E0, E1-low, E1-high, E3},
+  yticklabel style={font=\scriptsize},
+  y dir=reverse, xmajorgrids=true, grid style={gray!20},
+  axis x line*=bottom, axis y line*=left,
+  title style={font=\small}, title={Depth 0.5 (top) and depth 2 (bottom); positive favors Hyb}
+]
+\addplot[fill=blue!55!black,draw=blue!55!black] coordinates {
+  (-0.000002,C1) (0.000354,C2) (-0.000014,C3) (-0.000003,C4)
+  (-0.000017,C5) (0.003943,C6) (-0.000033,C7) (-0.000101,C8)
+};
+\end{axis}
+\end{tikzpicture}
+\caption{Cell-averaged recursive price-error MAE gain by operating condition and depth. Each bar averages four held-out shock sizes; cell-level contrasts are descriptive and do not have separate confidence intervals. The underlying values are exported in \code{figures/data/hybrid\_depth\_condition.csv}.}
+\label{fig:hybrid-cell-gains}
+\end{figure}
+
+The primary average should not be read in isolation: nearly all its gain comes from one low-capacity/depth combination, while flow-pressure prediction does not improve. The next modeling step is to represent capacity-binding and LP-withdrawal transitions explicitly and test them with another frozen protocol, rather than to add more free polynomial terms. The map comparison is a predictive surrogate diagnostic. It does not establish a Lyapunov function, local stability for the piecewise map, or stochastic stability for the complete simulator.
 
 \section{Trajectories by depth}
 

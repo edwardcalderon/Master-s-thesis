@@ -3,7 +3,7 @@
 
 \section{Alcance de los resultados}
 
-Este capítulo informa identidades analíticas, contrastes confirmatorios sobre 13\,500 ejecuciones y un análisis independiente de sensibilidad de ingeniería con 40\,500 trayectorias (sección~\ref{sec:engineering-sensitivity}). El protocolo confirmatorio se describe en el capítulo~\ref{cap:metodologia}. Todos los resultados son sintéticos: provienen de un micromundo sin datos de mercado y sin comisión, y no se validaron contra observaciones externas. La ejecución confirmatoria tiene el identificador \code{\RunID}; sus sumas de verificación y el comando que la regenera figuran en el anexo~\ref{cap:anexos}.
+Este capítulo informa identidades analíticas, contrastes confirmatorios sobre 13\,500 ejecuciones, una sensibilidad de ingeniería con 40\,500 trayectorias (sección~\ref{sec:engineering-sensitivity}) y una comparación reservada de mapas reducidos afines e híbridos sobre 9\,600 trayectorias (sección~\ref{sec:hybrid-results}). El protocolo confirmatorio se describe en el capítulo~\ref{cap:metodologia}. Todos los resultados son sintéticos: provienen de un micromundo sin datos de mercado y sin comisión, y no se validaron contra observaciones externas. La ejecución confirmatoria tiene el identificador \code{\RunID}; sus sumas de verificación y el comando que la regenera figuran en el anexo~\ref{cap:anexos}.
 
 \section{Resultados analíticos: profundidad e impacto}
 \label{sec:res-analitico}
@@ -270,6 +270,31 @@ E1-máx$^{\ast}$ & 0 & 0 & 0 & 0.0291 & 0.0291 & 0 & 0.0291 \\
 \end{tabular}
 \end{table}
 
+\subsection{Comprobación cuadrática de Lyapunov}
+
+Como análisis acotado, se resolvió numéricamente la ecuación~\eqref{eq:lyap-reducido} para cada condición con los coeficientes de precisión completa de \code{figures/data/exploration\_fits.csv}. La tabla~\ref{tab:lyapunov} presenta la solución simétrica $P$ y sus valores propios extremos. Los valores propios mínimos positivos confirman $P\succ0$ para cada matriz ajustada; las entradas se muestran redondeadas.
+
+\begin{table}[htbp]
+\centering
+\caption{Certificados cuadráticos numéricos de Lyapunov para los mapas autónomos ajustados.}
+\label{tab:lyapunov}
+\small
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Condición & $P_{11}$ & $P_{12}$ & $P_{22}$ & $\lambda_{\min}(P)$ & $\lambda_{\max}(P)$ \\
+\midrule
+E0 & 228.6032 & 10.9876 & 1.5310 & 1.000608 & 229.1336 \\
+E1-baja & 4.0853 & 0.1582 & 1.0087 & 1.000549 & 4.0935 \\
+E1-alta & 1.0069 & 0.0009 & 1.0009 & 1.000729 & 1.0071 \\
+E3 & 1.0462 & $-0.0140$ & 1.0043 & 1.000020 & 1.0504 \\
+E1-máx$^{\ast}$ & 1.0000 & 0.0000 & 1.0009 & 1.000000 & 1.0009 \\
+\bottomrule
+\multicolumn{6}{@{}l}{\footnotesize $^{\ast}$ Condición de extrapolación con ecuación de exceso de error degenerada.}
+\end{tabular}
+\end{table}
+
+Como $V_{t+1}=V_t-\lVert w_t\rVert_2^2$, cada mapa autónomo ajustado también satisface $V_{t+1}\le r_V V_t$, donde $r_V=1-1/\lambda_{\max}(P)$. Los límites resultantes son $0.9956$ para E0, $0.7557$ para E1-baja, $0.0070$ para E1-alta y $0.0480$ para E3 (y $0.0008$ para E1-máx). El límite de E0 está cerca de uno, en concordancia con la contracción lenta de su matriz con radio espectral próximo a uno. Son límites puntuales en la norma cuadrática, no estimaciones ajustadas por incertidumbre, garantías para el horizonte finito del simulador ni evidencia de estabilidad estocástica.
+
 \subsection{Error fuera de muestra}
 
 El mapa supera a la persistencia en conjunto, pero no en todas las condiciones (tabla~\ref{tab:h3}). En E0 el mapa es ligeramente peor ($+0.8\,\%$), ya que sin arbitraje el exceso casi no cambia y la persistencia es difícil de mejorar. En E1-alta y E3 la mejora es de $20.6\,\%$ y $15.2\,\%$. Respecto de un autorregresivo escalar, el mapa de dos variables no mejora: es peor en E0, E1-baja, E1-alta y E3 por $0.4$ a $1.3\,\%$ y mejor solo en E1-máx ($-1.9\,\%$, condición de extrapolación). El contraste de H3 contra el AR escalar no es primario, pero es informativo: la mayor parte de la mejora sobre la persistencia puede lograrse con un solo estado, y el segundo (la presión de compra) no añade capacidad predictiva a un paso.
@@ -317,6 +342,58 @@ E1-máx$^{\ast}$ & 603 & 0 & 1797 & sí \\
 \multicolumn{5}{@{}l}{\footnotesize $^{\ast}$ Extrapolación. Cada condición suma 2400 ejecuciones reservadas.}
 \end{tabular}
 \end{table}
+
+\section{Comparación reservada de mapas afines e híbridos}
+\label{sec:hybrid-results}
+
+La nueva comparación usa el análisis 0.1.0, ejecución \code{\HybridRunID} y el error de precio con signo. En 9\,600 trayectorias reservadas de 300 semillas nuevas, el mapa híbrido redujo el MAE recursivo medio del error de precio de 0.030807 a 0.030291. La mejora pareada media fue 0.000516 (intervalo bootstrap por semilla del 95\,\% [0.000499, 0.000533]); el 99.7\,\% de los contrastes promediados por semilla favoreció a Hyb. La mejora media frente a L0 es de aproximadamente 1.7\,\%. Se trata de una ganancia predictiva pequeña dentro del simulador especificado.
+
+Cada condición aportó 12\,000 transiciones de selección. Hubo observaciones a ambos lados de la banda (tabla~\ref{tab:hybrid-regimes}), aunque el modelo de arbitraje bajo tuvo menos observaciones dentro de ella. El ajuste sigue siendo específico para cada condición, y estos conteos no demuestran que las dos variables de estado capturen toda la memoria relevante para la transición.
+
+\begin{table}[htbp]
+\centering
+\caption{Transiciones de selección dentro y fuera de la banda configurada.}
+\label{tab:hybrid-regimes}
+\small
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Condición & En banda & Fuera de banda & Total \\
+\midrule
+E0 & 681 & 11\,319 & 12\,000 \\
+E1-baja & 1\,466 & 10\,534 & 12\,000 \\
+E1-alta & 3\,776 & 8\,224 & 12\,000 \\
+E3 & 2\,834 & 9\,166 & 12\,000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+La mejora no se distribuye entre las condiciones operativas. Se concentra en el arbitraje de capacidad baja, especialmente con profundidad 2, donde la ganancia promediada entre los cuatro choques reservados es 0.003943. Con profundidad 0.5, la ganancia correspondiente es 0.000354. Los promedios de las demás combinaciones de condición y profundidad se encuentran entre aproximadamente $-0.000101$ y $-0.000002$, lo que favorece levemente a L0. El MAE secundario a un paso para $e$ mejora de 0.014882 a 0.014800, mientras que los errores a un paso y recursivos de la presión de flujo $z$ son ligeramente peores con Hyb. Por tanto, el resultado respalda una ventaja limitada y dependiente de la condición de los términos de banda para predecir el error de precio; no muestra una superioridad uniforme del mapa híbrido ni que las variables de estado representen todo el proceso.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  xbar, width=0.93\textwidth, height=6.1cm,
+  xmin=-0.0002, xmax=0.0045,
+  xlabel={Ganancia del MAE recursivo reservado, L0 menos Hyb},
+  symbolic y coords={C1,C2,C3,C4,C5,C6,C7,C8}, ytick=data,
+  yticklabels={E0, E1-baja, E1-alta, E3, E0, E1-baja, E1-alta, E3},
+  yticklabel style={font=\scriptsize},
+  y dir=reverse, xmajorgrids=true, grid style={gray!20},
+  axis x line*=bottom, axis y line*=left,
+  title style={font=\small}, title={Profundidad 0.5 (arriba) y profundidad 2 (abajo); valores positivos favorecen Hyb}
+]
+\addplot[fill=blue!55!black,draw=blue!55!black] coordinates {
+  (-0.000002,C1) (0.000354,C2) (-0.000014,C3) (-0.000003,C4)
+  (-0.000017,C5) (0.003943,C6) (-0.000033,C7) (-0.000101,C8)
+};
+\end{axis}
+\end{tikzpicture}
+\caption{Ganancia media del MAE recursivo del error de precio por condición operativa y profundidad. Cada barra promedia cuatro magnitudes de choque reservadas; los contrastes por celda son descriptivos y no tienen intervalos de confianza separados. Los valores se exportan en \code{figures/data/hybrid\_depth\_condition.csv}.}
+\label{fig:hybrid-cell-gains}
+\end{figure}
+
+El promedio primario no debe interpretarse aisladamente: casi toda la ganancia proviene de una combinación de baja capacidad y profundidad, mientras que la predicción de la presión de flujo no mejora. El siguiente paso de modelado consiste en representar explícitamente los límites de capacidad y las transiciones de retiro de LP y evaluarlos con otro protocolo congelado, en vez de añadir más términos polinómicos libres. La comparación de mapas es un diagnóstico predictivo de un modelo sustituto. No establece una función de Lyapunov, estabilidad local del mapa por tramos ni estabilidad estocástica del simulador completo.
 
 \section{Trayectorias por profundidad}
 

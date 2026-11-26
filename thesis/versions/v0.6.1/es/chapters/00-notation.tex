@@ -1,0 +1,113 @@
+\chapter*{Notación}
+\addcontentsline{toc}{chapter}{Notación}
+
+Los símbolos siguientes se usan en todo el documento. El superíndice $\mathrm{D}$ designa al intercambio descentralizado (AMM) y $\mathrm{C}$ a la referencia centralizada.
+
+\begin{center}
+\small
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+Símbolo & Significado \\
+\midrule
+$x_t,\ y_t$ & Reservas de los activos $X$ e $Y$ del AMM en el tick $t$ (precio cotizado en unidades de $Y$ por unidad de $X$). \\
+$k_t = x_t y_t$ & Producto de reservas; constante en un intercambio sin comisión. \\
+$\pD_t = y_t/x_t$ & Precio marginal del AMM. \\
+$\pC_t$ & Precio de referencia centralizado (exógeno). \\
+$q$ & Cantidad de $X$ vendida al AMM en un intercambio. \\
+$f$ & Comisión proporcional retenida por la piscina. \\
+$I(q,x)$ & Impacto logarítmico de una venta: $2\log(1+q/x)$ sin comisión. \\
+$e_t = \log(\pD_t/\pC_t)$ & Error logarítmico de seguimiento. \\
+$\gamma$ & Semiancho logarítmico de la banda operativa de no arbitraje (valor ejecutado: $0.003$). \\
+$d_t,\ D_t = |d_t|$ & Exceso de error fuera de la banda con signo, y su valor absoluto. \\
+$c$ & Capacidad de arbitraje: fracción máxima de la reserva negociable por tick. \\
+$q^{\ast}$ & Tamaño de venta que lleva el precio al borde de la banda. \\
+$z_t$ & Presión neta de compra (ruido y tendencia; sin arbitraje) normalizada por la reserva inicial de $Y$. \\
+$u_t = -\Delta\log \pC_t$ & Entrada exógena del mapa reducido. \\
+$\alpha,\ \beta,\ \chi,\ \rho$ & Coeficientes del mapa de dos estados; $a = 1-\alpha$ y $c_z = -\chi$ en las tablas de ajuste. \\
+$A$ & Matriz local del mapa autónomo; $\operatorname{tr}A$ y $\det A$ su traza y determinante. \\
+$H$ & Horizonte de la ventana de respuesta (20 ticks). \\
+$A_{\mathrm{ex}} = \sum_{t=1}^{H} D_t$ & Área de exceso de error (métrica primaria de H1). \\
+$M = \max_{1\le t\le H}\bigl|\log(\pD_t/\pD_0)\bigr|$ & Respuesta máxima del precio del AMM (métrica primaria de H2). \\
+$\Delta_1,\Delta_2,\Delta_3$ & Contrastes pareados de H1, H2 y H3. \\
+$\mathrm{MAE}$ & Error absoluto medio de predicción a un paso (métrica primaria de H3). \\
+E0--E3 & Escenarios experimentales (tabla~\ref{tab:escenarios}). \\
+OE1--OE4 & Objetivos específicos. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section*{Glosario de términos técnicos}
+\phantomsection
+\addcontentsline{toc}{section}{Glosario de términos técnicos}
+
+\begingroup
+\small
+\setlength{\parskip}{0.15em}
+Las definiciones indican cómo se usa cada término en esta tesis. Se refieren al
+simulador especificado, salvo que expresen explícitamente una propiedad matemática general.
+
+\subsection*{Mercados y agentes}
+\begin{description}[style=unboxed,leftmargin=0pt,labelwidth=0pt,labelsep=0.5em,itemsep=0.1em]
+  \item[ABM --- modelo basado en agentes:] Modelo computacional en el que agentes representados individualmente siguen reglas especificadas, interactúan entre sí y con un entorno, y generan en conjunto los resultados simulados. Aquí los agentes son negociadores de ruido, un agente de tendencia/pánico, un arbitrajista y un proveedor de liquidez.
+  \item[Heterogeneidad de agentes:] Diferencias entre agentes en sus funciones, información, reglas, inventarios o acciones. En este estudio surge de las distintas reglas de negociación y provisión de liquidez; no significa que los agentes sean representaciones calibradas de participantes reales.
+  \item[AMM --- creador automático de mercado:] Mecanismo descentralizado que cotiza precios y ejecuta intercambios mediante una regla basada en reservas, en vez de cruzar órdenes en un libro convencional.
+  \item[CEX --- plataforma de intercambio centralizada:] Mercado representado aquí únicamente por una serie exógena de precios de referencia. Su libro de órdenes, impacto de mercado y realimentación con el AMM simulado están fuera del modelo.
+  \item[DEX --- plataforma de intercambio descentralizada:] Mercado implementado mediante protocolos basados en cadena de bloques. En esta tesis, el lado DEX se representa con la piscina AMM especificada.
+  \item[CPMM --- creador de mercado de producto constante:] AMM cuya regla ideal de intercambio, sin comisión, mantiene constante el producto de dos reservas, $xy=k$. Las comisiones y los depósitos o retiros de liquidez pueden cambiar ese producto; la igualdad no es un invariante incondicional de todos los eventos simulados.
+  \item[Reserva de liquidez (piscina):] Activos que mantiene un AMM y pone a disposición para los intercambios. En este modelo contiene las dos reservas $x_t$ e $y_t$.
+  \item[Proveedor de liquidez (LP):] Agente que aporta activos a una piscina AMM. El LP adaptativo simulado sigue una regla estilizada de retiro; no es un modelo del comportamiento de proveedores estimado empíricamente.
+  \item[Inventario:] Cantidad de cada activo que posee un agente. El inventario limita las órdenes que puede ejecutar cada agente simulado.
+  \item[Negociador de ruido:] Agente cuyo lado y momento de operación se generan al azar, en vez de depender de una señal de precios o información sobre el valor.
+  \item[Agente de tendencia/pánico:] Agente simulado que sigue un movimiento reciente del precio del AMM o, después de un umbral especificado de rendimiento negativo, ejecuta una venta de pánico.
+  \item[Flujo de órdenes:] Secuencia y tamaños de las órdenes de compra y venta que llegan a la piscina. Las ejecuciones pareadas reutilizan las mismas órdenes de ruido pregeneradas y los mismos choques de referencia.
+\end{description}
+
+\subsection*{Mecánica de mercado y respuesta de precios}
+\begin{description}[style=unboxed,leftmargin=0pt,labelwidth=0pt,labelsep=0.5em,itemsep=0.1em]
+  \item[Arbitraje:] Operación entre mercados para aprovechar una discrepancia de precios. En el simulador, el arbitrajista opera solo cuando la discrepancia entre el AMM y la referencia sale de la banda especificada, y su orden está sujeta a un límite de capacidad.
+  \item[Capacidad de arbitraje:] Fracción máxima de la reserva negociable que el arbitrajista simulado puede intercambiar en un tick. Es un parámetro controlado del modelo, no una capacidad medida en el mundo real.
+  \item[Banda de no arbitraje:] Intervalo alrededor del precio de referencia en el que el modelo no activa el arbitraje. Representa un umbral operativo; no se estima a partir de costos de transacción observados.
+  \item[Liquidez y profundidad:] Reservas disponibles para absorber un intercambio. En esta piscina de producto constante, reducir las reservas aumenta el impacto de precios de una orden absoluta dada. La definición corresponde a la piscina de dos activos del modelo.
+  \item[Intercambio (swap):] Operación que cambia un activo de la piscina por el otro según la regla de reservas del AMM.
+  \item[Deslizamiento:] Diferencia entre el precio promedio de ejecución de un intercambio y el precio marginal de la piscina inmediatamente antes de ejecutarlo. Depende del tamaño de la orden respecto de las reservas y, cuando se incluyen, de las comisiones.
+  \item[Impacto de precios:] Cambio del precio marginal de la piscina causado por un intercambio. Está relacionado con el deslizamiento, pero no es lo mismo.
+  \item[Precio de referencia:] Precio exógeno del CEX que sirve como objetivo de comparación. No responde a las operaciones del AMM simulado.
+  \item[Choque exógeno:] Cambio prescrito que se aplica al precio de referencia desde fuera del modelo. El diseño confirmatorio usa un choque único para comparar la respuesta del AMM en condiciones controladas.
+  \item[Error de seguimiento:] Diferencia logarítmica entre el precio marginal del AMM y el precio de referencia, $e_t=\log(p^{\mathrm D}_t/p^{\mathrm C}_t)$. El signo indica cuál de los dos precios es mayor.
+  \item[Exceso de error:] Parte del error de seguimiento que queda fuera de la banda de no arbitraje, representada por $d_t$. Su valor absoluto es cero dentro de la banda y mide la discrepancia que puede corregirse fuera de ella.
+\end{description}
+
+\subsection*{Descripción dinámica y experimentos}
+\begin{description}[style=unboxed,leftmargin=0pt,labelwidth=0pt,labelsep=0.5em,itemsep=0.1em]
+  \item[Estado:] Magnitudes que resumen un sistema en un tick dado. El estado completo del simulador incluye reservas, precios e inventarios de agentes; el mapa reducido conserva solo el exceso de error y la presión neta de compra.
+  \item[Micromundo:] Entorno computacional deliberadamente acotado, con agentes, reglas y mecanismos de interacción explícitos. Sus hallazgos corresponden a las configuraciones especificadas del modelo, no a una representación completa de un mercado real.
+  \item[Mapa afín:] Regla de la forma $x_{t+1}=Ax_t+b$, con una transformación lineal y un término constante. El mapa reducido ajustado tiene esta forma para cada condición especificada.
+  \item[Mapa reducido:] Regla afín estimada de tiempo discreto y dos estados que describe el exceso de error y la presión de compra del tick siguiente. Es una descripción reducida del simulador, no un reemplazo exacto de su dinámica completa, no lineal y basada en reglas.
+  \item[Modelo local / linealización:] Descripción dinámica simplificada que busca aplicarse cerca de una condición de operación declarada o dentro de un régimen especificado. Sus resultados no establecen el comportamiento fuera de ese dominio.
+  \item[Propiedad de Markov:] Propiedad según la cual el estado siguiente depende del estado actual, sin requerir los estados anteriores, una vez dadas las entradas del modelo. No se supone que el mapa reducido de dos variables tenga esta propiedad para el simulador completo.
+  \item[Régimen:] Categoría que describe un patrón del seguimiento simulado. La tesis clasifica las trayectorias como en banda, contractivas o persistentes según las reglas de ventana finita descritas en metodología; estas etiquetas no afirman estabilidad dinámica global.
+  \item[Estabilidad de Schur:] Estabilidad de un mapa lineal autónomo de tiempo discreto cuando todos los valores propios de su matriz tienen módulo estrictamente menor que uno (equivalentemente, cuando su radio espectral es menor que uno). La tesis aplica este criterio al mapa reducido ajustado; no demuestra la estabilidad global del simulador estocástico completo.
+  \item[Tick:] Paso de actualización discreto de la simulación. En cada tick, el modelo aplica el choque programado cuando corresponde, procesa las acciones de los agentes en un orden fijo y registra el estado resultante.
+  \item[Semilla:] Valor inicial de un generador de números pseudoaleatorios. Las ejecuciones con semillas distintas producen realizaciones estocásticas distintas; la semilla es la unidad independiente de los contrastes confirmatorios.
+  \item[Diseño pareado:] Comparación en la que dos condiciones comparten la misma semilla y las mismas entradas exógenas, de modo que la diferencia dentro de cada semilla aísla la regla modificada bajo condiciones simuladas comunes.
+  \item[Exploración y confirmación:] Conjuntos separados de simulaciones. La exploración se usa para estimar el mapa reducido y planear la precisión; la confirmación evalúa hipótesis preespecificadas con semillas disjuntas y celdas designadas.
+  \item[Configuración reservada:] Combinación de parámetros que se excluye del ajuste y se usa para evaluar si el mapa reducido describe resultados más allá de las configuraciones empleadas para estimarlo.
+  \item[H1--H3:] Las tres hipótesis preespecificadas: H1 estudia el arbitraje y el área de exceso de error; H2, el retiro adaptativo de liquidez y la respuesta máxima del precio; H3 compara el error de predicción a un paso del mapa reducido con el de persistencia.
+  \item[E0--E3:] Etiquetas usadas en la tabla de diseño experimental para los casos de referencia, arbitraje, sensibilidad a la profundidad y retiro adaptativo. E2 es un control analítico de profundidad, no una condición simulada independiente. Las etiquetas no son categorías generales de mercado.
+  \item[OE1--OE4:] Etiquetas de los cuatro objetivos específicos expuestos en el capítulo de objetivos.
+\end{description}
+
+\subsection*{Inferencia y alcance}
+\begin{description}[style=unboxed,leftmargin=0pt,labelwidth=0pt,labelsep=0.5em,itemsep=0.1em]
+  \item[MAE --- error absoluto medio:] Promedio de las diferencias absolutas entre valores predichos y observados del tick siguiente. Aquí se calcula para predicciones a un paso del exceso de error; un MAE menor indica menor error absoluto promedio.
+  \item[Referencia de persistencia:] Predicción sencilla que conserva el valor observado actual, ajustado por la entrada conocida del precio de referencia. Permite evaluar si el mapa reducido mejora frente a una referencia mínima.
+  \item[Autorregresión escalar:] Regla predictiva de una variable en la que el valor siguiente depende linealmente del actual. Es un modelo de comparación para evaluar el aporte del segundo estado del mapa reducido.
+  \item[Prueba de aleatorización por inversión de signos:] Procedimiento de inferencia pareada que compara el contraste medio observado con contrastes formados al invertir al azar los signos de las diferencias por semilla bajo la hipótesis nula.
+  \item[Intervalo de confianza bootstrap percentílico:] Intervalo formado por cuantiles de remuestreos repetidos de los contrastes independientes por semilla. Cuantifica la incertidumbre muestral bajo el diseño de remuestreo declarado.
+  \item[Intervalo de confianza:] Rango calculado mediante un procedimiento declarado para expresar la incertidumbre de una cantidad estimada. La tesis informa intervalos del 95\,\% para los contrastes pareados.
+  \item[Corrección de Holm:] Ajuste escalonado de valores $p$ para pruebas múltiples que controla la probabilidad familiar de una o más decisiones falsas de rechazo en la familia de hipótesis especificada.
+  \item[Verificación:] Comprobación de que la implementación respeta su especificación formal o declarada, por ejemplo, mediante pruebas de identidades de conservación, límites y reglas de eventos.
+  \item[Validación:] Evaluación de si el modelo es adecuado para el objetivo que busca representar. La tesis verifica propiedades de implementación, pero no valida el modelo frente a datos de mercado.
+  \item[Validez externa:] Grado en que los hallazgos se aplican más allá de las configuraciones simuladas a otros contextos, como plataformas reales o sistemas de producción. Los resultados aquí son sintéticos y no establecen validez externa.
+\end{description}
+\endgroup

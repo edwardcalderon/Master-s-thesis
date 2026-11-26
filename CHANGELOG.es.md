@@ -1,3 +1,19 @@
+## [0.1.10] - 2026-11-26
+
+### Añadido
+
+- Se añadió el experimento reproducible de mapa híbrido con banda, el protocolo congelado de selección y evaluación, hallazgos por semilla y exportaciones con hashes para el manuscrito bilingüe y el resumen interactivo del sitio.
+- Se añadió verificación en Lean y un puente de aritmética racional exacta para el mecanismo CPMM, documentando el alcance de las pruebas y sus límites respecto de la estabilidad del simulador completo.
+
+### Cambiado
+
+- Se actualizó el manuscrito en inglés y español a v0.8.0 con la metodología no lineal/híbrida, resultados por condición, un análisis acotado de Lyapunov e implicaciones prácticas limitadas por la evidencia sintética.
+- Se actualizaron las tareas de simulación y tesis para reflejar la evidencia y el trabajo de validación pendiente.
+
+### Corregido
+
+- Se aclaró que la mejora híbrida se concentra en arbitraje de baja capacidad y profundidad 2, no mejora la predicción de presión de flujo y no demuestra rendimiento en mercados reales.
+
 ## [0.1.9] - 2026-11-25
 
 ### Añadido

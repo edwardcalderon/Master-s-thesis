@@ -11,6 +11,14 @@
   boundaries.
 - State external-validity limits and keep real-market claims separate from synthetic
   mechanism results.
+- Predeclare the venue/pool pair, sample window, evaluation unit, target patterns,
+  chronological and pool-level holdouts, and calibration/evaluation split before
+  inspecting evaluation outcomes.
+- Reconcile reserve/swap and CEX events using a documented clock and ordering rule;
+  record fees, gas, block ordering, execution delay, liquidity changes, reorg handling,
+  and source data rights where available.
+- Report model disagreement and measurement/parameter uncertainty rather than only a
+  best-fit parameter set.
 
 ## Validation design inherited from v0.6.0
 

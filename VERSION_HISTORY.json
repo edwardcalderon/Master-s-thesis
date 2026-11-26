@@ -58,5 +58,11 @@
     "date": "2026-11-25",
     "status": "release",
     "summary": "Synchronized release v0.1.9 with @edcalderon/versioning."
+  },
+  {
+    "version": "0.1.10",
+    "date": "2026-11-26",
+    "status": "release",
+    "summary": "Synchronized release v0.1.10 with @edcalderon/versioning."
   }
 ]

@@ -68,12 +68,12 @@ y la orden ejecutada es $\min\{q^{\ast},\,c\,x\}$, además limitada por el inven
 
 \section{Agentes}
 
-El estado del sistema en el tick $t$ es
+El estado contable compacto registrado en el tick $t$ es
 \begin{equation}
   S_t = \bigl(x_t,\,y_t,\,\pC_t,\,W_t\bigr),
   \label{eq:estado}
 \end{equation}
-donde $W_t$ reúne los inventarios de los agentes. Cada agente opera con un inventario finito; los de ruido y tendencia disponen de dos veces las reservas iniciales y el arbitrajista de cinco veces. En las ejecuciones de confirmación ninguna orden estuvo limitada por capital (0 de 13\,500).
+donde $W_t$ reúne los inventarios de los agentes. Este vector es un estado contable compacto; no se afirma que $S_t$ por sí solo sea un estado completo de Markov. La regla de tendencia depende del cambio de precio del AMM respecto del tick anterior; por tanto, el estado de transición debe conservar ese precio o una memoria equivalente del agente. También deben conservarse las banderas de reglas de una sola activación que no puedan inferirse de los inventarios. En una formulación estocástica, la siguiente orden aleatoria puede representarse como entrada explícita; la reproducción determinista requiere además el estado del generador o el índice de la secuencia de órdenes pregenerada. El presente análisis no formaliza ese estado aumentado del simulador completo. Cada agente opera con inventario finito; los agentes de ruido y tendencia disponen de dos veces las reservas iniciales y el arbitrajista de cinco veces. En las ejecuciones de confirmación ninguna orden estuvo limitada por capital (0 de 13\,500).
 
 \paragraph{Ruido.} Con probabilidad $0.7$ por tick, emite una orden de lado aleatorio por el $0.4\,\%$ de la reserva inicial del activo de entrada. El calendario de órdenes se genera antes de la simulación a partir de la semilla, de modo que los diseños pareados comparten el mismo flujo.
 
@@ -105,9 +105,36 @@ La parte autónoma tiene matriz $A=\begin{pmatrix} a & \beta\\ c & \rho\end{pmat
 \end{equation}
 La estabilidad de la matriz estimada describe la dinámica lineal autónoma y no implica estabilidad del simulador estocástico.
 
+\subsection{Análisis de Lyapunov no exhaustivo del mapa reducido}
+
+Para cada condición ajustada, sea $A$ la matriz del mapa reducido autónomo y sea $Q=I$. Como las matrices ajustadas satisfacen las condiciones de Schur, la ecuación de Lyapunov discreta
+\begin{equation}
+  A^{\mathsf T}PA-P=-I
+  \label{eq:lyap-reducido}
+\end{equation}
+tiene una solución única definida positiva $P$. Una construcción es $P=\sum_{j=0}^{\infty}(A^j)^{\mathsf T}A^j$, que converge cuando el radio espectral de $A$ es menor que uno. Como el mapa ajustado no tiene intercepto, su equilibrio sin entrada es $w^*=0$. Con $w_t=(d_t,z_t)^{\mathsf T}$ y $V(w_t)=w_t^{\mathsf T}Pw_t$, se obtiene
+\begin{equation}
+  V(w_{t+1})-V(w_t)=-\lVert w_t\rVert_2^2.
+  \label{eq:lyap-decrecimiento}
+\end{equation}
+Por tanto, el origen es asintóticamente estable para cada mapa reducido autónomo ajustado. Este es un certificado lineal específico de cada condición: fija en cero la entrada del choque y omite las innovaciones estocásticas y los residuos del ajuste del simulador. No demuestra la estabilidad del simulador no lineal, por tramos y estocástico, ni la de su estado completo.
+
 \subsection{Estimación y evaluación reservada}
 
 Cada condición tiene su propio ajuste, estimado solo con las ejecuciones de exploración (semillas 0 a 299, profundidad 1, choques $\pm0.1$). La evaluación usa el error absoluto medio a un paso sobre las 20 transiciones de cada ejecución de confirmación, en las celdas reservadas. Los modelos de referencia son la persistencia, $\hat d_{t+1}=d_t+u_{t+1}$, y un autorregresivo escalar $d_{t+1}-u_{t+1}=a_s d_t$ ajustado por condición con los datos de exploración. Además, cada ejecución recibe una etiqueta observada: \emph{en banda} si $|d_t|<10^{-9}$ en los ticks 1 a 5 y 16 a 20; \emph{contractiva} si no lo es y el valor medio de $|d_t|$ en los ticks 16 a 20 es menor que en los ticks 1 a 5; \emph{persistente} en otro caso.
+
+\subsection{Comparación con un mapa híbrido sensible a la banda}
+\label{sec:hybrid-method}
+
+Un análisis separado (modelo 0.5.0, análisis 0.1.0) compara el mapa afín L0 con el candidato híbrido Hyb. Esta comparación es distinta de H1, la hipótesis de la tesis sobre el arbitraje. Usa el error de seguimiento con signo $e_t=\log(p_t^D/p_t^C)$ y la misma variable de flujo normalizada $z_t$. La entrada externa conocida es $u_{t+1}=-\Delta\log p^C_{t+1}$. Se definen el exceso con signo $\phi_\gamma(e)=\operatorname{sgn}(e)\max(|e|-\gamma,0)$ y el indicador $I_t=\mathbf{1}(|e_t|>\gamma)$, con banda configurada $\gamma=0.003$. Las ecuaciones son
+\begin{align}
+  \text{L0:}\quad e_{t+1}&=e_t+u_{t+1}+a e_t+b z_t,& z_{t+1}&=c e_t+\rho z_t,\\
+  \text{Hyb:}\quad e_{t+1}&=e_t+u_{t+1}+a e_t+b z_t+g\phi_\gamma(e_t)+h z_t I_t,&
+  z_{t+1}&=c e_t+\rho z_t+k\phi_\gamma(e_t)+m z_t I_t.
+\end{align}
+Los coeficientes se ajustan sin intercepto y por separado para las cuatro condiciones operativas compartidas. Por tanto, Hyb añade dos términos dependientes de la banda por variable predicha; no añade ramas de estado para la capacidad o el retiro. La cuadrícula de selección usa las semillas 3000--3299, profundidad 1 y choques $\pm0.10$. La evaluación intacta usa semillas 4000--4299, profundidades 0.5 y 2, y choques $\pm0.05$ y $\pm0.20$. La métrica primaria es el MAE recursivo por semilla en $e$, promediado sobre las 32 celdas reservadas por semilla y 20 transiciones. La predicción recursiva recibe la trayectoria exógena conocida del CEX y alimenta sus propios valores predichos $(e,z)$. El intervalo bootstrap percentílico pareado usa 10 000 remuestreos de las 300 unidades semilla; los contrastes por celda y las demás métricas de estado son resultados secundarios descriptivos. Esto evalúa la predicción del mapa reducido frente al simulador sintético especificado; no valida mercados ni demuestra estabilidad del sistema híbrido completo. La configuración exacta, las sumas de verificación del código y los resultados se registran en \code{experiments/cex\_dex\_mvp/hybrid\_config.json}.
+
+La ecuación de $z_{t+1}$ no recibe como entrada el flujo de órdenes estocástico realizado en el tick siguiente. Su objetivo incluye sorteos futuros de ruido o tendencia que este mapa basado solo en el estado no observa; por tanto, los errores de presión de flujo diagnostican una especificación incompleta de las entradas y no que el flujo del simulador sea determinista.
 
 \section{Diseño experimental}
 
@@ -196,3 +223,5 @@ Como guía de tamaño de muestra se usa $n\approx(1.96\,s/h)^2$, con $s$ la desv
 La verificación comprende nueve comprobaciones automáticas de invariantes (anexo~\ref{sec:verificacion}): conservación del producto y positividad de las reservas en ventas y compras sin comisión, preservación del precio en el retiro proporcional, estados configurados positivos y finitos, reducción del error por el arbitraje en ambas direcciones, activación del umbral adaptativo, intercambio de choques y ticks comunes en los pares, impacto creciente al reducir la liquidez, y conservación de activos con órdenes pareadas. La validación contra datos de mercado queda fuera del alcance (capítulo~\ref{cap:discusion}).
 
 La trazabilidad se apoya en un contrato de ejecución que registra identificador, versión del código, escenario, semilla, parámetros, series, métricas y sumas de verificación (anexo~\ref{sec:contrato}). El código y los datos de las figuras están en el repositorio del trabajo \cite{calderon2026repository}. Los resultados completos de la ejecución confirmatoria no se versionan: se citan por su identificador, sus sumas de verificación y el comando que los regenera.
+
+La comparación híbrida se reproduce con \code{pnpm experiment:mvp:hybrid}; sus exportaciones compactas para la web y la tesis se regeneran con \code{pnpm experiment:mvp:hybrid:export}. La ejecución \code{\HybridRunID} registra las configuraciones exactas del modelo y el análisis, los rangos de semillas, la versión de Python, los hashes de las fuentes y las sumas de verificación de los resultados.
