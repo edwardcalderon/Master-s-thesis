@@ -1,0 +1,188 @@
+\documentclass[11pt,letterpaper]{report}
+
+% English edition, synchronised with manuscript revision v0.8.4 (Spanish: es/main.tex).
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\DeclareUnicodeCharacter{2212}{\ensuremath{-}}% U+2212 minus sign used in the abstracts
+\usepackage{mathptmx}
+\usepackage{microtype}
+\usepackage[letterpaper,left=3cm,right=2.5cm,top=2.7cm,bottom=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs,tabularx,array,multirow,makecell}
+\usepackage{enumitem}
+\usepackage{setspace}
+\usepackage[font=small,labelfont=bf,labelsep=period,position=top]{caption}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{xurl}
+\usepackage{hyperref}
+
+\ifdefined\blindreviewmode
+  \def\pdfAuthorValue{}
+  \def\pdfSubjectValue{Manuscript for anonymous review, revision v0.8.4}
+\else
+  \def\pdfAuthorValue{Edward Calderón}
+  \def\pdfSubjectValue{Master's thesis: analytical capacity benchmark and synthetic CEX/DEX simulation results, November 26, 2026, manuscript v0.8.4}
+\fi
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=blue,
+  pdflang={en-US},
+  pdftitle={Price Tracking under Bounded Arbitrage: A Synthetic CEX/DEX Agent-Based Study},
+  pdfauthor={\pdfAuthorValue},
+  pdfsubject={\pdfSubjectValue}
+}
+
+\newcommand{\languageCode}{en}
+\newcommand{\versionTesis}{v0.1.10}
+\newcommand{\revisionManuscrito}{v0.8.4}
+\newcommand{\datadir}{figures/data}
+\ifdefined\blindreviewmode
+  \newcommand{\EngineeringRunID}{[omitted for anonymous review]}
+  \newcommand{\HybridRunID}{[omitted for anonymous review]}
+  \newcommand{\HtwoReviewRunID}{[omitted for anonymous review]}
+  \newcommand{\RunID}{[omitted for anonymous review]}
+\else
+  \newcommand{\EngineeringRunID}{cex-dex-engineering-9438e194aa7e}
+  \newcommand{\HybridRunID}{cex-dex-hybrid-1d1d9d2f8c5b}
+  \newcommand{\HtwoReviewRunID}{cex-dex-h2-review-\allowbreak 81af3e984e2c}
+  \newcommand{\RunID}{cex-dex-confirm-5b06486d695e}
+\fi
+
+\tolerance=1600
+\emergencystretch=3em
+
+% Notation common to both editions.
+\newcommand{\pD}{p^{\mathrm{D}}}
+\newcommand{\pC}{p^{\mathrm{C}}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\sgn}{\operatorname{sgn}}
+\newcommand{\code}[1]{\texttt{#1}}
+
+\setlength{\parskip}{0.35em}
+\setlength{\parindent}{0pt}
+\setlength{\headheight}{14pt}
+\renewcommand{\arraystretch}{1.12}
+\setlist{leftmargin=*,itemsep=0.15em,topsep=0.3em}
+\setcounter{tocdepth}{2}
+\numberwithin{equation}{chapter}
+\captionsetup{skip=6pt}
+\titleformat{\chapter}[hang]{\Large\bfseries}{\thechapter.}{0.6em}{}
+\titlespacing*{\chapter}{0pt}{-8pt}{16pt}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection.}{0.5em}{}
+\renewcommand{\bibsection}{\chapter{\bibname}}
+\setlength{\bibsep}{3pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small CEX/DEX: price tracking and liquidity}
+\fancyhead[R]{\small Manuscript \revisionManuscrito{} · 26 Nov 2026}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\fancypagestyle{plain}{%
+  \fancyhf{}
+  \fancyhead[L]{\small CEX/DEX: price tracking and liquidity}
+  \fancyhead[R]{\small Manuscript \revisionManuscrito{} · 26 Nov 2026}
+  \fancyfoot[C]{\small\thepage}
+  \renewcommand{\headrulewidth}{0.3pt}
+}
+
+\begin{document}
+
+% ---------------------------------------------------------------- Cover page
+\begin{titlepage}
+  \thispagestyle{empty}
+  \centering
+  \singlespacing
+  \ifdefined\blindreviewmode
+  \vspace*{4cm}
+  {\LARGE\bfseries Price Tracking under Bounded Arbitrage\\
+  A Synthetic CEX/DEX Agent-Based Study\par}
+  \vspace{1.2cm}
+  {\Large Version for double-blind review\par}
+  \vfill
+  {\small Working manuscript --- revision \revisionManuscrito{}\par}
+  \else
+  {\large\bfseries Universidad Nacional de Colombia\\[2pt]
+  Facultad de Minas\\[2pt]
+  Sede Medellín\par}
+  \vspace{3.2cm}
+  {\LARGE\bfseries Price Tracking under Bounded Arbitrage\\
+  A Synthetic CEX/DEX Agent-Based Study\par}
+  \vspace{0.9cm}
+  {\Large An agent-based experimental framework\\
+  and a reduced dynamical model\par}
+  \vspace{2.6cm}
+  {\Large Edward Calderón Aristizábal\par}
+  \vspace{1.6cm}
+  {\large Master in Engineering -- Systems and Computer Engineering\\[2pt]
+  In-depth (profundización) modality\par}
+  \vspace{0.8cm}
+  {\large Advisor: Prof. Juan David Ospina Arango\par}
+  {\large Co-director: Prof. John R. Ballesteros Parra\par}
+  \vfill
+  {\large Medellín, Colombia\\[2pt]
+  November 26, 2026\par}
+  \vspace{0.3cm}
+  {\small Working manuscript for advisor review --- revision \revisionManuscrito{} (edition \versionTesis{})\par}
+  \fi
+\end{titlepage}
+
+\pagenumbering{roman}
+\setcounter{page}{1}
+
+% ---------------------------------------------------------------- Abstract / Resumen
+\begingroup
+\setcounter{secnumdepth}{-1}
+\addtocontents{toc}{\protect\setcounter{tocdepth}{0}}
+\titleformat{\section}{\Large\bfseries}{}{0pt}{}
+\singlespacing
+\input{chapters/00-abstract}
+\clearpage
+\input{chapters/00-abstract-translation}
+\addtocontents{toc}{\protect\setcounter{tocdepth}{2}}
+\endgroup
+\setcounter{secnumdepth}{2}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.5em}{}
+
+\clearpage
+\tableofcontents
+\clearpage
+\listoftables
+\clearpage
+\listoffigures
+\clearpage
+\input{chapters/00-notation}
+\onehalfspacing
+
+% ---------------------------------------------------------------- Body
+\clearpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\input{chapters/01-introduction}
+\input{chapters/02-problem-and-state-of-the-art}
+\input{chapters/03-justification}
+\input{chapters/04-hypotheses}
+\input{chapters/05-objectives}
+\input{chapters/06-methodology}
+\input{chapters/07-results}
+\input{chapters/08-discussion-and-conclusions}
+\input{chapters/09-future-work}
+
+\bibliographystyle{unsrtnat}
+\bibliography{references}
+
+\input{chapters/11-annexes}
+\end{document}

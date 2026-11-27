@@ -1,0 +1,20 @@
+\chapter{Justificación}
+\label{cap:justificacion}
+
+\section{Justificación científica}
+
+El movimiento básico del precio de un AMM de producto constante bajo un intercambio limitado está determinado algebraicamente. Presentarlo como un descubrimiento experimental exageraría el resultado. El valor científico del estudio consiste en derivar explícitamente el referente y luego identificar qué desviaciones observadas dependen del flujo de órdenes, el calendario y las reglas de agentes del simulador. Esta distinción hace que el aporte sea más acotado y fácil de auditar.
+
+El trabajo no reclama originalidad por combinar una referencia CEX con un AMM. Estudios previos abordan el seguimiento de precios de referencia, los retornos de proveedores y LVR, las comisiones y el arbitraje, la liquidez concentrada, y el orden de transacciones y MEV \cite{angeris2020uniswap,milionis2022lvr,heimbach2022risks,daian2020flash,adams2021uniswapv3}. El aporte es una comparación compacta y reproducible entre un límite exacto de capacidad y un micromundo basado en reglas y de horizonte finito, incluida una sensibilidad que revela cómo el efecto de baja profundidad depende del tamaño de las órdenes y del pánico. El resultado sobre persistencia de la recuperación también identifica una magnitud diferenciada para futuros estudios empíricos: las salidas posteriores al primer retorno.
+
+\section{Justificación metodológica}
+
+Las corridas pareadas comparten el choque exógeno y las órdenes de ruido pregeneradas, de modo que sus diferencias aíslan la intervención de código bajo el calendario especificado. La semilla es la unidad de réplica Monte Carlo; no representa una muestra de mercados. Las pruebas de aleatorización archivadas llegaron al piso de resolución, por lo que sus valores $p$ no sustentan las conclusiones. En su lugar, el manuscrito informa magnitudes de efecto, variación entre semillas, sensibilidad en las condiciones configuradas y los casos en que las referencias simples igualan o superan al mapa reducido.
+
+El modelo y el contrato de salida registran reglas, parámetros, semillas y sumas de verificación, y la implementación se contrasta con invariantes mecánicas. La interpretación está condicionada por tres hechos del diseño: el disparador H2 se activa en todas las corridas ensayadas, el retiro también reduce el límite de orden de arbitraje porque es proporcional a las reservas, y la métrica original de desplazamiento máximo no mide el sobrepaso respecto de la nueva referencia.
+
+\section{Relevancia para ingeniería}
+
+Los resultados sugieren dos magnitudes para futuros estudios de reproducción y monitoreo: la persistencia después del primer retorno a la banda y el tamaño de la orden relativo a las reservas activas, junto con la discrepancia frente a la corrección máxima disponible por evento. Su utilidad en sistemas desplegados no se ha evaluado; hacerlo requiere reproducir eventos de mercado sincronizados con comisiones, gas, latencia, capital finito, orden transaccional y competencia entre buscadores.
+
+El tablero interactivo presenta las reglas especificadas y sus consecuencias simuladas para enseñanza e inspección. Su efecto educativo no ha sido evaluado. La piscina de producto constante, la referencia exógena y los ticks abstractos también delimitan lo que la interfaz y la simulación representan.

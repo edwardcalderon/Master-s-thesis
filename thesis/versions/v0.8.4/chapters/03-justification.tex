@@ -1,0 +1,20 @@
+\chapter{Justification}
+\label{cap:justificacion}
+
+\section{Scientific justification}
+
+The basic price movement of a constant-product AMM under a bounded swap is algebraically determined. Treating that movement as an experimental discovery would overstate the result. The scientific value of the study is instead to derive the benchmark explicitly, then identify which observed departures depend on the simulator's order flow, schedule and agent rules. This distinction makes the contribution narrower and easier to audit.
+
+The work does not claim novelty for combining a CEX reference with an AMM. Prior work studies reference-price tracking, LP returns and LVR, fees and arbitrage, concentrated liquidity, and transaction ordering and MEV \cite{angeris2020uniswap,milionis2022lvr,heimbach2022risks,daian2020flash,adams2021uniswapv3}. The contribution is a compact, reproducible comparison of an exact capacity bound with a rule-based finite-horizon micro-world, including a sensitivity that reveals how a shallow-depth effect depends on order size and panic behavior. The measured recovery-persistence result also identifies a distinct quantity for future empirical study: later departures after an initial return.
+
+\section{Methodological justification}
+
+Paired runs share the same exogenous shock and pre-generated noise orders, so their differences isolate the code-level intervention under the specified schedule. The seed is the Monte Carlo replication unit; it does not represent a sampled market. The archived randomization tests reached their resolution floor, so their p-values are not used to support the conclusions. Instead, the manuscript reports effect magnitudes, seed-level variability, sensitivity across configured conditions and cases where simple baselines perform as well as or better than the reduced map.
+
+The model and output contract record rules, parameters, seeds and checksums, and the implementation is checked against mechanical invariants. The interpretation is shaped by three design facts: the H2 trigger fires in every tested run, withdrawal also lowers the arbitrage order cap because it is proportional to reserves, and the original peak-displacement metric does not measure overshoot relative to the shocked reference.
+
+\section{Engineering relevance}
+
+The results suggest two candidate quantities for future replay and monitoring studies: persistence after the first return to a tracking band, and order size relative to active reserves alongside discrepancy relative to the maximum correction available per event. Their value in deployed systems remains untested; evaluating it requires synchronized market-event replay with realistic fees, gas, latency, finite capital, transaction ordering and competition among searchers.
+
+The interactive dashboard presents the specified rules and their simulated consequences for teaching and inspection. Its educational effect has not been evaluated. The constant-product pool, exogenous reference and abstract event ticks also delimit what the interface and simulation represent.

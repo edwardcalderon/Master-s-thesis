@@ -1,0 +1,59 @@
+{
+  "run_id": "cex-dex-capacity-ratio-e269f980fd26",
+  "analysis": "h2-capacity-ratio-check-0.8.0",
+  "created_on": "2026-11-27",
+  "arms": {
+    "fixed_cap_panic": 900,
+    "fixed_cap_no_panic": 900
+  },
+  "seeds": [
+    2000,
+    2299
+  ],
+  "depth_scale": 0.5,
+  "shocks": [
+    -0.05,
+    -0.1,
+    -0.2
+  ],
+  "new_random_seeds": false,
+  "inputs": {
+    "abm_config.json": {
+      "path": "experiments/cex_dex_mvp/abm_config.json",
+      "sha256": "9c221ada2b8a2150d238c11d320e34fd3697a6a67d193ab4951b48547b09623f"
+    },
+    "engineering_config.json": {
+      "path": "experiments/cex_dex_mvp/engineering_config.json",
+      "sha256": "f8b9ae9966bc2f66b4a2d293a3dbb256c0bc5f6f17d6ef37dbaaabbcdff4b8ca"
+    },
+    "confirm_config.json": {
+      "path": "experiments/cex_dex_mvp/confirm_config.json",
+      "sha256": "dcf2ef01fdc7504834362f7cb38b93801b2effa861f6d0e3be8ed74796cef16f"
+    },
+    "H2_CAPACITY_RATIO_PROTOCOL_0.8.0.md": {
+      "path": "experiments/cex_dex_mvp/H2_CAPACITY_RATIO_PROTOCOL_0.8.0.md",
+      "sha256": "ed57c1f4551c3f05284fe5684c535a6e4540b77396fa9893269df9c5f17a444c"
+    }
+  },
+  "sources": {
+    "experiments/cex_dex_mvp/analyze_capacity_ratio_check.py": "5403209c8002e1240f3c0fd596a515a5badc8720163276dc8e92a6c68afbf9f1",
+    "experiments/cex_dex_mvp/abm.py": "3ef15c40763911e92c72afa020f95739c54fca49db8a183e371a94365875531e",
+    "experiments/cex_dex_mvp/engineering.py": "beeb920c35b4f0203ae403874451fe502b342aab615f76fe3985469f895f73fd",
+    "experiments/cex_dex_mvp/confirm.py": "9b2c7df09f49bd2fb247ad97b25253ebc06423010050e76890df701132df9a0e"
+  },
+  "outputs": {
+    "fixed_capacity_ratio_paths.csv": {
+      "rows": 1800,
+      "sha256": "9a489e0f49132716d1b54433fad5e83f2b39ba3be85ba762241b5d802edb4281"
+    },
+    "fixed_capacity_ratio_summary.csv": {
+      "rows": 6,
+      "sha256": "c66a2c5af22cfce163edf88f874f42501a776191d7fc5dc022d6295142540b58"
+    }
+  },
+  "limitations": [
+    "Post-hoc replay of existing seeds; not an independent or confirmatory sample.",
+    "Synthetic zero-fee model with end-of-tick episode classification.",
+    "R uses configured aligned orders and approximate reserves; it is not a universal threshold law."
+  ]
+}

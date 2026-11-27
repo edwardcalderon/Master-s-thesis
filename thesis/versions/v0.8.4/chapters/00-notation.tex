@@ -1,0 +1,113 @@
+\chapter*{Notation}
+\addcontentsline{toc}{chapter}{Notation}
+
+The following symbols are used throughout the document. The superscript $\mathrm{D}$ denotes the decentralized exchange (AMM) and $\mathrm{C}$ the centralized reference.
+
+\begin{center}
+\small
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+Symbol & Meaning \\
+\midrule
+$x_t,\ y_t$ & AMM reserves of assets $X$ and $Y$ at tick $t$ (price quoted in units of $Y$ per unit of $X$). \\
+$k_t = x_t y_t$ & Reserve product; constant in a zero-fee swap. \\
+$\pD_t = y_t/x_t$ & AMM marginal price. \\
+$\pC_t$ & Centralized reference price (exogenous). \\
+$q$ & Amount of $X$ sold to the AMM in a swap. \\
+$f$ & Proportional fee retained by the pool. \\
+$I(q,x)$ & Logarithmic impact of a sale: $2\log(1+q/x)$ without fee. \\
+$e_t = \log(\pD_t/\pC_t)$ & Logarithmic tracking error. \\
+$\gamma$ & Logarithmic half-width of the operating no-arbitrage band (executed value: $0.003$). \\
+$d_t,\ D_t = |d_t|$ & Excess error outside the band with sign, and its absolute value. \\
+$c$ & Arbitrage capacity: maximum fraction of the tradable reserve per tick. \\
+$q^{\ast}$ & Sale size that takes the price to the edge of the band. \\
+$z_t$ & Net buying pressure (noise and trend; no arbitrage) normalized by the initial reserve of $Y$. \\
+$u_t = -\Delta\log \pC_t$ & Exogenous input of the reduced map. \\
+$A$ & Linear part of an affine map, as in $x_{t+1}=Ax_t+b$. \\
+$H$ & Horizon of the response window (20 abstract event ticks). \\
+$\delta_c=2\log(1+c)$ & Ideal log-price correction for a capacity-limited arbitrage order in the isolated-pool benchmark. \\
+$N_\gamma$ & Ideal event ticks required to reach the no-arbitrage band in the isolated-pool benchmark. \\
+$A_{\mathrm{ex}} = \sum_{t=1}^{H} D_t$ & Excess-error area; a simulated outcome, not an empirical finding. \\
+$M = \max_{1\le t\le H}\bigl|\log(\pD_t/\pD_0)\bigr|$ & Legacy peak displacement from the pre-shock AMM price; not post-shock tracking error or overshoot. \\
+$t_c$ & Tick of the second consecutive in-band observation confirming sustained return; post-recovery outcomes use $t>t_c$. \\
+$A_{\mathrm{post}}=\sum_{t>t_c}(|e_t|-\gamma)_+$ & Post-recovery excess-area outcome; exploratory H2 primary metric. \\
+$P_{\mathrm{post}}=\max_{t>t_c}(|e_t|-\gamma)_+$ & Post-recovery peak excess; exploratory H2 secondary metric. \\
+$R_{\mathrm{1tick}},R_{\mathrm{flow}},R_{\mathrm{panic}}$ & Configured one-tick maximum-adverse, continuous-flow, and panic impact/capacity ratios; exploratory, not measured thresholds. \\
+$\mathrm{MAE}$ & Mean absolute one-step prediction error (model-comparison metric of H3). \\
+E0--E3 & Experimental scenarios (table~\ref{tab:escenarios}). \\
+OE1--OE4 & Specific objectives. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\section*{Glossary of technical terms}
+\phantomsection
+\addcontentsline{toc}{section}{Glossary of technical terms}
+
+\begingroup
+\small
+\setlength{\parskip}{0.15em}
+The definitions below describe how each term is used in this thesis. They refer to
+the specified simulator unless they explicitly state a general mathematical property.
+
+\subsection*{Markets and agents}
+\begin{description}[style=unboxed,leftmargin=0pt,labelwidth=0pt,labelsep=0.5em,itemsep=0.1em]
+  \item[ABM --- agent-based model:] A computational model in which individually represented agents follow specified rules, interact with one another and with an environment, and collectively generate the simulated outcomes. Here, the agents are noise traders, a trend/panic trader, an arbitrageur, and a liquidity provider.
+  \item[Agent heterogeneity:] Differences in agents' roles, information, rules, inventories, or actions. In this study, heterogeneity comes from the distinct trading and liquidity-provision rules; it does not imply that the agents are calibrated representations of real participants.
+  \item[AMM --- automated market maker:] A decentralized trading mechanism that quotes prices and executes swaps according to a reserve-based rule rather than matching orders in a conventional order book.
+  \item[CEX --- centralized exchange:] A trading venue represented here only by an exogenous reference-price series. Its order book, market impact, and feedback with the simulated AMM are outside the model.
+  \item[DEX --- decentralized exchange:] A trading venue implemented through blockchain-based protocols. In this thesis, the DEX side is represented by the specified AMM pool.
+  \item[CPMM --- constant-product market maker:] An AMM whose ideal, fee-free swap rule keeps the product of two reserves, $xy=k$, constant. Fees and liquidity additions or withdrawals can change that product; the equality is not an unconditional invariant of every simulated event.
+  \item[Liquidity pool:] The assets held by an AMM and made available for swaps. In this model it contains the two reserves $x_t$ and $y_t$.
+  \item[Liquidity provider (LP):] An agent that supplies assets to an AMM pool. The simulated LP follows a one-time threshold-withdrawal rule; it is not an empirically estimated model of provider behavior.
+  \item[Inventory:] The quantity of each asset held by an agent. Inventory limits which simulated orders an agent can execute.
+  \item[Noise trader:] An agent whose order side and timing are generated randomly rather than from a price signal or information about value.
+  \item[Trend/panic trader:] The simulated agent that follows a recent AMM price movement or, after a specified negative-return threshold, submits a panic sale.
+  \item[Order flow:] The sequence and sizes of buy and sell orders arriving at the pool. Paired runs reuse the same pregenerated noise orders and reference shocks.
+\end{description}
+
+\subsection*{Market mechanics and price response}
+\begin{description}[style=unboxed,leftmargin=0pt,labelwidth=0pt,labelsep=0.5em,itemsep=0.1em]
+  \item[Arbitrage:] Trading across venues to benefit from a price discrepancy. In the simulator, the arbitrageur trades only when the AMM-reference discrepancy is outside the specified band and its order is subject to a capacity limit.
+  \item[Arbitrage capacity:] The maximum fraction of the tradable reserve that the simulated arbitrageur may trade in one tick. It is a controlled model parameter, not a measured real-world capacity.
+  \item[No-arbitrage band:] The interval around the reference price in which the model does not activate arbitrage. It represents an operating threshold; it is not estimated from observed transaction costs.
+  \item[Liquidity and depth:] The reserves available to absorb a swap. In this constant-product pool, reducing reserves increases the price impact of a given absolute order. This definition is specific to the model's two-asset pool.
+  \item[Swap:] An exchange of one pool asset for the other under the AMM's reserve rule.
+  \item[Slippage:] The difference between a swap's average execution price and the pool's marginal price immediately before the swap. It depends on order size relative to reserves and, when included, fees.
+  \item[Price impact:] The change in the pool's marginal price caused by a swap. It is related to, but not identical to, slippage.
+  \item[Reference price:] The exogenous CEX price used as the comparison target. It does not respond to simulated AMM trades.
+  \item[Exogenous shock:] A prescribed change applied to the reference price from outside the model. The executed design uses a one-time shock so the AMM response can be compared under controlled conditions.
+  \item[Tracking error:] The logarithmic difference between the AMM marginal price and the reference price, $e_t=\log(p^{\mathrm D}_t/p^{\mathrm C}_t)$. Its sign identifies which price is higher.
+  \item[Excess error:] The part of the tracking error outside the no-arbitrage band, represented by $d_t$. Its absolute value is zero inside the band and measures the discrepancy that remains eligible for correction outside it.
+\end{description}
+
+\subsection*{Dynamical description and experiments}
+\begin{description}[style=unboxed,leftmargin=0pt,labelwidth=0pt,labelsep=0.5em,itemsep=0.1em]
+  \item[State:] The quantities used to summarize a system at a given tick. The simulator's full state includes reserves, prices, and agent inventories; the reduced map retains only excess error and net buying pressure.
+  \item[Micro-world:] A deliberately bounded computational environment with explicit agents, rules, and interaction mechanisms. Its findings concern the specified model configurations, not a complete representation of a real market.
+  \item[Affine map:] A rule of the form $x_{t+1}=Ax_t+b$, with a linear transformation and a constant offset. The fitted reduced map has this form for each stated condition.
+  \item[Reduced map:] The estimated two-state affine discrete-time rule used to describe next-tick excess error and buying pressure. It is a reduced description of the simulator, not an exact replacement for its full nonlinear, rule-based dynamics.
+  \item[Local model / linearization:] A simplified dynamical description intended to apply near a stated operating condition or within a stated regime. Results from a local model do not establish behavior outside that domain.
+  \item[Markov property:] A property under which the next state depends on the current state, without requiring earlier states, once the model inputs are given. The two-variable reduced map is not assumed to have this property for the full simulator.
+  \item[Regime:] A category used to describe a pattern of simulated tracking behavior. Trajectories receive descriptive in-band, contractive, or persistent labels using the finite-window rules in the methods; these are summaries, not independently observed regimes or claims of global dynamical stability.
+  \item[Tick:] One discrete event step of the simulation. It has no calibrated wall-clock or block-time duration.
+  \item[Seed:] The initial value for a pseudorandom-number generator. Distinct seeds produce Monte Carlo realizations of the programmed order process; they are not samples of real markets.
+  \item[Paired design:] A comparison in which two conditions share the same seed and exogenous inputs, so their within-seed difference isolates the changed model rule under common simulated conditions.
+  \item[Exploration and held-out evaluation:] Disjoint simulation sets. Exploration estimates the reduced maps; held-out seeds and cells compare their performance against specified baselines.
+  \item[Held-out configuration:] A parameter combination withheld from fitting and used to assess whether the reduced map describes outcomes beyond the configurations used to estimate it.
+  \item[H1--H3:] H1 is the analytical capacity benchmark; H2 is an exploratory sensitivity of the fixed withdrawal trigger; H3 compares reduced maps with persistence and scalar AR(1).
+  \item[E0--E3:] Labels used in the experimental-design table for the reference, arbitrage, depth-sensitivity, and threshold-withdrawal cases. E2 is an analytical depth control, not an independently simulated condition. The labels are not general market categories.
+  \item[OE1--OE4:] Labels for the four specific objectives stated in the objectives chapter.
+\end{description}
+
+\subsection*{Inference and scope}
+\begin{description}[style=unboxed,leftmargin=0pt,labelwidth=0pt,labelsep=0.5em,itemsep=0.1em]
+  \item[MAE --- mean absolute error:] The average absolute difference between predicted and observed next-tick values. Here it is computed over one-step predictions of excess error; lower MAE indicates smaller average absolute prediction error.
+  \item[Persistence benchmark:] A simple prediction that carries the current observed value forward, adjusted for the known reference-price input. It tests whether the reduced map improves on a minimal baseline.
+  \item[Scalar autoregression:] A one-variable prediction rule in which the next value depends linearly on the current value. It is a comparison model for assessing the contribution of the reduced map's second state.
+  \item[Monte Carlo interval:] A range formed by resampling seed-level simulation contrasts. It describes variability under fixed rules and parameter levels, not uncertainty across markets.
+  \item[Verification:] Checking that the implementation follows its formal or stated specification, for example by testing conservation identities, bounds, and event rules.
+  \item[Validation:] Assessing whether the model is adequate for its intended target. The thesis verifies implementation properties but does not validate the model against market data.
+  \item[External validity:] The extent to which findings apply beyond the simulated configurations to other settings, such as actual exchanges or production systems. The results here are synthetic and do not establish external validity.
+\end{description}
+\endgroup

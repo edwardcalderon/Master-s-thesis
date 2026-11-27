@@ -1,0 +1,29 @@
+\chapter{Analytical proposition and evaluation questions}
+\label{cap:hipotesis}
+
+The study distinguishes an algebraic consequence of the swap rule from two questions that require simulation. These are claims about the specified zero-fee micro-world; they are not hypotheses about observed markets.
+
+\section{H1: ideal correction under bounded arbitrage}
+
+Let $e_t=\log(p_t^D/p_t^C)$ and $D_t=(|e_t|-\gamma)_+$. In an isolated, zero-fee pool with a fixed reference, no other orders and no binding inventory limit, the maximum order $q=cx$ changes the log price by $\delta_c=2\log(1+c)$. Since the arbitrageur stops at the band, the out-of-band error evolves as
+\[
+  D_{t+1}=\max(0,D_t-\delta_c),\qquad
+  N_\gamma=\left\lceil\frac{D_0}{2\log(1+c)}\right\rceil \quad(c>0).
+\]
+For $c=0$, no finite correction occurs. This is a mechanical benchmark derived from the constant-product swap equation, not an empirical finding. Simulation is useful only for quantifying departures from this benchmark caused by other agents, event order, finite horizon and the specified inventory rules.
+
+\section{H2: withdrawal, order scale and tracking response}
+
+The available experiments address a narrower evaluation question:
+% QUESTION_LOCK:h2:BEGIN
+\emph{Within the tested capacity and depth levels, how does the specified one-time liquidity-withdrawal rule affect post-shock tracking, and how does that effect vary when order sizes scale with reserves or panic behavior is disabled?}
+% QUESTION_LOCK:h2:END
+The E3 rule is a one-time threshold trigger, not an estimated provider-response policy: it withdraws 45\,\% of reserves as soon as $|e_t|>0.02$. The executed shocks exceed this threshold in every E3 run. The original peak displacement from the pre-shock AMM price is treated as a diagnostic only; it is not a measure of overshoot relative to the new reference.
+
+\section{H3: descriptive accuracy of reduced maps}
+
+The map clause of the research question is operationalized as predictive description of continuous tracking-error paths on held-out simulator runs. The finite-window trajectory labels summarize those paths; they are not independently observed regimes or targets in a classification test. H3 asks:
+% QUESTION_LOCK:h3:BEGIN
+\emph{How accurately does the two-state map predict held-out tracking-error paths relative to persistence and a scalar AR(1), and how does a band-aware map perform against the affine map in recursive replay?}
+% QUESTION_LOCK:h3:END
+The comparison concerns simulator-generated paths. The hybrid replay receives the realized future CEX path, so its result is not a real-time forecast test. No regime-classification or stability hypothesis is advanced.

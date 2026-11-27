@@ -1,0 +1,50 @@
+name: Thesis question guard
+
+on:
+  pull_request:
+    paths:
+      - "thesis/chapters/02-problem-and-state-of-the-art.tex"
+      - "thesis/es/chapters/02-problem-and-state-of-the-art.tex"
+      - "thesis/chapters/04-hypotheses.tex"
+      - "thesis/es/chapters/04-hypotheses.tex"
+      - "thesis/question-control.json"
+      - "scripts/check-thesis-questions.mjs"
+      - ".github/workflows/thesis-question-guard.yml"
+  push:
+    branches: [main]
+    paths:
+      - "thesis/chapters/02-problem-and-state-of-the-art.tex"
+      - "thesis/es/chapters/02-problem-and-state-of-the-art.tex"
+      - "thesis/chapters/04-hypotheses.tex"
+      - "thesis/es/chapters/04-hypotheses.tex"
+      - "thesis/question-control.json"
+      - "scripts/check-thesis-questions.mjs"
+      - ".github/workflows/thesis-question-guard.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-approved-questions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Check approval record and locked question text
+        env:
+          QUESTION_BASE_REF: ${{ github.base_ref }}
+        run: |
+          if [ -n "$QUESTION_BASE_REF" ] && git cat-file -e "origin/$QUESTION_BASE_REF:thesis/question-control.json" 2>/dev/null; then
+            node scripts/check-thesis-questions.mjs --base-ref "origin/$QUESTION_BASE_REF"
+          else
+            node scripts/check-thesis-questions.mjs
+          fi

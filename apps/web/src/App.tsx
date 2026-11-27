@@ -1,10 +1,10 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { contentByLocale, release, type Locale } from "@tesis/content";
 import englishMessages from "./locales/en.json";
 import spanishMessages from "./locales/es.json";
 import Playground from "./features/playground/Playground";
 
-type IconName = "arrow" | "book" | "check" | "code" | "download" | "external" | "file" | "github" | "moon" | "play" | "sun";
+type IconName = "arrow" | "book" | "check" | "code" | "download" | "external" | "file" | "github" | "menu" | "close" | "moon" | "play" | "sun";
 type Theme = "light" | "dark";
 
 const messages = { en: englishMessages, es: spanishMessages } satisfies Record<Locale, typeof englishMessages>;
@@ -20,6 +20,8 @@ function Icon({ name, size = 18 }: { name: IconName; size?: number }) {
     external: <><path d="M14 4h6v6" /><path d="M20 4 11 13" /><path d="M18 13v6H5V6h6" /></>,
     file: <><path d="M6 3h8l4 4v14H6z" /><path d="M14 3v5h5" /><path d="M9 13h6" /><path d="M9 17h6" /></>,
     github: <><path d="M15 22v-3.5c.05-1.3-.45-2.1-1-2.5 3.3-.35 6.75-1.6 6.75-7.15a5.6 5.6 0 0 0-1.5-3.9A5.2 5.2 0 0 0 19.1 2S17.85 1.6 15 3.55a13.2 13.2 0 0 0-6 0C6.15 1.6 4.9 2 4.9 2a5.2 5.2 0 0 0-1.15 4.95 5.6 5.6 0 0 0-1.5 3.9c0 5.55 3.45 6.8 6.75 7.15-.55.4-1.05 1.2-1.05 2.5V22" /><path d="M7 18c-3 .9-3-1.5-4.5-1.8" /></>,
+    menu: <><path d="M4 7h16M4 12h16M4 17h16" /></>,
+    close: <><path d="m6 6 12 12M18 6 6 18" /></>,
     moon: <path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z" />,
     play: <path d="m8 5 11 7-11 7z" />,
     sun: <><circle cx="12" cy="12" r="3.5" /><path d="M12 2v2.2M12 19.8V22M4.93 4.93l1.56 1.56M17.5 17.5l1.57 1.57M2 12h2.2M19.8 12H22M4.93 19.07l1.56-1.56M17.5 6.5l1.57-1.57" /></>
@@ -69,6 +71,8 @@ function App() {
   const [copied, setCopied] = useState(false);
   const [theme, setTheme] = useState<Theme>(initialTheme);
   const [readingMode, setReadingMode] = useState(() => typeof window !== "undefined" && window.localStorage.getItem("thesis-reading-mode") === "on");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const mobileMenuRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     fetch("./thesis/master-thesis.pdf", { method: "HEAD" })
@@ -96,6 +100,20 @@ function App() {
     window.localStorage.setItem("thesis-reading-mode", readingMode ? "on" : "off");
   }, [readingMode]);
 
+  useEffect(() => {
+    const dialog = mobileMenuRef.current;
+    if (!dialog) return;
+    if (mobileMenuOpen && !dialog.open) dialog.showModal();
+    if (!mobileMenuOpen && dialog.open) dialog.close();
+  }, [mobileMenuOpen]);
+
+  useEffect(() => {
+    const desktop = window.matchMedia("(min-width: 1161px)");
+    const closeOnDesktop = () => { if (desktop.matches) setMobileMenuOpen(false); };
+    desktop.addEventListener("change", closeOnDesktop);
+    return () => desktop.removeEventListener("change", closeOnDesktop);
+  }, []);
+
   const copyCloneCommand = async () => {
     await navigator.clipboard?.writeText("git clone https://github.com/edwardcalderon/Master-s-thesis.git");
     setCopied(true);
@@ -112,6 +130,14 @@ function App() {
       ? copy.pdf.missing
       : copy.pdf.pending;
   const openNotebookLabel = (title: string) => `${copy.notebook.open}: ${title}`;
+  const navigationLinks = [
+    { href: "#abstract", label: copy.header.abstract },
+    { href: "#lab", label: copy.header.lab },
+    { href: "#research", label: copy.header.overview },
+    { href: "#notebooks", label: copy.header.notebooks },
+    { href: "#docs", label: copy.header.notes },
+    { href: "#pdf", label: copy.header.manuscript }
+  ];
 
   return <div className="site-shell" data-theme={theme} data-reading={readingMode ? "on" : "off"}>
     <header className="topbar page-pad">
@@ -120,12 +146,7 @@ function App() {
         <span className="brand-copy"><strong>{content.thesis.shortTitle}</strong><small>{copy.header.subtitle} · {release.tag}</small></span>
       </a>
       <nav className="topnav" aria-label={copy.header.navigation}>
-        <a href="#abstract">{copy.header.abstract}</a>
-        <a href="#lab">{copy.header.lab}</a>
-        <a href="#research">{copy.header.overview}</a>
-        <a href="#notebooks">{copy.header.notebooks}</a>
-        <a href="#docs">{copy.header.notes}</a>
-        <a href="#pdf">{copy.header.manuscript}</a>
+        {navigationLinks.map((link) => <a href={link.href} key={link.href}>{link.label}</a>)}
       </nav>
       <div className="header-actions">
         <div className="locale-switch" role="group" aria-label={copy.language.label}>
@@ -139,7 +160,30 @@ function App() {
           <Icon name={theme === "light" ? "moon" : "sun"} size={17} />
         </button>
         <a className="repository-link" href="https://github.com/edwardcalderon/Master-s-thesis" target="_blank" rel="noreferrer" aria-label={copy.header.openRepository}><Icon name="github" size={17} /></a>
+        <button className="mobile-menu-trigger" type="button" aria-label={mobileMenuOpen ? copy.header.closeNavigation : copy.header.openNavigation} aria-expanded={mobileMenuOpen} aria-controls="mobile-navigation" onClick={() => setMobileMenuOpen((open) => !open)}>
+          <Icon name={mobileMenuOpen ? "close" : "menu"} size={19} />
+        </button>
       </div>
+      <dialog ref={mobileMenuRef} className="mobile-menu" id="mobile-navigation" aria-label={copy.header.navigation} onClose={() => setMobileMenuOpen(false)} onClick={(event) => { if (event.target === event.currentTarget) setMobileMenuOpen(false); }}>
+        <div className="mobile-menu-inner">
+          <div className="mobile-menu-bar">
+            <span className="mono">{copy.header.navigation}</span>
+            <button className="mobile-menu-close" type="button" autoFocus onClick={() => setMobileMenuOpen(false)} aria-label={copy.header.closeNavigation}><Icon name="close" size={20} /></button>
+          </div>
+          <nav className="mobile-menu-links" aria-label={copy.header.navigation}>
+            {navigationLinks.map((link, index) => <a href={link.href} key={link.href} onClick={() => setMobileMenuOpen(false)}><span className="mobile-menu-index">0{index + 1}</span><span>{link.label}</span><Icon name="arrow" size={18} /></a>)}
+          </nav>
+          <div className="mobile-menu-tools">
+            <div className="locale-switch" role="group" aria-label={copy.language.label}>
+              <button className={locale === "en" ? "locale-option is-selected" : "locale-option"} type="button" onClick={() => setLocale("en")} aria-pressed={locale === "en"} lang="en">{copy.language.english}</button>
+              <button className={locale === "es" ? "locale-option is-selected" : "locale-option"} type="button" onClick={() => setLocale("es")} aria-pressed={locale === "es"} lang="es">{copy.language.spanish}</button>
+            </div>
+            <button className="utility-button" type="button" onClick={() => setReadingMode((value) => !value)} aria-pressed={readingMode}><Icon name="book" size={16} /><span>{readingMode ? copy.header.readingOn : copy.header.reading}</span></button>
+            <button className="theme-button" type="button" onClick={() => setTheme(nextTheme)} aria-label={theme === "light" ? copy.header.useDark : copy.header.useLight}><Icon name={theme === "light" ? "moon" : "sun"} size={17} /><span>{theme === "light" ? copy.header.useDark : copy.header.useLight}</span></button>
+            <a className="repository-link" href="https://github.com/edwardcalderon/Master-s-thesis" target="_blank" rel="noreferrer"><Icon name="github" size={17} /><span>{copy.header.openRepository}</span></a>
+          </div>
+        </div>
+      </dialog>
     </header>
 
     <main id="top">

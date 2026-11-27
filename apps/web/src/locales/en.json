@@ -1,8 +1,8 @@
 {
-  "seo": { "title": "Price Tracking and Liquidity Fragility in Hybrid CEX/DEX Crypto Markets", "description": "An agent-based CEX/DEX thesis with a reproducible, browser-based simulation lab." },
+  "seo": { "title": "Price Tracking under Bounded Arbitrage: A Synthetic CEX/DEX Agent-Based Study", "description": "An agent-based CEX/DEX thesis with a reproducible, browser-based simulation lab." },
   "language": { "label": "Site language", "english": "English", "spanish": "Español" },
   "header": {
-    "home": "Master Thesis Lab home", "subtitle": "research edition", "navigation": "Primary navigation",
+    "home": "Master Thesis Lab home", "subtitle": "research edition", "navigation": "Primary navigation", "openNavigation": "Open navigation", "closeNavigation": "Close navigation",
     "overview": "Overview", "lab": "Simulation lab", "abstract": "Abstract", "notebooks": "Notebooks", "notes": "Notes", "manuscript": "Manuscript",
     "readingOn": "Reading on", "reading": "Reading", "exitReading": "Exit reading mode", "enterReading": "Enter reading mode",
     "useLight": "Use light theme", "useDark": "Use dark theme", "openRepository": "Open repository"

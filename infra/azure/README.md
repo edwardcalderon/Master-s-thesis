@@ -81,3 +81,20 @@ The F1 plan and API deployment plus health and max-bound smoke checks are comple
 The static Pages build has the API URL configured, but the feature branch still needs
 to reach `main` before the site points readers to it. F1 avoids consuming the 12-month
 student credit; upgrading to a paid SKU needs a separate budget decision.
+
+## Optional empirical data archive
+
+The CEX/DEX ingestor is documented in
+[`experiments/empirical_data/README.md`](../../experiments/empirical_data/README.md).
+The Bicep template can optionally provision a private Standard LRS Blob account and
+container by setting `createHistoricalDataStorage=true`; the option defaults to
+`false` because storage and retrieval can incur charges. Shared-key access is disabled,
+the container is private, and the lifecycle policy moves blobs to Cool after 90 days.
+The ingestor uploads through Azure CLI OAuth/RBAC, not embedded keys.
+
+No empirical data storage account has been provisioned. In the current CLI shell,
+`az account show` found no active login, so remote subscription state and Blob upload
+permissions could not be checked. The bounded pilot's CEX trades and aligned output
+are local and Git-ignored; the repository contains only the CC BY 4.0 DEX sample. The
+full upstream DEX CSV was approximately 9.1 GB at capture time, so the ingestor uses
+ranged reads and the project should archive only predeclared, rights-reviewed windows.

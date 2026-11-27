@@ -1,0 +1,38 @@
+\chapter{Objetivos}
+\label{cap:objetivos}
+
+\section{Objetivo general}
+
+Evaluar el seguimiento de precios y la amplificación de perturbaciones en un mercado CEX/DEX simplificado mediante experimentos computacionales basados en agentes y una aproximación dinámica discreta de bajo orden, y formular mediciones candidatas y preguntas empíricas para futuros estudios de monitoreo y pruebas de estrés con datos de mercados reales.
+
+\section{Objetivos específicos}
+
+\begin{enumerate}[label=\textbf{OE\arabic*.}, leftmargin=3em]
+  \item Formular y verificar un simulador discreto de un AMM de producto constante con una referencia CEX exógena, agentes de ruido, tendencia, arbitraje y provisión de liquidez, y un registro reproducible de las ejecuciones.
+  \item Caracterizar el efecto de la capacidad de arbitraje sobre el error de seguimiento y el tiempo de recuperación tras una perturbación de la referencia.
+  \item Evaluar si la reducción adaptativa de liquidez amplifica la respuesta del precio del AMM y bajo qué profundidades.
+  \item Estimar un mapa dinámico discreto de dos variables a partir de observables del simulador y contrastar su capacidad de predicción fuera de muestra frente a modelos de referencia.
+\end{enumerate}
+
+\section{Correspondencia entre objetivos, hipótesis y evidencia}
+
+La tabla~\ref{tab:oe-h} relaciona cada objetivo con la hipótesis que lo contrasta, el método y la evidencia con la que se reporta. El objetivo OE1 es instrumental: no se contrasta con una hipótesis propia, pero habilita los demás, porque sin un simulador verificado ninguna comparación sería interpretable.
+
+\begin{table}[H]
+\centering
+\caption{Correspondencia entre objetivos específicos, hipótesis, método y evidencia.}
+\label{tab:oe-h}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.0}
+\begin{tabularx}{\textwidth}{@{}l l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X@{}}
+\toprule
+Objetivo & Hipótesis & Método & Evidencia \\
+\midrule
+OE1 & H1--H3 (instrumental) & Especificación, invariantes y registro de ejecuciones & Nueve verificaciones; ID y sumas de verificación (anexo~\ref{cap:anexos}) \\
+OE2 & H1 & Capacidades pareadas: cero, baja, alta y máxima & Área de exceso; tasa y tiempo de recuperación (sección~\ref{sec:res-h1}) \\
+OE3 & H2 & Diseño pareado estático frente a adaptativo en tres profundidades & Respuesta máxima y desglose por celda (sección~\ref{sec:res-h2}) \\
+OE4 & H3 & Estimación exploratoria; evaluación en celdas y semillas reservadas & Error frente a persistencia y autorregresivo escalar; clasificación de regímenes (sección~\ref{sec:res-h3}) \\
+\bottomrule
+\end{tabularx}
+\end{table}

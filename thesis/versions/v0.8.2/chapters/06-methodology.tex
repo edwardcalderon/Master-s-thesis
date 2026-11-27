@@ -1,0 +1,204 @@
+\chapter{Methodology}
+\label{cap:metodologia}
+
+\section{Approach}
+
+The study combines analytical derivation with computational experiments. A discrete micro-world is specified and paired runs alter selected rules while reusing the same exogenous shocks and noise orders. The design follows the logic of design science \cite{hevner2004design} insofar as the simulator and reduced maps are built, verified and evaluated against explicit criteria, and it draws on the modeling and simulation methodology described in the Spanish-language literature \cite{hernandez2014metodologia}. Exploration runs estimate candidate maps; disjoint seeds and cells are used for held-out comparisons. The simulation results are conditional on the encoded model and are not market-sample inference.
+
+The procedure has four steps: (i) specify the AMM, the CEX reference and the agents' rules; (ii) verify the implementation with invariants; (iii) estimate the reduced map with exploration seeds and cells; and (iv) compare predictions on disjoint held-out seeds and cells using seed-paired summaries.
+
+\section{Focused literature review}
+
+The literature was selected for its relevance to five components of the design: agent-based models in finance, AMM mechanics, arbitrage with costs and limits, reduced models, and validation and reproducibility. Each reference was checked against the publisher's record or a preprint repository, and metadata discrepancies and peer-review status were noted (annex~\ref{sec:protocolo-literatura}). Preprints and working papers are cited as such. The inclusion criteria were direct pertinence to the mechanism studied and verifiability; works whose relation to the problem was only thematic were discarded.
+
+\section{Mechanics of the constant-product AMM}
+\label{sec:amm}
+
+The AMM has reserves $(x_t,y_t)$ of assets $X$ and $Y$, with marginal price
+\begin{equation}
+  \pD_t = \frac{y_t}{x_t},
+  \label{eq:precio}
+\end{equation}
+and product $k_t=x_ty_t$. In a swap without fee, the sale of an amount $q>0$ of $X$ to the AMM conserves the product and leaves the reserves
+\begin{equation}
+  x' = x+q,\qquad y' = \frac{xy}{x+q}.
+  \label{eq:reservas}
+\end{equation}
+The subsequent marginal price and the logarithmic impact are
+\begin{equation}
+  p' = p\left(1+\frac{q}{x}\right)^{-2},\qquad I(q,x)=\left|\log\frac{p'}{p}\right| = 2\log\left(1+\frac{q}{x}\right).
+  \label{eq:impacto}
+\end{equation}
+Slippage, defined as the relative difference between the average execution price and the initial marginal price, is $q/(x+q)$. With a proportional fee $f$ retained by the pool, the effective amount entering the invariant is $(1-f)q$, so that
+\begin{equation}
+  x'=x+q,\qquad y'=\frac{xy}{x+(1-f)q},\qquad k'\ge k.
+  \label{eq:comision}
+\end{equation}
+Equation~\eqref{eq:comision} is included to make the experiment's assumption precise: \textbf{the simulator as executed implements only zero-fee swaps} ($f=0$). The fee levels in table~\ref{tab:factores} are design candidates for later work and were not run. The no-arbitrage band is retained, but as a tolerance parameter and not as a consequence of a fee.
+
+A proportional withdrawal of liquidity, which multiplies both reserves by the same fraction, keeps the marginal price and reduces $k$ by the square of that fraction. This makes the pool more sensitive to a subsequent order of a given size; the identity
+\begin{equation}
+  \frac{\partial I}{\partial x} = -\frac{2q}{x(x+q)} <0
+  \label{eq:dI}
+\end{equation}
+shows that the impact decreases with the reserve. It is a mechanical property and not a hypothesis.
+
+\section{Centralized reference}
+
+The CEX price is exogenous and follows
+\begin{equation}
+  \log \pC_{t+1} = \log \pC_t + \mu + \sigma\,\varepsilon_{t+1} + s_{t+1},
+  \label{eq:cex}
+\end{equation}
+with drift $\mu$, volatility $\sigma$, Gaussian noise $\varepsilon$ and a deterministic shock $s$ applied only once at tick 1. In all executed scenarios $\mu=\sigma=0$, so that the only perturbation of the reference is the shock. This choice is deliberate: it isolates the AMM's response to a known perturbation and avoids confounding it with the noise of the reference. External volatility appears in table~\ref{tab:factores} as a design candidate, not executed.
+
+\section{Tracking error, band and arbitrage}
+
+The logarithmic error is $e_t=\log(\pD_t/\pC_t)$. A no-arbitrage band of half-width $\gamma$ (executed value $0.003$) and the signed excess error are defined as
+\begin{equation}
+  d_t = \sgn(e_t)\,\bigl(|e_t|-\gamma\bigr)_+ ,\qquad D_t=|d_t|.
+  \label{eq:exceso}
+\end{equation}
+If $e_t>\gamma$, an arbitrageur sells $X$ to the AMM until the price reaches the edge of the band. The size that achieves this is
+\begin{equation}
+  q^{\ast} = x\left(\sqrt{\frac{\pD}{\pC e^{\gamma}}}-1\right),
+  \label{eq:qstar}
+\end{equation}
+and the executed order is $\min\{q^{\ast},\,c\,x\}$, further limited by the arbitrageur's inventory; $c$ is the arbitrage capacity, expressed as the maximum fraction of the tradable reserve per tick. The case $e_t<-\gamma$ is symmetric, with a purchase of $X$ paid in $Y$. With $c=0$ no order is executed. Capacity is the only parameter that grades arbitrage in the design: $c=0.005$ is low capacity, $0.03$ high and $0.10$ maximum.
+
+\section{Agents}
+
+The compact accounting state recorded at tick $t$ is
+\begin{equation}
+  S_t = \bigl(x_t,\,y_t,\,\pC_t,\,W_t\bigr),
+  \label{eq:estado}
+\end{equation}
+where $W_t$ gathers the agents' inventories. This vector is a compact accounting state, not a claim that $S_t$ alone is Markov-complete. The trend rule depends on the AMM's previous-tick price change; a transition state must therefore retain that price or equivalent agent memory. Any one-time rule flags not inferable from inventories must also be carried forward. In a stochastic formulation, the next random order can be represented as an explicit input; deterministic replay additionally needs the random-stream state or pre-generated-order index. The present analysis does not formalize this augmented full-simulator state. Each agent operates with a finite inventory; the noise and trend agents have twice the initial reserves and the arbitrageur five times. In the archived Monte Carlo runs no order was capital-limited (0 of 13\,500).
+
+\paragraph{Noise.} With probability $0.7$ per tick, it issues an order of random side for $0.4\,\%$ of the initial reserve of the input asset. The order schedule is generated before the simulation from the seed, so that paired designs share the same flow.
+
+\paragraph{Trend and panic.} After the noise order, it computes the AMM price return relative to the end of the previous tick. If it is less than or equal to $-1.5\,\%$, it sells once per run $2\,\%$ of the initial reserve of $X$ (panic sale). Otherwise, if its magnitude reaches $0.1\,\%$, it follows the trend with an order of $0.6\,\%$ of the initial reserve of the input asset.
+
+\paragraph{Arbitrage.} It executes the rule of the previous section with capacity $c$.
+
+\paragraph{Liquidity provision.} In the adaptive scenario, a provider withdraws once, proportionally, $45\,\%$ of the reserves (keeping $55\,\%$) if $|e_t|>0.02$. In the static scenario it does not withdraw. This rule is a modeling decision of this work: it does not reproduce the optimal-stopping policy of the literature \cite{bergault2025exit} and was not calibrated with data.
+
+\section{Schedule of a tick}
+
+At each tick: (1) the reference shock is applied (only at tick 1); (2) the pre-generated noise order is executed; (3) the trend or panic agent evaluates the AMM return; (4) the adaptive provider evaluates its withdrawal rule; (5) the arbitrageur executes its bounded order; (6) the state and the metrics are recorded and the asset-conservation identities (tolerance $10^{-8}$ times the largest total of the system) and the positivity and finiteness of the reserves are checked. The horizon is 20 ticks, with initial reserves $x_0=y_0=10\,000$ and initial price 1. Depth is changed with a factor $\kappa$ that multiplies the reserves and divides the order fractions, so that the absolute size of noise orders is maintained (40 units) and the impact of a noise sale is $0.016$, $0.008$ and $0.004$ with $\kappa=0.5,1,2$.
+
+\section{Low-order dynamical map}
+
+The two variables of the map are the excess error $d_t$ and the net buying pressure $z_t$, defined as the signed sum of the noise and trend orders (arbitrage excluded) divided by the initial reserve of $Y$. With the exogenous input $u_t=-\Delta\log\pC_t$, the map is
+\begin{align}
+  d_{t+1} &= (1-\alpha)\,d_t + \beta\,z_t + u_{t+1}, \label{eq:mapa-d}\\
+  z_{t+1} &= -\chi\,d_t + \rho\,z_t. \label{eq:mapa-z}
+\end{align}
+The code fits $a=1-\alpha$ and $\beta$ by least squares without intercept on the target $d_{t+1}-u_{t+1}$, and $c=-\chi$ and $\rho$ with the equation of $z$. Since $d_t$ is zero inside the band and changes form at its boundary, a single affine map cannot represent that threshold exactly. If the predictor $d_t$ is numerically null (a case with no variation of the excess), only the second predictor is used and the equation is flagged as degenerate. The parameters are not assumed to be universal: they are estimated per condition.
+
+
+\subsection{Estimation and held-out evaluation}
+
+Each condition has its own fit, estimated only with the exploration runs (seeds 0 to 299, depth 1, shocks $\pm0.1$). Evaluation uses mean absolute one-step error over 20 transitions in the disjoint held-out runs. Baselines are persistence, $\hat d_{t+1}=d_t+u_{t+1}$, and a scalar autoregression $d_{t+1}-u_{t+1}=a_s d_t$ fitted per condition using exploration data. Each trajectory also receives a descriptive label: \emph{in-band} if $|d_t|<10^{-9}$ at ticks 1--5 and 16--20; \emph{contractive} if it is not in-band and mean $|d_t|$ is lower at ticks 16--20 than at ticks 1--5; \emph{persistent} otherwise. These labels summarize simulator paths, not independently observed regimes.
+
+\subsection{Band-aware hybrid-map comparison}
+\label{sec:hybrid-method}
+
+A separate analysis (model 0.5.0, analysis 0.1.0) compares the affine map L0 with a hybrid candidate Hyb. This is an additional reduced-model evaluation, not a hypothesis test about market behavior. It uses signed tracking error $e_t=\log(p_t^D/p_t^C)$ and the same normalized flow variable $z_t$. The known external input is $u_{t+1}=-\Delta\log p^C_{t+1}$. Define the signed excess $\phi_\gamma(e)=\operatorname{sgn}(e)\max(|e|-\gamma,0)$ and indicator $I_t=\mathbf{1}(|e_t|>\gamma)$, with the configured band $\gamma=0.003$. The equations are
+\begin{align}
+  \text{L0:}\quad e_{t+1}&=e_t+u_{t+1}+a e_t+b z_t,& z_{t+1}&=c e_t+\rho z_t,\\
+  \text{Hyb:}\quad e_{t+1}&=e_t+u_{t+1}+a e_t+b z_t+g\phi_\gamma(e_t)+h z_t I_t,&
+  z_{t+1}&=c e_t+\rho z_t+k\phi_\gamma(e_t)+m z_t I_t.
+\end{align}
+Coefficients are fitted without an intercept and separately for each of the four shared operating conditions. Hyb therefore adds two band-dependent terms per predicted variable; it does not add capacity or withdrawal state branches. The selection grid is seeds 3000--3299, depth 1 and shocks $\pm0.10$. The untouched evaluation uses seeds 4000--4299, depths 0.5 and 2, and shocks $\pm0.05$ and $\pm0.20$. Its primary metric is the seed-level mean rollout MAE in $e$, averaged over the 32 held-out cells per seed and 20 transitions. Rollout prediction receives the known exogenous CEX path and recursively feeds back predicted $(e,z)$. The paired percentile-bootstrap interval uses 10,000 resamples of the 300 seed units; per-cell contrasts and other state metrics are descriptive secondary outcomes. The evaluation compares reduced-map errors on simulator-generated paths; it does not test real-time forecasting or stability of the complete hybrid system. The exact config, source checksums and output contract are in \code{experiments/cex\_dex\_mvp/hybrid\_config.json}.
+
+The $z_{t+1}$ equation does not receive the next tick's realized stochastic order flow as an input. Its target includes future noise/trend draws that are unobserved by this state-only map; flow-pressure errors are therefore a diagnostic of an incomplete input model, not evidence that the simulator flow is deterministic.
+
+\section{Experimental design}
+
+\begin{table}[htbp]
+\centering
+\caption{Experimental scenarios. Capacities are fractions of the tradable reserve per tick.}
+\label{tab:escenarios}
+\small
+\begin{tabularx}{\textwidth}{@{}l >{\raggedright\arraybackslash}X l l l@{}}
+\toprule
+Scenario & Description & Capacity & Liquidity & Region \\
+\midrule
+E0 & Reference without arbitrage & 0 & static & primary \\
+E1-low & Low-capacity arbitrage & 0.005 & static & primary \\
+E1-high & High-capacity arbitrage & 0.03 & static & primary \\
+E2 & Depth reduction (factor $\kappa$) & --- & --- & analytical control \\
+E3 & High arbitrage with adaptive withdrawal & 0.03 & adaptive & primary \\
+E1-max & Maximum-capacity arbitrage & 0.10 & static & extrapolation \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+E2 is not simulated as an independent condition: depth enters as the factor $\kappa$ in all scenarios and its mechanical effect is presented as an analytical table (chapter~\ref{cap:resultados}). Table~\ref{tab:factores} distinguishes the executed factors from the design candidates.
+
+\begin{table}[htbp]
+\centering
+\caption{Design factors. Only the levels marked as executed are part of the results.}
+\label{tab:factores}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{0.9}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.19\textwidth} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{0.19\textwidth}@{}}
+\toprule
+Factor & Levels & Status \\
+\midrule
+Arbitrage capacity $c$ & 0; 0.005; 0.03; 0.10 & executed \\
+Depth $\kappa$ & 0.5; 1; 2 (held-out); 1 (exploration) & executed \\
+Reference shock & $-0.05$; $-0.10$; $-0.20$ (held-out); $\pm0.10$ (exploration) & executed \\
+Liquidity withdrawal & static; adaptive & executed \\
+Fee $f$ & levels to be defined & candidate, not executed \\
+Arbitrage latency & levels to be defined & candidate, not executed \\
+External volatility $\sigma$ & levels to be defined & candidate, not executed \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Map fitting and held-out comparisons}
+
+Exploration uses seeds 0 to 299, depth 1 and shocks $\pm0.10$. Held-out runs use seeds 1000 to 1299, depths 0.5, 1 and 2 and shocks $-0.05$, $-0.10$ and $-0.20$, with 5 conditions and 9 cells per seed, or 13\,500 runs (2700 per condition). The seed ranges are disjoint. For the one-step map comparison, the 8 cells whose (depth, shock) pair is not in the exploration grid are evaluated; cell $(1.0,-0.10)$ is excluded. These choices were fixed before running the held-out set and are recorded in the annex. They define Monte Carlo comparisons within this model, not a preregistered test about market behavior.
+
+\section{Metrics}
+
+\begin{table}[htbp]
+\centering
+\caption{Experiment metrics.}
+\label{tab:metricas}
+\small
+\begin{tabularx}{\textwidth}{@{}l >{\raggedright\arraybackslash}X l@{}}
+\toprule
+Metric & Definition & Use \\
+\midrule
+Excess area $A$ & Sum of absolute excess error over 20 ticks & Descriptive H1; compare with ideal benchmark \\
+Legacy displacement $M$ & Maximum AMM log-price change from pre-shock price & H2 diagnostic; not overshoot \\
+Post-shock tracking error & Maximum absolute $e_t$ & Candidate H2 outcome; not evaluated \\
+Prediction error & One-step MAE over 20 transitions & Held-out H3 model comparison \\
+Sustained return & Two consecutive ticks with $|e_t|\le\gamma$ & Secondary \\
+Return time & Start tick; 21 if no sustained return & Secondary \\
+Minimum pool depth & $\min_t\sqrt{x_ty_t}$ & Secondary \\
+Withdrawal activation & Whether the fixed trigger applied & Mechanism \\
+Capital-limited orders & Count & Verification \\
+Trajectory label & In-band, contractive or persistent & Descriptive only \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The return time is right-censored: a run with no sustained return receives the value 21 and the restricted mean is reported, which must not be read as an expected recovery time.
+
+\section{Monte Carlo summaries}
+\label{sec:analisis-estadistico}
+
+The seed is the Monte Carlo replication unit. Cells are averaged within each seed, and paired mean and median differences are reported with percentile-bootstrap intervals from 10\,000 resamples \cite{efron1979bootstrap}. These intervals characterize variability in the programmed random order process under fixed rules and levels; they do not represent uncertainty across real markets. The previous 20\,000-draw sign-flip tests returned the minimum resolvable value for all three reported contrasts; Holm adjustment therefore gave the same floor-level value for each. Those p-values and the earlier sample-size targets are omitted from interpretation because they add no information about effect size or model scope. The archived run products remain available for reproducibility.
+
+\section{Verification, validation and traceability}
+
+Verification comprises nine automatic checks (annex~\ref{sec:verificacion}), combining mechanical identities and bounds with configured-rule and paired-run consistency checks. Some checks restate expected behavior encoded in the rules; passing them is not independent support for causal claims.
+
+Traceability rests on an execution contract that records identifier, code version, scenario, seed, parameters, series, metrics and checksums (annex~\ref{sec:contrato}). The code and the data of the figures are in the repository of the work \cite{calderon2026repository}. The full run outputs are not versioned: they are cited by identifier, checksums and the command that regenerates them.
+
+The hybrid-map comparison can be reproduced with \code{pnpm experiment:mvp:hybrid}; its compact web and thesis exports are regenerated with \code{pnpm experiment:mvp:hybrid:export}. Run \code{\HybridRunID} records the exact model and analysis configs, seed ranges, Python version, source hashes, and output checksums.

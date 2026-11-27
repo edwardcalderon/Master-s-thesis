@@ -1,40 +1,29 @@
-\chapter{Hipótesis}
+\chapter{Proposición analítica y preguntas de evaluación}
 \label{cap:hipotesis}
 
-\section{Hipótesis general}
+El estudio distingue una consecuencia algebraica de la regla de intercambio de dos preguntas que requieren simulación. Estas son afirmaciones sobre el micromundo especificado sin comisiones; no son hipótesis sobre mercados observados.
 
-Existe una asociación sistemática entre las condiciones de arbitraje, la profundidad de liquidez y la respuesta de precios de un AMM de producto constante ante una perturbación en la referencia centralizada, y esa asociación puede describirse con un mapa dinámico discreto de bajo orden estimado a partir del simulador. Las tres hipótesis siguientes la desagregan en afirmaciones refutables sobre una métrica y un contraste definidos de antemano.
+\section{H1: corrección ideal con arbitraje acotado}
 
-\section{H1: el arbitraje activo reduce el exceso de error}
-
-Sea $A=\sum_{t=1}^{H} D_t$ el área de exceso de error de una ejecución, con $D_t=|d_t|$ y $H=20$ ticks. Para cada semilla se forma el contraste pareado
+Sea $e_t=\log(p_t^D/p_t^C)$ y $D_t=(|e_t|-\gamma)_+$. En una piscina aislada sin comisión, con referencia fija, sin otras órdenes y sin una restricción vinculante de inventario, la orden máxima $q=cx$ cambia el precio logarítmico en $\delta_c=2\log(1+c)$. Como el arbitrajista se detiene en la banda, el exceso de error evoluciona según
 \[
-\Delta_1 = A_{\text{activo}} - A_{\text{inactivo}},
+  D_{t+1}=\max(0,D_t-\delta_c),\qquad
+  N_\gamma=\left\lceil\frac{D_0}{2\log(1+c)}\right\rceil \quad(c>0).
 \]
-donde las dos ejecuciones comparten la perturbación y las órdenes de ruido y difieren solo en la capacidad de arbitraje. La hipótesis nula es $\E[\Delta_1]\ge 0$ y la alternativa $\E[\Delta_1]<0$.
+Para $c=0$ no hay corrección finita. Este es un referente mecánico derivado de la ecuación del intercambio de producto constante, no un hallazgo empírico. La simulación sirve para cuantificar las desviaciones respecto de ese referente causadas por otros agentes, el orden de eventos, el horizonte finito y las reglas de inventario especificadas.
 
-La hipótesis se completa con una comparación secundaria entre capacidades: si la capacidad de arbitraje importa y no solo su presencia, una capacidad mayor debe producir un área de exceso menor que una capacidad menor. Esta comparación (H1 de capacidad) se informa como no primaria y no entra en la corrección de Holm.
+\section{H2: retiro, escala de órdenes y respuesta de seguimiento}
 
-\section{H2: el retiro adaptativo amplifica la respuesta}
+La pregunta de evaluación que responden las corridas disponibles es más acotada:
+% QUESTION_LOCK:h2:BEGIN
+\emph{Dentro de los niveles de capacidad y profundidad ensayados, ¿cómo afecta al seguimiento posterior al choque la regla especificada de retiro único de liquidez, y cómo varía ese efecto cuando el tamaño de las órdenes escala con las reservas o se desactiva la conducta de pánico?}
+% QUESTION_LOCK:h2:END
+La regla E3 es un disparador de umbral único, no una política adaptativa estimada: retira el 45\,\% de las reservas en cuanto $|e_t|>0.02$. Los choques ejecutados superan este umbral en todas las corridas E3. El desplazamiento máximo original respecto al precio del AMM previo al choque se trata solo como diagnóstico; no mide el sobrepaso frente a la nueva referencia.
 
-Sea $M=\max_{1\le t\le H}\left|\log(\pD_t/\pD_0)\right|$ la respuesta máxima del precio del AMM. Para cada semilla,
-\[
-\Delta_2 = M_{\text{adaptativo}} - M_{\text{estático}},
-\]
-con ambas ejecuciones bajo arbitraje activo y los mismos flujos exógenos. La hipótesis nula es $\E[\Delta_2]\le 0$ y la alternativa $\E[\Delta_2]>0$: si los proveedores retiran liquidez al observar un error persistente, el AMM queda con menos reservas y el mismo flujo posterior produce una respuesta mayor.
+\section{H3: precisión descriptiva de los mapas reducidos}
 
-El efecto mecánico de una menor profundidad sobre el impacto de una orden es una identidad analítica (capítulo~\ref{cap:resultados}, sección de resultados analíticos) y no se contrasta como hipótesis. Lo que H2 evalúa es si la regla adaptativa concreta de este trabajo produce el efecto en el simulador, y bajo qué profundidades.
-
-\section{H3: el mapa reducido supera a la persistencia}
-
-Sea $L$ el error absoluto medio de predicción a un paso del exceso de error sobre las configuraciones y semillas reservadas. Para cada semilla,
-\[
-\Delta_3 = \E\left[L_{\text{mapa}} - L_{\text{persistencia}}\right],
-\]
-con la esperanza tomada sobre las condiciones primarias y las celdas de evaluación reservadas. La hipótesis nula es $\Delta_3\ge 0$ y la alternativa $\Delta_3<0$: el mapa de dos variables predice el exceso de error del tick siguiente con menor error absoluto que mantener el valor actual corregido por el cambio de la referencia.
-
-La clasificación de regímenes (contractivo, persistente, en banda) con el criterio de Schur es un resultado complementario y no un contraste confirmatorio. La comparación con un autorregresivo escalar se informa como diagnóstico no primario: sirve para saber qué aporta el segundo estado, no para sostener H3.
-
-\section{Criterios de contraste}
-
-Las tres hipótesis primarias se contrastan con una prueba de aleatorización unilateral por inversión de signos sobre los contrastes por semilla, con corrección de Holm al nivel 0.05 \cite{holm1979simple}. Además se informan la diferencia media, un intervalo de confianza del 95 por ciento por bootstrap percentílico pareado \cite{efron1979bootstrap} y la proporción de semillas en la dirección prevista. El detalle del protocolo se presenta en la sección~\ref{sec:analisis-estadistico}.
+La cláusula del mapa en la pregunta de investigación se operacionaliza como descripción predictiva del error de seguimiento continuo en trayectorias reservadas del simulador. Las etiquetas de trayectoria por ventana finita resumen esas trayectorias; no son regímenes observados independientemente ni objetivos de una prueba de clasificación. H3 pregunta:
+% QUESTION_LOCK:h3:BEGIN
+\emph{¿Con qué precisión predice el mapa de dos estados las trayectorias reservadas del error de seguimiento frente a la persistencia y un AR(1) escalar, y cómo se desempeña un mapa sensible a la banda frente al mapa afín en la reproducción recursiva?}
+% QUESTION_LOCK:h3:END
+La comparación se refiere a trayectorias generadas por el simulador. La reproducción híbrida recibe la trayectoria futura realizada del CEX, por lo que su resultado no evalúa un pronóstico en tiempo real. No se propone una hipótesis de clasificación de regímenes ni de estabilidad.

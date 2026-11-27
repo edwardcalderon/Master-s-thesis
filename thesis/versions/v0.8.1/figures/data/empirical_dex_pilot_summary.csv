@@ -1,0 +1,8 @@
+metric,value,definition
+Observed swaps,3,events
+Observed event span,2026-11-26 04:02:59+00:00 to 2026-11-26 04:05:47+00:00,UTC
+Sample quote volume,1856.563660,USDT across the three excerpted swaps; not venue-wide volume
+Effective swap price range,1703.11256363--1703.97023117,"USDT/ETH; event trade prices, not reserve-implied marginal prices"
+"Source-estimated slippage at 1,000 USDT",0.02160193--0.03620115,percent; source estimate for a hypothetical trade size
+"Source-estimated slippage at 10,000 USDT",0.16970281--0.18425125,percent; source estimate for a hypothetical trade size
+Pool fee tier,0.3000,"percent; nominal pool tier, not total execution cost"

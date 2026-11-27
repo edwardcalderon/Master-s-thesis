@@ -1,0 +1,460 @@
+\chapter{Results}
+\label{cap:resultados}
+
+\section{Scope of the results}
+
+This chapter reports analytical identities, Monte Carlo comparisons over 13\,500 simulator runs, an engineering sensitivity over 40\,500 paths (section~\ref{sec:engineering-sensitivity}), and a held-out comparison of affine and hybrid reduced maps over 9\,600 paths (section~\ref{sec:hybrid-results}). All paths come from the specified zero-fee micro-world. Run identifiers and reproduction details are documented in the annex; repository-specific identifiers are withheld in the anonymous copy.
+
+\section{Analytical results: depth and impact}
+\label{sec:res-analitico}
+
+For a fixed sale of $q=500$ units of $X$, the impact $I(q,\kappa x)$ of equation~\eqref{eq:impacto} grows as the reserve is reduced (table~\ref{tab:impacto}). With $x=10\,000$, reducing the reserve to one quarter multiplies the impact by 3.7 and the slippage by 3.5.
+
+\begin{table}[htbp]
+\centering
+\caption{Impact of a sale of $q=500$ units according to the reserve (analytical result).}
+\label{tab:impacto}
+\small
+\begin{tabular}{@{}rrrr@{}}
+\toprule
+Reserve factor & Reserve $x$ & Impact $I$ & Slippage (\%) \\
+\midrule
+1.00 & 10\,000 & 0.09758 & 4.76 \\
+0.75 & 7500 & 0.12908 & 6.25 \\
+0.50 & 5000 & 0.19062 & 9.09 \\
+0.25 & 2500 & 0.36464 & 16.67 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Figure~\ref{fig:impacto} shows the full curve. With $I(q,\kappa x)=2\log(1+q/(\kappa x))$ and $\kappa<1$, $I(q,\kappa x)>I(q,x)$ holds for all $q>0$, and the derivative of equation~\eqref{eq:dI} is negative. This result is an algebraic consequence of the constant-product rule and is also an implementation check (check 8 of the annex).
+
+\subsection{Ideal correction rate under bounded arbitrage}
+
+In the absence of other orders and with a fixed reference, a capacity-limited swap of $q=cx$ changes the log price by $\delta_c=2\log(1+c)$. If the error is outside the band, the remaining excess follows $D_{t+1}=\max(0,D_t-\delta_c)$, and the ideal number of ticks to reach the band is
+\[
+  N_\gamma=\left\lceil\frac{D_0}{2\log(1+c)}\right\rceil,\qquad D_0=(|e_0|-\gamma)_+.
+\]
+For a log shock of magnitude $0.20$ and $\gamma=0.003$, the ideal counts are 20 ticks at $c=0.005$, four at $c=0.03$, and two at $c=0.10$; with $c=0$, correction does not occur. The low-capacity result is therefore largely implied by the rule and the 20-tick horizon. Simulation adds information about how noise, trend, withdrawal and event ordering change that benchmark.
+
+\begin{table}[htbp]
+\centering
+\caption{Idealized correction under a fixed reference and no other orders.}
+\label{tab:capacity-benchmark}
+\small
+\begin{tabular}{@{}rrr@{}}
+\toprule
+Capacity $c$ & Log correction per tick $2\log(1+c)$ & Ideal ticks to band \\
+\midrule
+0 & 0 & No finite correction \\
+0.005 & 0.00998 & 20 \\
+0.03 & 0.05912 & 4 \\
+0.10 & 0.19062 & 2 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.78\textwidth,height=6cm,xlabel={Reserve factor $\kappa$},ylabel={Logarithmic impact $I$},grid=major,xmin=0.1,xmax=1.05]
+\addplot[thick,blue!70!black] table[col sep=comma,x=reserve_factor,y=log_impact] {\datadir/impact_curve.csv};
+\end{axis}
+\end{tikzpicture}
+\caption{Logarithmic impact of a sale of $q=500$ units according to the reserve factor.}
+\label{fig:impacto}
+\end{figure}
+
+\section{Overview of the conditions}
+
+Table~\ref{tab:resumen} summarizes the five conditions, with 2700 runs each (300 seeds times 9 cells). E1-max is an extrapolation outside the principal capacity levels. The 300 seeds are a computational replication choice, not a market sample size.
+
+\begin{table}[htbp]
+\centering
+\caption{Summary of the held-out conditions (2700 runs per condition).}
+\label{tab:resumen}
+\small
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+Condition & Area $A$ & Legacy $M$ & Recov. & Return\,$^{a}$ & Min. depth & Withdrawal \\
+\midrule
+E0 & 2.363 & 0.1012 & 4.6\,\% & 20.47 & 11667 & 0\,\% \\
+E1-low & 1.056 & 0.1305 & 56.8\,\% & 14.82 & 11667 & 0\,\% \\
+E1-high & 0.100 & 0.1220 & 100.0\,\% & 2.54 & 11667 & 0\,\% \\
+E3 & 0.180 & 0.1335 & 96.6\,\% & 4.27 & 6417 & 100\,\% \\
+E1-max & 0.005 & 0.1197 & 100.0\,\% & 1.22 & 11667 & 0\,\% \\
+\bottomrule
+\multicolumn{7}{@{}l}{\footnotesize $^{a}$ Restricted mean with censoring at 21 ticks.}
+\end{tabular}
+\end{table}
+
+The mean peak error is $0.176$ in E0, $0.127$ in E1-low, $0.064$ in E1-high, $0.073$ in E3 and $0.008$ in E1-max. No order was capital-limited in the 13\,500 runs.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.9\textwidth,height=6.4cm,xlabel={Tick},ylabel={Mean $|d_t|$},grid=major,legend pos=north east,legend style={font=\scriptsize},xmin=0,xmax=20,ymin=0]
+\addplot[thick,red!70!black] table[col sep=comma,x=tick,y=mean_abs_excess,restrict expr to domain={\thisrow{series_id}}{10:10}] {\datadir/trajectories.csv};
+\addplot[thick,orange!85!black] table[col sep=comma,x=tick,y=mean_abs_excess,restrict expr to domain={\thisrow{series_id}}{20:20}] {\datadir/trajectories.csv};
+\addplot[thick,blue!70!black] table[col sep=comma,x=tick,y=mean_abs_excess,restrict expr to domain={\thisrow{series_id}}{30:30}] {\datadir/trajectories.csv};
+\addplot[thick,dashed,green!50!black] table[col sep=comma,x=tick,y=mean_abs_excess,restrict expr to domain={\thisrow{series_id}}{40:40}] {\datadir/trajectories.csv};
+\legend{E0,E1-low,E1-high,E3}
+\end{axis}
+\end{tikzpicture}
+\caption{Mean excess error $|d_t|$ per tick, averaged over all cells and seeds.}
+\label{fig:trayectorias}
+\end{figure}
+
+\section{H1: simulated correction against the analytical benchmark}
+\label{sec:res-h1}
+
+The ideal calculation predicts 20 ticks to the band at the low capacity $c=0.005$, the full simulation horizon; the high-capacity rule $c=0.03$ needs only four ticks before other agents act. In the held-out runs, the mean excess area is $2.363$ in E0, $1.056$ in E1-low and $0.100$ in E1-high. The paired E1-high versus E0 difference is $-2.263$ (median $-2.078$; 95\,\% seed-bootstrap interval $[-2.345,-2.182]$), and all 300 paired seed averages are lower with E1-high. The E1-high versus E1-low difference is $-0.956$ (interval $[-1.003,-0.909]$). These values describe how the specified interacting simulator departs from the simple benchmark; the direction of arbitrage correction itself follows from the rule.
+
+\begin{table}[htbp]
+\centering
+\caption{Paired Monte Carlo summaries (300 seeds). Intervals describe seed-level variability under the fixed simulator.}
+\label{tab:inferencia}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}Xrr>{\raggedright\arraybackslash}p{0.25\textwidth}>{\raggedright\arraybackslash}p{0.16\textwidth}@{}}
+\toprule
+Contrast & Mean $\Delta$ & Median & 95\,\% interval & Sign share \\
+\midrule
+H1: E1-high minus E0 area & $-2.2629$ & $-2.0784$ & $[-2.3448,-2.1820]$ & 100\,\% lower \\
+H1: E1-high minus E1-low area & $-0.9560$ & $-0.8456$ & $[-1.0034,-0.9091]$ & 100\,\% lower \\
+H2: legacy peak displacement & $+0.01143$ & $+0.01140$ & $[0.01074,0.01212]$ & 99.67\,\% higher \\
+H3 map minus persistence MAE & $-0.000808$ & $-0.000960$ & $[-0.000917,-0.000692]$ & 84.67\,\% lower \\
+H3 map minus scalar AR(1) MAE & $+0.0000822$ & $+0.0000844$ & $[0.0000780,0.0000864]$ & 97.67\,\% higher \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Recovery rate}
+
+Sustained recovery depends on capacity and on the cell (table~\ref{tab:recuperacion}). Without arbitrage it barely occurs. With low capacity it varies between 20 and 100\,\%, and it is lower the larger the shock: a large shock requires more steps bounded by $c\,x$. With high and maximum capacity it is total in all cells.
+
+\begin{table}[htbp]
+\centering
+\caption{Sustained recovery rate (\%) by cell and condition.}
+\label{tab:recuperacion}
+\small
+\begin{tabular}{@{}rrrrrrr@{}}
+\toprule
+$\kappa$ & Shock & E0 & E1-low & E1-high & E3 & E1-max \\
+\midrule
+0.5 & $-0.05$ & 21.7 & 54.7 & 100.0 & 87.0 & 100.0 \\
+0.5 & $-0.10$ & 1.3 & 45.3 & 100.0 & 86.7 & 100.0 \\
+0.5 & $-0.20$ & 5.3 & 29.3 & 100.0 & 95.7 & 100.0 \\
+1 & $-0.05$ & 0.0 & 72.0 & 100.0 & 100.0 & 100.0 \\
+1 & $-0.10$ & 3.7 & 59.3 & 100.0 & 100.0 & 100.0 \\
+1 & $-0.20$ & 0.0 & 20.3 & 100.0 & 100.0 & 100.0 \\
+2 & $-0.05$ & 9.7 & 100.0 & 100.0 & 100.0 & 100.0 \\
+2 & $-0.10$ & 0.0 & 99.0 & 100.0 & 100.0 & 100.0 \\
+2 & $-0.20$ & 0.0 & 31.0 & 100.0 & 100.0 & 100.0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:h1-ideal-times} compares simulation return rates at the deadline predicted by the isolated-pool benchmark with rates by the full 20-tick horizon. The first rate is not the benchmark's first-entry event: simulation recovery requires two consecutive post-arbitrage observations inside the band and reports the start tick of that pair. The table therefore aligns the deadline while retaining the more demanding sustained-return criterion. Each cell contains 300 seeds; Wilson intervals are included in the reproducible CSV.
+
+\begin{table}[htbp]
+\centering
+\caption{Simulated sustained-return rates by the ideal first-entry deadline and by tick 20. Each entry is percentage by $N_\gamma$ / percentage by tick 20 ($n=300$).}
+\label{tab:h1-ideal-times}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\begin{tabularx}{\textwidth}{@{}rrr>{\centering\arraybackslash}X>{\centering\arraybackslash}X@{}}
+\toprule
+Depth $\kappa$ & Shock & $N_\gamma$ ($c=.005/.03$) & $c=.005$ & $c=.03$ \\
+\midrule
+0.5 & $-0.05$ & 5 / 1 & 17.7 / 54.7 & 49.0 / 100.0 \\
+1.0 & $-0.05$ & 5 / 1 & 21.3 / 72.0 & 57.3 / 100.0 \\
+2.0 & $-0.05$ & 5 / 1 & 43.7 / 100.0 & 100.0 / 100.0 \\
+0.5 & $-0.10$ & 10 / 2 & 28.3 / 45.3 & 59.3 / 100.0 \\
+1.0 & $-0.10$ & 10 / 2 & 28.7 / 59.3 & 83.3 / 100.0 \\
+2.0 & $-0.10$ & 10 / 2 & 44.7 / 99.0 & 100.0 / 100.0 \\
+0.5 & $-0.20$ & 20 / 4 & 29.3 / 29.3 & 84.0 / 100.0 \\
+1.0 & $-0.20$ & 20 / 4 & 20.3 / 20.3 & 79.7 / 100.0 \\
+2.0 & $-0.20$ & 20 / 4 & 31.0 / 31.0 & 98.3 / 100.0 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The table also shows where the isolated benchmark is informative and where interactions matter. At capacity $c=0.03$ and depth factor $\kappa=2$, 100\,\% of paths meet the sustained-return criterion by the ideal deadline for shocks $-0.05$ and $-0.10$, and 98.3\,\% do so for $-0.20$. At $\kappa=0.5$ and $1$, only 49.0--84.0\,\% and 57.3--83.3\,\%, respectively, meet it by that deadline, although every $c=0.03$ path recovers by tick 20. The gap reflects continued orders and event ordering under the simulated schedule; it does not contradict the isolated-pool bound, whose assumptions exclude those mechanisms. The result gives the simulation a bounded role: quantifying finite-horizon departures from a mechanical benchmark.
+
+\subsection{Breakdown by cell}
+
+The effect of H1 is negative in all cells (table~\ref{tab:celdas}); its magnitude grows with the shock, because without arbitrage the excess accumulates over the 20 ticks. The heterogeneity across seeds is large (figure~\ref{fig:cuantiles}): the contrast ranges from $-4.60$ to $-1.38$.
+
+\begin{table}[htbp]
+\centering
+\caption{Descriptive per-cell differences for the arbitrage contrasts and legacy H2 statistic.}
+\label{tab:celdas}
+\small
+\begin{tabular}{@{}rrrrrc@{}}
+\toprule
+$\kappa$ & Shock & E1-high vs. E0 & E1-high vs. E1-low & Legacy $M$ difference & Held out \\
+\midrule
+0.5 & $-0.05$ & $-1.630$ & $-0.832$ & $+0.0523$ & yes \\
+0.5 & $-0.10$ & $-1.873$ & $-0.941$ & $+0.0361$ & yes \\
+0.5 & $-0.20$ & $-3.128$ & $-1.703$ & $+0.0146$ & yes \\
+1 & $-0.05$ & $-1.222$ & $-0.294$ & $0.0000$ & yes \\
+1 & $-0.10$ & $-2.023$ & $-0.652$ & $0.0000$ & no \\
+1 & $-0.20$ & $-3.784$ & $-1.883$ & $0.0000$ & yes \\
+2 & $-0.05$ & $-1.007$ & $-0.116$ & $0.0000$ & yes \\
+2 & $-0.10$ & $-1.951$ & $-0.450$ & $0.0000$ & yes \\
+2 & $-0.20$ & $-3.748$ & $-1.732$ & $0.0000$ & yes \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.8\textwidth,height=6cm,xlabel={Quantile},ylabel={Per-seed contrast},grid=major,legend pos=south east,legend style={font=\scriptsize}]
+\addplot[thick,blue!70!black,mark=*,mark size=1.5pt] table[col sep=comma,x=quantile,y=value,restrict expr to domain={\thisrow{contrast_id}}{1:1}] {\datadir/delta_quantiles.csv};
+\addplot[thick,orange!85!black,mark=square*,mark size=1.5pt] table[col sep=comma,x=quantile,y=value,restrict expr to domain={\thisrow{contrast_id}}{2:2}] {\datadir/delta_quantiles.csv};
+\legend{H1 primary,H1 capacity}
+\end{axis}
+\end{tikzpicture}
+\caption{Quantiles of the per-seed contrast of H1 ($\Delta_1$ and the comparison of capacities).}
+\label{fig:cuantiles}
+\end{figure}
+
+\section{H2: withdrawal and order-scale sensitivity}
+\label{sec:res-h2}
+
+Under the legacy statistic $M=\max_t|\log(p_t^D/p_0^D)|$, the paired E3-minus-E1-high difference is $+0.0114$ on average (95\,\% seed-bootstrap interval $[0.0107,0.0121]$). This statistic measures displacement from the pre-shock AMM price, not overshoot or maximum tracking error relative to the new CEX reference. It also saturates at $|\text{shock}|+\gamma$ in six of nine cells. It is retained only as a description of the original design. The later whole-horizon peak $P=\max_{0\le t\le20}|e_t|$ has a related limitation: it includes tick 1, when the imposed shock dominates both conditions, so its contrast shrinks as shock size grows.
+
+The per-cell differences in table~\ref{tab:celdas} are positive only at depth factor $\kappa=0.5$ and zero at $\kappa=1$ and $2$. The withdrawal activates in all E3 paths because every applied shock exceeds the fixed trigger $|e_t|>0.02$; it usually occurs at tick 1. This is a deterministic one-time intervention under the tested shocks, not a test of heterogeneous or gradual provider responses. The panic order is activated only at $\kappa=0.5$, where the configured noise-order impact is $1.6\,\%$, just 0.1 percentage point beyond the $1.5\,\%$ threshold.
+
+We therefore ran a post-hoc replay of the archived seeds and moved the primary exploratory H2 diagnostic to the cumulative excess error after recovery is confirmed. Let $t_c$ be the second of the two consecutive in-band observations that define sustained return; then $A_{\mathrm{post}}=\sum_{t>t_c}(|e_t|-\gamma)_+$. At depth $\kappa=0.5$, the paired E3-minus-E1-high difference is $0.1229$ (95\,\% seed-bootstrap interval $[0.1092,0.1373]$, $n=267$), $0.1239$ ($[0.1134,0.1348]$, $n=272$), and $0.1215$ ($[0.1109,0.1326]$, $n=287$) for shocks $-0.05$, $-0.10$, and $-0.20$, respectively. At depths 1 and 2, the paired contrasts are zero to numerical precision in all shock cells. Figure~\ref{fig:h2-post-recovery} shows this depth pattern. The similar shallow-depth contrasts across shock sizes, after excluding the shock and the two confirmation ticks, are more directly relevant to post-recovery fragility than the old peak metric. This remains a conditional, post-hoc comparison among recovered paths, not a confirmatory or market-level effect.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=0.88\textwidth,height=6.0cm,
+  xlabel={Depth factor $\kappa$}, ylabel={$\Delta A_{\mathrm{post}}$ (E3 $-$ E1-high)},
+  xmin=0.25,xmax=2.25,ymin=-0.01,ymax=0.16,
+  xtick={0.5,1,2}, ymajorgrids=true, grid style={gray!20},
+  legend style={font=\scriptsize,at={(0.98,0.98)},anchor=north east},
+  axis line style={gray!60}, tick label style={font=\scriptsize}
+]
+\addplot+[only marks,mark=*,mark size=2pt,blue!70!black,error bars/.cd,y dir=both,y explicit] coordinates {
+  (0.42,0.12295) +- (0,0.01402) (0.92,0) (1.92,0)
+};
+\addlegendentry{Shock $-0.05$}
+\addplot+[only marks,mark=square*,mark size=2pt,orange!85!black,error bars/.cd,y dir=both,y explicit] coordinates {
+  (0.50,0.12393) +- (0,0.01071) (1.00,0) (2.00,0)
+};
+\addlegendentry{Shock $-0.10$}
+\addplot+[only marks,mark=triangle*,mark size=2.2pt,green!45!black,error bars/.cd,y dir=both,y explicit] coordinates {
+  (0.58,0.12154) +- (0,0.01083) (1.08,0) (2.08,0)
+};
+\addlegendentry{Shock $-0.20$}
+\end{axis}
+\end{tikzpicture}
+\caption{Post-recovery excess-area contrast across the tested depths. Error bars symmetrically approximate the 95\,\% paired seed-bootstrap intervals at $\kappa=0.5$; the contrasts at $\kappa=1$ and $2$ are numerically zero. At shallow depth, paired sample sizes are 267, 272 and 287; all three depth levels use 300 archived seeds.}
+\label{fig:h2-post-recovery}
+\end{figure}
+
+The pressure-ratio counterexample can be resolved mechanistically within the tested design. At shallow depth and $c=0.03$, the continuous noise-plus-trend input gives $R_{\mathrm{flow}}=0.670$ in the static case, below one, while the configured one-off panic input gives $R_{\mathrm{panic}}=1.327$; the maximum same-direction noise-plus-panic input gives $R_{\max}^{\mathrm{adv}}=1.586$. At E3's nominal post-withdrawal reserve, these ratios are 1.208, 2.375 and 2.831 (table~\ref{tab:pressure-ratio}). The panic-disabled replay yields no later departures in E1-high static (0/300 at each shock; Wilson 95\,\% upper limit 1.3\,\%), whereas the panic-allowed departures are single episodes and all 143 overlap the panic-order tick. In E3, 98.2--99.6\,\% of recovered paths depart later, and about 92--95\,\% have multiple departure episodes; this pattern remains when panic is disabled. These results support a narrow mechanism statement: the E1 events in these shallow cells are panic-associated one-off departures, while repeated E3 departures do not require panic. They do not establish a universal pressure threshold; the ratios use configured orders and approximate reserves, not realized directional flow at each event.
+
+We also ran a paired capacity-reference counterfactual at $\kappa=0.5$: the arbitrage cap was fixed at $c$ times the initial input reserve, with execution still capped by the pool's active input reserve. Across the three shocks, E3 recovery increased from 90.3--95.7\,\% under the original reserve-linked cap to 100\,\%; its later-departure share among all runs fell from 88.7--94.7\,\% to 17.7--41.0\,\%. The post-recovery E3-minus-static excess-area contrast fell from 0.122--0.124 to 0.0036--0.0097; the paired current-cap-minus-fixed-cap contrast was 0.114--0.118 with 95\,\% intervals excluding zero. This isolates a substantial role for the capacity coupling in this one shallow-depth design. A residual contrast remains, and interactions and recovery conditioning prevent interpreting the difference as a universal causal share. The broader withdrawal-by-capacity-by-depth factorial is still needed.
+
+A broader follow-up should vary withdrawal, capacity reference, depth, order scale and panic independently in a frozen factorial design, with the primary post-recovery estimand and recovery coverage declared in advance. The present replay is exploratory and reuses existing seeds; it is not a new independent sample.
+
+\section{H3: predictive comparison against simple baselines}
+\label{sec:res-h3}
+
+The map clause is answered here as a comparison of continuous-error predictive description on held-out simulator paths; the finite-horizon labels are descriptive summaries rather than observed class labels. The two-state map is fitted to signed excess error $d_t$, which is zero inside the band and changes slope at its boundary. A single affine relation cannot represent this threshold exactly. On held-out cells, the map has lower mean absolute error than persistence in most conditions, but does not outperform scalar AR(1) in any principal condition. Its second state therefore adds no demonstrated one-step predictive value in this design; the map remains a descriptive simulator summary rather than a regime model.
+
+\begin{table}[htbp]
+\centering
+\caption{Mean absolute one-step error on held-out simulator cells.}
+\label{tab:h3}
+\small
+\begin{tabular}{@{}lrrrc@{}}
+\toprule
+Condition & Two-state map & Persistence & Scalar AR(1) & Map better than persistence \\
+\midrule
+E0 & 0.01765 & 0.01751 & 0.01757 & no \\
+E1-low & 0.01573 & 0.01615 & 0.01566 & yes \\
+E1-high & 0.00493 & 0.00620 & 0.00486 & yes \\
+E3 & 0.00929 & 0.01096 & 0.00916 & yes \\
+E1-max$^{\ast}$ & 0.00567 & 0.00594 & 0.00578 & yes \\
+\bottomrule
+\multicolumn{5}{@{}l}{\footnotesize $^{\ast}$ Extrapolation condition outside the principal capacity levels.}
+\end{tabular}
+\end{table}
+
+Averaged over the four principal conditions, the map-minus-persistence difference is $-0.000808$ (95\,\% seed-bootstrap interval $[-0.000917,-0.000692]$); the map-minus-scalar-AR difference is $+0.0000822$ (interval $[0.0000780,0.0000864]$). These intervals describe Monte Carlo variability. The finite-horizon path labels summarize the same simulated runs and are not independently observed regimes.
+
+\section{Held-out comparison of affine and hybrid maps}
+\label{sec:hybrid-results}
+
+The new comparison uses analysis 0.1.0, run \code{\HybridRunID}, and signed price error. On 9\,600 held-out trajectories from 300 new seeds, the hybrid map reduced mean recursive price-error MAE from 0.030807 to 0.030291. The paired mean improvement was 0.000516 (95\,\% seed-bootstrap interval [0.000499, 0.000533]); 99.7\,\% of seed-averaged contrasts favored Hyb. Relative to L0, the average improvement is about 1.7\,\%. This is a small replay-error gain within the specified simulator; the evaluation receives the realized future CEX path and is not a real-time forecasting test.
+
+Each condition contributed 12\,000 selection transitions. Both sides of the band were represented (table~\ref{tab:hybrid-regimes}), although the low-arbitrage model had fewer in-band observations. The fit remains condition-specific, and this count does not establish that the two-variable state captures all transition-relevant memory.
+
+\begin{table}[htbp]
+\centering
+\caption{Selection transitions on each side of the configured band.}
+\label{tab:hybrid-regimes}
+\small
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Condition & In band & Outside band & Total \\
+\midrule
+E0 & 681 & 11\,319 & 12\,000 \\
+E1-low & 1\,466 & 10\,534 & 12\,000 \\
+E1-high & 3\,776 & 8\,224 & 12\,000 \\
+E3 & 2\,834 & 9\,166 & 12\,000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The gain is not distributed across operating conditions. It is concentrated in low-capacity arbitrage, especially at depth 2, where the cell-averaged gain across the four held-out shocks is 0.003943. At depth 0.5 the corresponding gain is 0.000354. The other condition/depth averages are between approximately $-0.000101$ and $-0.000002$, slightly favoring L0. The secondary one-step MAE for $e$ improves from 0.014882 to 0.014800, while the one-step and recursive errors for flow pressure $z$ are slightly worse under Hyb. The result therefore supports a limited, condition-dependent advantage for the band terms in predicting price error; it does not show that the hybrid representation is uniformly superior or that the state variables suffice to capture the complete process.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  xbar, width=0.93\textwidth, height=6.1cm,
+  xmin=-0.0002, xmax=0.0045,
+  xlabel={Mean held-out rollout MAE gain, L0 minus Hyb},
+  symbolic y coords={C1,C2,C3,C4,C5,C6,C7,C8}, ytick=data,
+  yticklabels={E0, E1-low, E1-high, E3, E0, E1-low, E1-high, E3},
+  yticklabel style={font=\scriptsize},
+  y dir=reverse, xmajorgrids=true, grid style={gray!20},
+  axis x line*=bottom, axis y line*=left,
+  title style={font=\small}, title={Depth 0.5 (top) and depth 2 (bottom); positive favors Hyb}
+]
+\addplot[fill=blue!55!black,draw=blue!55!black] coordinates {
+  (-0.000002,C1) (0.000354,C2) (-0.000014,C3) (-0.000003,C4)
+  (-0.000017,C5) (0.003943,C6) (-0.000033,C7) (-0.000101,C8)
+};
+\end{axis}
+\end{tikzpicture}
+\caption{Cell-averaged recursive price-error MAE gain by operating condition and depth. Each bar averages four held-out shock sizes; cell-level contrasts are descriptive and do not have separate confidence intervals. The underlying values are exported in \code{figures/data/hybrid\_depth\_condition.csv}.}
+\label{fig:hybrid-cell-gains}
+\end{figure}
+
+The hybrid map’s mean gain should not be read in isolation: nearly all its gain comes from one low-capacity/depth combination, while flow-pressure prediction does not improve. The next modeling step is to represent capacity-binding and LP-withdrawal transitions explicitly and test them with another frozen protocol, rather than to add more free polynomial terms. The map comparison is a predictive surrogate diagnostic. It does not establish a Lyapunov function, local stability for the piecewise map, or stochastic stability for the complete simulator.
+
+\section{Trajectories by depth}
+
+Figure~\ref{fig:prof} compares E1-high and E3 with $\kappa=0.5$. At the lowest depth, E3 starts from the same initial excess and is corrected more slowly. A compatible explanation is that withdrawal lowers both depth and the arbitrage cap $c\,x$; these mechanisms are coupled in the current design. With $\kappa=1$ and $2$ the two trajectories are almost identical. The sustained return occurs on average at tick $7.8$ for E3 with $\kappa=0.5$ against $2.8$ for E1-high, whereas with $\kappa=1$ and $2$ the differences are $0.1$ ticks or less.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.9\textwidth,height=6.2cm,xlabel={Tick},ylabel={Mean $|d_t|$},grid=major,legend style={font=\scriptsize},xmin=0,xmax=20,ymin=0]
+\addplot[thick,blue!70!black] table[col sep=comma,x=tick,y=mean_abs_excess,restrict expr to domain={\thisrow{series_id}}{31:31}] {\datadir/trajectories.csv};
+\addplot[thick,dashed,green!50!black] table[col sep=comma,x=tick,y=mean_abs_excess,restrict expr to domain={\thisrow{series_id}}{41:41}] {\datadir/trajectories.csv};
+\legend{E1-high,E3}
+\end{axis}
+\end{tikzpicture}
+\caption{Mean excess error with $\kappa=0.5$: static high arbitrage (E1-high) and with threshold withdrawal (E3).}
+\label{fig:prof}
+\end{figure}
+
+\section{Engineering sensitivity: recovery and order scale}
+\label{sec:engineering-sensitivity}
+
+A supplementary analysis (analysis 0.6.0, run \code{\EngineeringRunID}) used 300 new seeds (2000--2299), three order-flow variants and the 15 depth/shock/condition cells of the held-out grid: 40\,500 paths, 20 abstract ticks each. It is a descriptive and exploratory sensitivity analysis, not an inferential test. Recovery means the first observed pair of consecutive ticks inside the band; a later departure is counted separately. Deadlines are ticks, not elapsed time.
+
+With the original fixed absolute order sizes, E3 threshold-withdrawal recovered at least once in 97.4\,\% of paths, yet only 81.9\,\% ended in-band. Of paths that recovered, 31.2\,\% later departed. At depth 0.5, only 45.8\,\% ended in-band and 98.8\,\% of recovered paths later departed. Thus a first sustained return is not equivalent to persistent tracking in this model. These equally weighted design averages carry no multiplicity-adjusted population claim.
+
+The depth-specific threshold-withdrawal-minus-static maximum-response contrast changes with order definition (table~\ref{tab:engineering-sensitivity}). Holding absolute orders fixed produced an effect at depth 0.5, while scaling the noise and trend orders with initial reserves made the contrast effectively zero at all three depths. Disabling panic reduced, but did not eliminate, this shock-dominated whole-horizon metric. The post-recovery replay below separates that one-time event from subsequent departures. This sensitivity shows that depth alone does not determine the result; order size relative to reserves and the reaction rule matter.
+
+\begin{table}[htbp]
+\centering
+\caption{Supplementary paired threshold-withdrawal-minus-static maximum response by depth (300 new seeds). Approximate 95\,\% intervals are unadjusted.}
+\label{tab:engineering-sensitivity}
+\small
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Order-flow variant & Depth 0.5 & Depth 1 & Depth 2 \\
+\midrule
+Fixed absolute orders & 0.03458 [0.03225, 0.03690] & 0.00000 & 0.00000 \\
+Orders proportional to initial reserves & 0.00000 & 0.00000 & 0.00000 \\
+Fixed orders, panic disabled & 0.01471 [0.01364, 0.01577] & 0.00000 & 0.00000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+At depth 0.5 under fixed absolute orders, E3 threshold-withdrawal ended in-band in 45.8\,\% of paths; with proportional orders it ended in-band in 100\,\%. These variants still share the same stylized representative-agent model and are not empirical comparisons. The complete cell summaries, paired contrasts, configuration and hashes are exported under \code{figures/engineering/}.
+
+\subsection{Pressure and departure mechanisms: exploratory replay}
+
+The frozen exploratory replay protocol 0.7.0 reruns 9\,000 paths using the existing seeds 2000--2299: 5\,400 fixed-order paths over the three depths and shocks, 1\,800 shallow no-panic paths, and 1\,800 shallow paths with the arbitrage input cap fixed to its initial-reserve amount. All 7\,200 paths using the original reserve-linked cap reproduce their archived recovery, departure, excess-area, maximum-response and capital-limit metrics exactly. The replay is therefore a reproducibility and mechanism analysis of existing seeds, not an independent Monte Carlo sample.
+
+For a configured input order $q$ and reserve $x$, define $R(q,x,c)=2\log(1+q/x)/\delta_c$, with $\delta_c=2\log(1+c)$. The conservative one-tick diagnostic is $R_{\mathrm{1tick}}=\max_{q\in\mathcal Q_{\mathrm{adv}}}R(q,x,c)$, where $\mathcal Q_{\mathrm{adv}}$ includes the largest adverse configured input, including panic. At depth 0.5 and capacity $c=0.03$, the decomposition reports $R_{\mathrm{flow}}$ for $q=100$ (noise plus trend aligned), $R_{\mathrm{panic}}$ for the one-off panic order $q=200$, and $R_{\mathrm{1tick}}=R_{\max}^{\mathrm{adv}}$ for $q=240$ (noise plus panic aligned; panic replaces rather than adds to trend). The post-withdrawal E3 reserve is approximated as 55\,\% of the starting reserve. These configured ratios are not realized tick-by-tick measurements; noise occurs with probability 0.7, event directions may differ, and the reserve changes within a tick.
+
+\begin{table}[htbp]
+\centering
+\caption{Configured flow-to-capacity ratios at depth factor 0.5 and $c=0.03$.}
+\label{tab:pressure-ratio}
+\small
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Condition & $R_{\mathrm{flow}}$ ($q=100$) & $R_{\mathrm{panic}}$ ($q=200$) & $R_{\max}^{\mathrm{adv}}$ ($q=240$) \\
+\midrule
+E1-high, static ($x\approx5000$) & 0.670 & 1.327 & 1.586 \\
+E3, after 45\,\% withdrawal ($x\approx2750$) & 1.208 & 2.375 & 2.831 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:departure-episodes} separates whether a path departs after recovery from how often it does so. In E1-high static, the 90 departures after shock $-0.05$ and 53 after $-0.10$ are single episodes, and each first departure coincides with the panic-order tick; no departures occur after the matched no-panic ablation at any tested shock (0/300 in each cell; Wilson 95\,\% upper limit 1.3\,\%). In E3, 98.2--99.6\,\% of recovered paths depart later, and most have multiple episodes. This repeated-departure pattern remains in the no-panic runs. Within these cells, the evidence supports a one-off panic-associated E1 mechanism and a recurring E3 flow mechanism; it does not turn the approximate pressure ratios into universal thresholds.
+
+\begin{table}[htbp]
+\centering
+\caption{Post-recovery departure paths and episode counts at depth factor 0.5. The parenthetical value is the mean number of contiguous out-of-band episodes per recovered path.}
+\label{tab:departure-episodes}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\begin{tabularx}{\textwidth}{@{}l r >{\centering\arraybackslash}X >{\centering\arraybackslash}X@{}}
+\toprule
+Condition & Shock & Panic enabled: paths/recovered (episodes/path) & Panic disabled: paths/recovered (episodes/path) \\
+\midrule
+E1-high static & $-0.05$ & 90/300 (0.30) & 0/300 (0.00) \\
+E1-high static & $-0.10$ & 53/300 (0.18) & 0/300 (0.00) \\
+E1-high static & $-0.20$ & 0/300 (0.00) & 0/300 (0.00) \\
+E3 threshold withdrawal & $-0.05$ & 266/267 (4.09) & 279/280 (4.93) \\
+E3 threshold withdrawal & $-0.10$ & 271/272 (4.41) & 256/258 (4.09) \\
+E3 threshold withdrawal & $-0.20$ & 284/287 (3.65) & 288/288 (3.77) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The paired capacity-reference control fixes the order-input cap at 3\,\% of the initial input reserve and still caps execution by active pool reserves. Table~\ref{tab:capacity-reference} shows that this raises E3 recovery to 100\,\% and sharply reduces its later-departure share. The post-recovery E3-minus-static excess-area contrast falls from 0.122--0.124 to 0.0036--0.0097. The paired current-cap-minus-fixed-cap contrasts are 0.114--0.118 (95\,\% intervals [0.1005, 0.1278], [0.1061, 0.1277], and [0.1077, 0.1288] for shocks $-0.05$, $-0.10$, and $-0.20$). The counterfactual assigns much of the shallow-cell contrast to the reserve-linked capacity change in this model, while the residual suggests that reduced depth also matters. Because withdrawal and depth interact, recovery coverage differs between cap modes, and this is one selected depth, these figures are not a universal causal decomposition.
+
+\begin{table}[htbp]
+\centering
+\caption{Shallow-cell capacity-reference counterfactual. Recovery is the share of all 300 runs; departure is the share of all runs; $\Delta A_{\mathrm{post}}$ is E3 minus E1-high among paired recovered paths.}
+\label{tab:capacity-reference}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\begin{tabularx}{\textwidth}{@{}r >{\centering\arraybackslash}X >{\centering\arraybackslash}X rr@{}}
+\toprule
+Shock & E3 recovery: linked/fixed cap & E3 departure: linked/fixed cap & $\Delta A_{\mathrm{post}}$ linked & fixed cap \\
+\midrule
+$-0.05$ & 90.3/100.0\,\% & 88.7/41.0\,\% & 0.1229 & 0.0097 \\
+$-0.10$ & 91.0/100.0\,\% & 90.3/33.7\,\% & 0.1239 & 0.0080 \\
+$-0.20$ & 95.7/100.0\,\% & 94.7/17.7\,\% & 0.1215 & 0.0036 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Summary of the results}
+
+\begin{itemize}
+  \item \textbf{Analytical arbitrage benchmark:} an isolated pool with capacity $c$ reduces out-of-band log error by at most $2\log(1+c)$ per tick. The matched-deadline table shows how rarely a two-tick sustained return begins by the ideal first-entry deadline at low capacity; the direction of correction remains built into the rule.
+  \item \textbf{Withdrawal sensitivity:} post-recovery excess area is higher under E3 only at depth 0.5 with fixed orders. A fixed-initial-cap counterfactual removes most of this contrast in that cell, but the result remains post-hoc and condition-specific.
+  \item \textbf{Departure mechanism:} E1-high static later departures are single panic-associated episodes and disappear in the no-panic ablation. E3 has repeated departures in most recovered paths, including when panic is disabled. These are programmed-model outcomes, not market frequencies.
+  \item \textbf{Pressure ratios:} configured continuous-flow ratios alone miss the E1 one-off panic event; the panic and maximum-adverse ratios exceed one. The ratios remain exploratory inputs and do not establish a threshold law.
+  \item \textbf{Reduced models:} the two-state map improves on persistence in some conditions but does not beat scalar AR(1). The band-aware map's approximately 1.7\,\% replay-error gain is concentrated in one condition and uses the realized future CEX path.
+\end{itemize}

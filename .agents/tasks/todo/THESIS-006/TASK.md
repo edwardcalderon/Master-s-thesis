@@ -3,25 +3,41 @@
 - **Owner:** `edcalderon`
 - **Status:** TODO
 - **Created:** 2026-11-26
-- **Scope:** Follow up the completed first hybrid comparison in THESIS-005 and manuscript v0.8.0.
-- **GitHub issue:** [#8 — strengthen hybrid-map analysis and define validation next steps](https://github.com/edwardcalderon/Master-s-thesis/issues/8)
+- **Scope:** Follow up the completed first hybrid comparison in THESIS-005 and the exploratory H2 mechanism pilot reported in manuscript v0.8.4.
+- **GitHub issue:** [#12 — hybrid validation, simulation infrastructure, and microworld roadmap](https://github.com/edwardcalderon/Master-s-thesis/issues/12) (follow-up to closed #8; the acceptance criteria remain TODO)
 
 ## Goal
 
 Determine whether the band-aware reduced map remains informative across more realistic
 operating regimes and whether any stability statement can be justified for a more
-complete hybrid representation. Preserve the current v0.8.0 evidence as a frozen
-baseline; no extension may overwrite it.
+complete hybrid representation. Preserve v0.8.4 as the current assessment baseline,
+v0.8.3 as the prior assessment snapshot, and v0.8.0 as the historical first hybrid-map
+comparison; no extension may overwrite them.
+
+The approved main question evaluates tracking-error trajectories over the tested
+capacity/depth grid. It does not claim regime-classification accuracy. The v0.8.4 H2
+replay reuses existing seeds. It finds shallow E1 later departures only in panic-enabled
+paths, recurrent E3 departures with and without panic, and a substantial reduction in the
+post-recovery contrast under a fixed-initial-reserve capacity control. That control covers
+one shallow depth and conditions the area outcome on recovery; it does not resolve the
+full withdrawal-depth-capacity interaction. Any follow-up must predeclare its estimand
+and use realized, directional flow and active reserves if testing an event-level
+pressure-to-capacity diagnostic.
 
 ## Acceptance criteria
 
-- Freeze a new model/protocol version before fitting or evaluating a regime-complete
+- Freeze a new model/protocol version before fitting or evaluating a trajectory-prediction
   candidate. Represent capacity binding and LP-withdrawal modes explicitly, and state
   which state/event variables are needed for a Markov-complete transition.
 - Compare the new candidate with L0, the existing Hyb model, and simple predictive
   baselines on fresh selection seeds and disjoint held-out seeds, shocks, depths, and
   operating conditions. Report paired seed-level effects, uncertainty, and cell-level
   results; do not rely on an aggregate gain alone.
+- A post-hoc shallow-depth fixed-capacity pilot is complete in v0.8.4. If H2 is extended,
+  predeclare a factorial or otherwise identifying design that varies withdrawal,
+  arbitrage capacity, depth, order scaling and panic behavior independently enough to
+  estimate their interactions. Do not treat the pilot as a general causal decomposition:
+  it covers one depth and recovered-path coverage differs between cap modes.
 - Separate conditional price-error tracking with a supplied CEX path from forecasts
   using only information available at the forecast origin. Evaluate flow pressure with
   no future stochastic-flow realization as an input; document target timing and any
@@ -34,9 +50,9 @@ baseline; no extension may overwrite it.
 - Check sensitivity to band width, capacity, liquidity depth, order-to-reserve scale,
   random-flow strength, and seed range. Preserve configurations, code/source hashes,
   outputs, and a second-run reproduction check.
-- Update the English and Spanish methodology, results, conclusions, figures, glossary,
-  and versioned snapshot only after the protocol and findings are fixed. State synthetic
-  scope and market-validation limits in both editions.
+- Extend the English and Spanish methodology, results, conclusions, figures, glossary,
+  and versioned snapshot only after the next protocol and findings are fixed. State
+  synthetic scope and market-validation limits in both editions.
 - Review representative-agent rules and the ODD contract with the advisor. Any decision
   to add heterogeneous agents becomes an explicit model/version change. Keep real-pair
   data acquisition, rights, and external validation under DATA-001.
@@ -65,5 +81,6 @@ baseline; no extension may overwrite it.
 
 ## Next action
 
-Review the open estimand, inputs, and operating-mode questions with the advisor, then
-freeze a protocol and model version before implementing the next candidate.
+Review the open estimand, inputs, and operating-mode questions with the advisor. The
+v0.8.4 pilot is complete; next, freeze a factorial or model-extension protocol before
+implementing the broader robustness study.

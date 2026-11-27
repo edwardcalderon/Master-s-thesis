@@ -1,0 +1,39 @@
+{
+  "schema_version": "execution_scenario_v1",
+  "status": "template_only_not_observed",
+  "market": "ETH/USDT",
+  "venue": "Kraken Spot",
+  "units": {
+    "fees": "basis points of notional",
+    "delay": "milliseconds",
+    "capital": "USDT and ETH",
+    "gas": "wei and ETH"
+  },
+  "scenarios": [
+    {
+      "name": "base",
+      "cex_taker_fee_bps": null,
+      "cex_maker_fee_bps": null,
+      "agent_order_delay_ms": null,
+      "agent_capital_usdt": null,
+      "agent_inventory_eth": null,
+      "max_order_notional_usdt": null,
+      "source_or_protocol_reference": null,
+      "notes": "Populate only from the actual account fee tier or a cited, predeclared scenario source."
+    }
+  ],
+  "observed_from_ingestion": {
+    "cex_trade_and_publication_timestamps": true,
+    "cex_account_fee_tier": false,
+    "agent_network_or_decision_latency": false,
+    "agent_capital_or_inventory": false,
+    "dex_pool_fee_tier_and_swap_slippage_proxy": true,
+    "dex_transaction_receipt_gas": "optional; collect with --enrich-gas and an Ethereum mainnet RPC"
+  },
+  "rules": [
+    "Never replace null values with unlabelled defaults.",
+    "Record provenance for every non-null execution assumption.",
+    "Treat publication-minus-execution time as exchange dissemination lag, not agent order latency.",
+    "Treat DEX swap slippage estimates as trade-size-specific diagnostics, not universal transaction costs."
+  ]
+}

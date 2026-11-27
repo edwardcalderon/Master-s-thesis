@@ -1,7 +1,7 @@
 # DATA-001 — Bounded empirical validation path
 
 - **Owner:** `edcalderon`
-- **Status:** TODO
+- **Status:** IN PROGRESS
 - **Goal:** Validate selected v0.8.0 model findings and v0.6.0 monitoring/order-scaling requirements on one predeclared real CEX/DEX pair after access and data rights are established.
 
 ## Acceptance criteria
@@ -44,3 +44,12 @@ robustness work with THESIS-006, but retain a separate real-data protocol and ho
 
 - Synthetic model mechanics and run metadata are stable.
 - The empirical question, period, source, and data rights are declared before collection.
+
+
+## Progress (2026-11-26)
+
+- Selected the Kraken ETH/USDT public Post-Trade stream and the Ethereum Uniswap V2 WETH/USDT pool as a pilot pair. The DEX dataset is CC BY 4.0; Kraken data has no open redistribution license identified, so CEX rows and CEX-derived values stay private.
+- Implemented a bounded, range-seeking ingestor, UTC minute alignment, event-time gap recording, optional Ethereum receipt gas enrichment, manifests/checksums, and optional private Azure Blob upload.
+- Acquired a six-minute pilot: the repository contains only its three licensed DEX swap rows; the CEX capture and aligned output are local and Git-ignored. This is pipeline evidence only, not a thesis finding.
+- Added optional private StorageV2/Blob infrastructure; it compiles but is not deployed. Azure CLI has no active sign-in in the current shell.
+- Remaining: resolve CEX data rights for any external release; capture a predeclared, sufficiently long window; add account fee schedule, order-book depth, agent latency/capital scenarios, and assess the selected estimand on chronological/pool holdouts.

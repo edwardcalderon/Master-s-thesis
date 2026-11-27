@@ -1,0 +1,164 @@
+\chapter{Technical Annexes}
+\label{cap:anexos}
+
+\section{ODD description of the model}
+\label{sec:odd}
+
+The description follows the ODD protocol \cite{grimm2020odd}.
+
+\subsection*{Overview}
+
+\textbf{Purpose.} To study how a constant-product AMM tracks an exogenous reference price after a perturbation, under different arbitrage capacities, depths and liquidity-provision rules.
+
+\textbf{Entities and state variables.} The AMM (reserves $x_t$, $y_t$); the CEX reference ($\pC_t$); four wallets: noise, trend and panic, arbitrageur and liquidity provider, with inventories in $X$ and $Y$. The derived variables are $e_t$, $d_t$ and $z_t$.
+
+\textbf{Scales.} A tick is a discrete unit of time with no calendar equivalence; the horizon is 20 ticks. The initial reserves are $10\,000$ units per asset and the initial price is 1.
+
+\textbf{Process overview.} At each tick: reference shock (only at tick 1), noise order, trend or panic decision, adaptive provider decision, arbitrage order, recording and checks.
+
+\subsection*{Design concepts}
+
+\textbf{Emergence.} The trajectory of the tracking error results from the interaction between bounded arbitrage and the order flow. \textbf{Adaptation.} The provider withdraws liquidity upon an error greater than $0.02$ (once); the panic agent reacts to an AMM return less than or equal to $-1.5\,\%$ (once per run); the trend agent follows returns of magnitude greater than or equal to $0.1\,\%$. \textbf{Objectives.} None of the agents optimizes; the rules are heuristic. \textbf{Sensing.} The agents observe the AMM price and, the arbitrageur, also the reference. \textbf{Stochasticity.} Only the noise flow is random (activity and side); the AMM mechanics and the rules are deterministic. \textbf{Interaction.} Indirect, through the price and the reserves.
+
+\subsection*{Details}
+
+\textbf{Initialization.} Reserves $10\,000/10\,000$, initial reference price 1; noise and trend wallets with twice the initial reserves, arbitrageur with five times, provider with zero. \textbf{Input.} The reference shock and the noise schedule pre-generated from the seed. \textbf{Submodels.} Equations~\eqref{eq:reservas} to~\eqref{eq:qstar} and the rules of the section on agents in chapter~\ref{cap:metodologia}. Table~\ref{tab:parametros} summarizes the parameters.
+
+\begin{table}[htbp]
+\centering
+\caption{Parameters of the executed model (version 0.4.0).}
+\label{tab:parametros}
+\small
+\begin{tabular}{@{}lr@{}}
+\toprule
+Parameter & Value \\
+\midrule
+Initial reserves $x_0=y_0$ & 10\,000 \\
+Initial reference price & 1 \\
+Horizon & 20 ticks \\
+Shock tick & 1 \\
+Band half-width $\gamma$ & 0.003 \\
+Ticks inside the band for the sustained return & 2 \\
+Arbitrage capacities $c$ & 0; 0.005; 0.03; 0.10 \\
+Noise and trend inventory (multiple of the reserves) & 2 \\
+Arbitrageur inventory (multiple) & 5 \\
+Noise activity probability & 0.7 \\
+Noise order size (fraction of the initial reserve) & 0.004 \\
+Trend threshold (logarithmic return) & 0.001 \\
+Trend order size & 0.006 \\
+Panic threshold (logarithmic return) & $-0.015$ \\
+Panic sale size & 0.02 \\
+Maximum panic sales per run & 1 \\
+Adaptive withdrawal threshold (logarithmic error) & 0.02 \\
+Fraction of reserves kept & 0.55 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Execution contract and reproducibility}
+\label{sec:contrato}
+
+Each simulator run is described by the fields of table~\ref{tab:contrato}.
+
+\begin{table}[htbp]
+\centering
+\caption{Execution contract.}
+\label{tab:contrato}
+\small
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+Field & Content \\
+\midrule
+\code{run\_id} & Identifier derived from the parameters. \\
+Commit & Code version and state of the working tree. \\
+Scenario & Condition, capacity and liquidity rule. \\
+Seed & Seed of the noise flow. \\
+Parameters & Complete configuration of the model and of the protocol. \\
+Clock & Tick and recorded event. \\
+Series & Prices, reserves, errors, orders. \\
+Metrics & Those of table~\ref{tab:metricas}. \\
+Checks & Asset conservation, positivity and finiteness. \\
+Environment & Python and platform version. \\
+Checksum & SHA-256 of configurations, code and products. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection*{Confirmatory run}
+
+\begin{itemize}
+  \raggedright
+  \item Identifier: \code{\RunID}, analysis version 0.5.0, model version 0.4.0, Python 3.12.3.
+  \item Code commit: \code{06778ccfb4db032d8ae143dcd4396d8786ee7814}, with a clean working tree (\code{git\_working\_tree\_dirty} false).
+  \item Run counts: 3000 exploration and 13\,500 confirmation.
+  \item SHA-256 of the confirmation configuration:\newline\code{dcf2ef01fdc7504834362f7cb38b93801b2effa861f6d0e3be8ed74796cef16f}; of the model configuration:\newline\code{9c221ada2b8a2150d238c11d320e34fd3697a6a67d193ab4951b48547b09623f}.
+  \item SHA-256 of the source code: \code{confirm.py} \code{9b2c7df09f49bd2f\ldots}, \code{abm.py} \code{f15c666856519b8\ldots}, \code{run.py} \code{1530471be964587e\ldots}, \code{h1c.py} \code{6c26ed25f8796d1c\ldots} (full values in the run summary).
+  \item SHA-256 of the products: \code{run\_metrics.csv} \code{2a0fbd17bb3e5eb6\ldots}; \code{inference.csv} \code{d4828a48cd0f8f2a\ldots}; \code{cell\_breakdown.csv} \code{0a87125ca4a09068\ldots}; \code{h3\_by\_condition.csv} \code{28d31f52e5c4be41\ldots};\newline\code{condition\_summary.csv} \code{ee6c02c5ac37544b\ldots};\newline\code{exploration\_fits.csv} \code{1f5f7ffbe00a86c6\ldots}; \code{sample\_size\_guidance.csv} \code{86d4a3a45fedd0a2\ldots}.
+\end{itemize}
+
+\subsection*{Supplementary engineering sensitivity and full replay}
+
+The original runner sources and the confirmatory configuration were not changed. Five existing pipelines reproduced their recorded output artifacts byte for byte: deterministic mechanism \code{cex-dex-mvp-f183520b90aa}, sweep \code{cex-dex-sweep-5e33d51c51a3}, stochastic selection \code{cex-dex-abm-a99f9be866b2}, held-out map \code{cex-dex-h1c-43e446f04adf}, and confirmation \code{cex-dex-confirm-5b06486d695e}. All nine implementation invariants passed.
+
+The supplementary analysis is \code{cex-dex-engineering-9438e194aa7e} (analysis 0.6.0; model 0.4.0), 300 fresh seeds (2000--2299), 40\,500 paths. Its protocol and configuration are \code{experiments/cex\_dex\_mvp/ENGINEERING\_PROTOCOL.md} and \code{engineering\_config.json}. The independent-unit resampling is by seed; cell recovery intervals are Wilson intervals, and paired depth intervals are unadjusted normal approximations. The run and export checksums are in \code{figures/engineering/manifest.json}. Repeating the analysis in a second output directory reproduced all numeric CSV and config artifacts byte for byte.
+
+The products of the run are not versioned in the repository. To regenerate them and export the figure data:
+
+\begin{verbatim}
+python3 experiments/cex_dex_mvp/confirm.py
+python3 experiments/cex_dex_mvp/export_thesis_data.py \
+  --run-dir experiments/cex_dex_mvp/output/confirm/<run_id>
+python3 experiments/cex_dex_mvp/check_invariants.py
+\end{verbatim}
+
+Repeating the run produced the same identifier and byte-for-byte identical result files, except for the \code{generated\_at\_utc} and \code{git\_working\_tree\_dirty} fields of the summary.
+
+\section{Verification plan}
+\label{sec:verificacion}
+
+Table~\ref{tab:verificacion} lists the automatic checks of the script \code{check\_invariants.py}. All nine passed in the version used for the results.
+
+\begin{table}[htbp]
+\centering
+\caption{Simulator verifications and result.}
+\label{tab:verificacion}
+\small
+\begin{tabularx}{\textwidth}{@{}l X l@{}}
+\toprule
+Id. & Check & Result \\
+\midrule
+V01 & The zero-fee sale of $X$ conserves $k$ and keeps reserves positive. & passes \\
+V02 & The zero-fee purchase of $X$ conserves $k$ and keeps reserves positive. & passes \\
+V03 & Proportional withdrawal conserves the marginal price. & passes \\
+V04 & The configured states from E0 to E3 have positive and finite reserves. & passes \\
+V05 & Arbitrage reduces the error from both directions of the shock and a larger capacity does not worsen it. & passes \\
+V06 & The adaptive threshold is activated and amplifies the peak error. & passes \\
+V07 & The static and adaptive comparison shares the exogenous trajectory and the ticks. & passes \\
+V08 & The impact of a fixed sale grows with each reduction of liquidity. & passes \\
+V09 & Paired conditions share the noise orders and conserve assets (24 trajectories, 504 states). & passes \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+These checks verify the implementation. Validation against real markets was not performed. There is no automatic check that the simulator reproduces stylized facts, nor was behavior with fees verified, because it is not implemented.
+
+\section{Literature protocol and reference audit}
+\label{sec:protocolo-literatura}
+
+The 87 scholarly references were checked against publisher records (Crossref) or preprint repositories, comparing titles, authors, year, publication, volume and pages. The bibliography now has 88 entries, including one data citation for the DEX pilot; that dataset citation records source attribution and licensing and is not part of the scholarly-reference audit. The scholarly works were prioritized by relevance to the problem: core items support central claims (AMM mechanics, arbitrage, agent-based models, validation), recommended items broaden context, and reserve items support a specific claim. The following cases were identified and are declared to make their status clear:
+
+\begin{itemize}
+  \item Campbell et al., Bergault et al., Dean et al. and Cohen et al. are cited as preprints or working papers, with no peer review located.
+  \item In Dean et al., the Crossref record lists Dean as first author, and another bibliographic database lists a different name; Crossref is used and it is recommended to confirm it on the publisher's page of the working paper.
+  \item Windrum et al. (2007) was located only by URL and has no DOI verified in the record consulted.
+  \item Holm (1979) is partially verified (publisher's page); the pagination was taken from the usual citation.
+  \item Schär (2021): the pages were inferred from the record and not confirmed on the journal's site. Angeris et al. (2020): volume and issue were not confirmed.
+  \item Creswell: there is a date conflict between editions (2014 and 2018). For Kleijnen and Law the edition was not confirmed.
+\end{itemize}
+
+The detailed list, with the evidence per entry, is kept in the repository (\code{thesis/literature-audit/}). No earlier ABM of an AMM with liquidity withdrawal dependent on the tracking error was found; this claim is limited to the databases consulted.
+
+\section{Sensitivity protocol}
+\label{sec:sensibilidad}
+
+The sensitivity analysis that accompanies a later revision should be carried out on the factors of table~\ref{tab:factores} that are currently candidates. A one-factor-at-a-time variation, with the rest fixed, makes it possible to recognize the individual contribution; factorial or screening designs \cite{morris1991factorial,saltelli2010variance} apply when there are more than three or four factors. Each variation must be fixed before simulating and reported with the sample-size guide of section~\ref{sec:analisis-estadistico}.

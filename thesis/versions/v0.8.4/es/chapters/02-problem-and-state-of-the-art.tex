@@ -1,0 +1,106 @@
+\chapter{Planteamiento del problema y estado del arte}
+\label{cap:problema}
+
+\section{Delimitación del problema}
+
+Un CEX permite que los participantes introduzcan órdenes de compra y venta cuya ejecución depende de las órdenes disponibles en el libro. Un AMM de producto constante, en cambio, permite intercambios contra una piscina de dos activos. En la representación ideal de este último, el precio marginal se obtiene de la relación entre reservas, y la profundidad disponible determina la diferencia entre ese precio y el precio medio al que se ejecuta una transacción. Un cambio en el mercado centralizado no modifica directamente las reservas del AMM: para que su precio se ajuste deben producirse transacciones.
+
+Se considera un par de activos $X/Y$ negociado en dos mecanismos. El CEX se representa por una serie de precios externos en unidades de $Y$ por unidad de $X$; el DEX, por un AMM. Esta simplificación permite controlar la perturbación aplicada a la referencia y observar solo la respuesta descentralizada. No se estudia un libro de órdenes completo ni una realimentación bidireccional entre mercados; la elección excluye de forma deliberada la profundidad del CEX y la sincronización de bloques, que exigirían otra infraestructura experimental.
+
+El error de seguimiento es $e_t=\log(\pD_t/\pC_t)$. Su signo indica si el precio marginal del AMM está por encima o por debajo de la referencia. Los costos de transacción impiden interpretar toda diferencia como una oportunidad ejecutable, por lo que se distingue el error bruto del exceso fuera de una banda operativa. La duración de la discrepancia se mide sobre un horizonte explícito. Que el error vuelva a la banda no demuestra, por sí solo, estabilidad global de un sistema estocástico.
+
+El problema tiene dos niveles. En el microscópico interesa cómo el arbitraje, las órdenes de los agentes y las decisiones de retiro alteran las reservas. En el reducido interesa si una relación de transición de pocas variables permite describir la respuesta del modelo completo. Distintas configuraciones pueden producir un error agregado similar; en tal caso, una descripción reducida no identifica necesariamente el mecanismo que lo generó. Por eso los experimentos intervienen sobre un mecanismo a la vez y conservan las demás condiciones.
+
+\section{Sistemas complejos y mercados artificiales}
+
+Los sistemas complejos adaptativos comprenden componentes heterogéneos que interactúan con su entorno y entre sí. Holland \cite{holland1995hidden} destaca la adaptación y la organización a partir de reglas locales; su obra se usa aquí solo como marco conceptual y no sustenta afirmaciones sobre mercados. En finanzas esta perspectiva es útil porque los precios observados modifican las decisiones posteriores, y la agregación de órdenes puede producir retroalimentaciones que no aparecen al estudiar una decisión aislada.
+
+La economía computacional basada en agentes estudia procesos económicos mediante reglas ejecutables y poblaciones heterogéneas \cite{tesfatsion2003agent}, y su aplicación a las finanzas cuenta con revisiones consolidadas \cite{lebaron2006agent,hommes2006heterogeneous,axtell2025agent}. Un modelo basado en agentes (ABM) no exige que todos los participantes compartan una expectativa ni que el sistema alcance un equilibrio de inmediato. A diferencia de una representación agregada, conserva estados individuales y permite intervenciones contrafactuales sobre políticas particulares. Sin embargo, más detalle no equivale a más capacidad explicativa: con demasiadas reglas libres, múltiples configuraciones pueden explicar las mismas observaciones.
+
+El mercado artificial de Palmer y colaboradores \cite{palmer1994artificial} y el modelo de Brock y Hommes \cite{brock1998heterogeneous} son antecedentes para estudiar dinámicas endógenas producidas por estrategias heterogéneas; Lux y Marchesi \cite{lux1999scaling} examinan regularidades financieras en un modelo estocástico de agentes. La implicación para este trabajo no es que un AMM reproduzca automáticamente esos resultados, sino que comparar políticas de ruido y de tendencia permite indagar cuánto de la dinámica depende de la heterogeneidad y cuánto de la estructura institucional. Además, los agentes de inteligencia cero \cite{gode1993allocative,farmer2005predictive} justifican que un flujo de órdenes aleatorio, sin información ni objetivo, sea una representación mínima legítima de los negociadores de ruido.
+
+Los hechos estilizados de los mercados financieros, como las colas pesadas de los retornos y la persistencia de la volatilidad \cite{cont2001empirical}, proporcionan criterios de comparación. Reproducirlos de forma aislada es insuficiente como validación, porque distribuciones semejantes pueden emerger de mecanismos distintos, y un horizonte corto de simulación no permite estimar con precisión características de cola. Por eso el seguimiento de precios y la respuesta a una perturbación son aquí los resultados primarios, y los hechos estilizados quedan como diagnósticos secundarios sujetos a suficiencia de datos.
+
+\section{Mercados artificiales de criptoactivos}
+
+Cocco, Concas y Marchesi \cite{cocco2017artificial} trasladan el enfoque basado en agentes al estudio de un mercado artificial de Bitcoin, y Cocco, Tonelli y Marchesi \cite{cocco2019agent} lo extienden a la negociación de ese activo. Esos trabajos muestran que la investigación de criptoactivos mediante ABM antecede a la infraestructura DeFi actual. El mecanismo de interés aquí no es la emisión del activo ni la minería, sino la negociación contra reservas, y esos modelos no representan un AMM.
+
+Comparar trabajos exige distinguir el mecanismo de formación de precios, el origen de las órdenes y el procedimiento de validación. Un mercado artificial que forma precios con un libro de órdenes y uno que usa una función de conservación no son intercambiables. Una propiedad matemática del AMM, como el aumento del impacto al disminuir sus reservas, no debe confundirse con una propiedad estadística producida por el comportamiento de los agentes. Este trabajo conserva ambos niveles y asigna a cada uno una prueba distinta.
+
+\section{Intercambios descentralizados y AMM}
+
+Schär \cite{schar2021defi} describe la infraestructura financiera basada en contratos inteligentes, y Xu y colaboradores \cite{xu2023sok} sistematizan los mecanismos de intercambio con AMM; Bartoletti, Chiang y Lluch-Lafuente \cite{bartoletti2022theory} ofrecen una teoría formal de los AMM. El caso de producto constante es suficientemente simple para derivar la relación entre el tamaño de una orden y el cambio de precio. Un AMM de liquidez concentrada, en cambio, distribuye posiciones por intervalos de precio y no puede representarse sin más con una única pareja de reservas globales.
+
+El documento técnico de Uniswap v2 \cite{adams2020uniswap} permite distinguir el intercambio ideal sin comisión del intercambio con comisión retenida por la piscina. La condición $xy=k$ es una identidad durante un intercambio sin costos; al incorporar comisiones o entradas y salidas de proveedores de liquidez, el producto de reservas cambia. Una implementación debe registrar esos cambios de manera contable y no usar como invariante una igualdad que solo vale bajo supuestos específicos. Lehar y Parlour \cite{lehar2025uniswap} y Capponi y Jia \cite{capponi2025liquidity} analizan la provisión de liquidez y el comportamiento de los proveedores en DEX, lo que ubica la regla de retiro de este trabajo en un campo de estudio establecido.
+
+Angeris y Chitra \cite{angeris2020cfmm} estudian los creadores de mercado de función constante y sus propiedades como oráculos de precio. Angeris y colaboradores \cite{angeris2020uniswap} analizan formalmente los mercados de producto constante, muestran que bajo ciertas condiciones siguen de cerca el precio de un mercado de referencia y lo verifican con una simulación basada en agentes a gran escala. El antecedente es directamente relevante: demuestra que el seguimiento de un precio externo por un AMM, con arbitrajistas y agentes heterogéneos, no es por sí mismo una brecha original. Su enfoque se usa como punto de partida para definir las pruebas de seguimiento y delimitar el uso del mapa reducido.
+
+\section{Arbitraje, costos y retiro de liquidez}
+
+El arbitraje acerca el precio del AMM al precio externo cuando la discrepancia permite una operación rentable. Con comisión, el arbitraje solo es rentable si la discrepancia supera un umbral \cite{milionis2025fees}; con capital finito, aversión al riesgo o fricciones de liquidación, el ajuste es incompleto \cite{shleifer1997limits}. En criptoactivos, las desviaciones de precio entre mercados persisten por restricciones de capital y por los tiempos de liquidación \cite{makarov2020trading,hautsch2024building}, y el costo del arbitraje recae sobre los proveedores de liquidez, que pierden frente a los arbitrajistas cuando el precio de referencia se mueve \cite{milionis2022lvr}. La magnitud del ajuste depende del tamaño de la operación y de la capacidad disponible. Una regla que ajusta siempre el precio a su objetivo equivale a suponer capacidad suficiente y ejecución inmediata; introducir una capacidad máxima de negociación permite estudiar los casos en que el ajuste requiere varios pasos.
+
+Campbell y colaboradores \cite{campbell2025optimal} analizan la elección de comisiones y la rentabilidad de proveedores pasivos en un modelo en que un AMM opera en paralelo con un CEX, con simulaciones y calibración con datos. Su objeto es la rentabilidad de la provisión y la determinación de comisiones, mientras que aquí se estudia el error de seguimiento y el alcance descriptivo de un mapa local. Esta distinción es una delimitación temática, no una prueba de que no existan otros trabajos sobre el mismo objeto. Conviene además señalar que el trabajo de Campbell y colaboradores es un preprint, igual que el de Bergault y colaboradores \cite{bergault2025exit} que se discute más adelante; Dean y colaboradores \cite{dean2022arbitrage} presentan un modelo de arbitraje con un AMM en un documento de trabajo que no ha sido arbitrado. Los tres se citan como antecedentes, no como resultados establecidos.
+
+Palit \cite{palit2022shuffled} reordena aleatoriamente eventos históricos de Uniswap y los reproduce a través del mecanismo del AMM, lo que reduce el mercado real a inteligencia cero y permite medir su efecto en la pérdida impermanente, el deslizamiento y la eficiencia de precios. La lección metodológica es preservar un flujo y modificar una sola dimensión para aislar su efecto. Aquí se aplica la idea a pares de simulaciones con perturbaciones y flujos exógenos comunes que cambian una regla de arbitraje o de provisión de liquidez; no se afirma haber replicado el estudio histórico. Otros modelos basados en agentes sobre AMM son escasos: Sabaté-Vidales y Šiška \cite{sabatevidales2023variable} simulan comisiones variables en mercados de producto constante, y Cohen y colaboradores \cite{cohen2023inefficiency} combinan una perspectiva de cobertura con simulaciones multiagente y concluyen que, en promedio, las comisiones no compensan el riesgo de mercado. No se encontró un ABM previo que represente un retiro de liquidez dependiente del error de seguimiento.
+
+Bergault, Bieber y Sánchez-Betancourt \cite{bergault2025exit} tratan la salida de un proveedor de liquidez como un problema de parada óptima, en el que el momento de retirarse depende del estado de la piscina y del precio de referencia. Estos antecedentes delimitan H2: no se propone descubrir que el retiro depende del estado, sino evaluar una regla heurística concreta y su efecto sobre la respuesta de precios bajo intervenciones controladas. La regla no reproduce la política óptima de esos autores y es una decisión de modelado propia, apoyada en ese antecedente y en el análisis de Lehar y Parlour \cite{lehar2025uniswap}; la analogía con las corridas bancarias \cite{diamond1983bank} se usa solo como intuición y no como evidencia sobre AMM.
+
+La salida proporcional de reservas no cambia de inmediato el precio marginal, pero reduce el tamaño de la piscina respecto de una orden posterior. Esta distinción separa una propiedad mecánica verificable de una hipótesis de comportamiento. En la implementación estudiada, el proveedor es un único agente representativo con un disparador fijo; como todos los choques ensayados superan ese umbral, la simulación no identifica respuestas heterogéneas ni graduales de los proveedores de liquidez.
+
+Sobre la formación de precios entre CEX y DEX, Capponi, Jia y Yu \cite{capponi2026price} estudian el descubrimiento de precios en intercambios descentralizados, y Alexander y colaboradores \cite{alexander2025price} el descubrimiento de precios y la eficiencia de las piscinas de Uniswap. Estos estudios empíricos muestran la importancia del tiempo de los eventos y de la relación entre mercados; el simulador actual no reproduce esos entornos. La pérdida frente al rebalanceo (LVR) mide un resultado para el proveedor de liquidez respecto de una estrategia de rebalanceo, mientras que este trabajo mide el seguimiento de precios y la respuesta de las reservas; son resultados relacionados pero distintos \cite{milionis2022lvr,milionis2022quantifying}. En cadena, el arbitraje también depende del orden de las transacciones, la competencia entre buscadores y los incentivos de inclusión estudiados por la literatura de MEV \cite{daian2020flash,zhou2021hft}, que el mecanismo de un solo agente y sin costos omite.
+
+\section{Modelos dinámicos reducidos}
+
+El ABM puede representarse como una transformación discreta de su estado completo. Reducirlo a dos variables implica descartar información de inventarios, reservas y memoria de los agentes. El resultado no tiene necesariamente la propiedad de Markov: un mismo par de observables puede corresponder a estados internos distintos y, por tanto, a transiciones distintas. Por eso el mapa reducido se formula como aproximación local y no como identidad global. Ajustar mapas de grano grueso a la salida de simuladores microscópicos tiene antecedentes metodológicos \cite{gear2003equationfree}, y también el uso de sustitutos estadísticos de un ABM \cite{lamperti2018surrogates}.
+
+La linealización alrededor de un punto de operación exige declarar el dominio y el significado de las variables \cite{roubal2010linearization}. Con una banda de no arbitraje, la función que convierte el error bruto en exceso no es diferenciable en sus límites, de modo que resulta útil distinguir regiones activas e inactivas; combinar submodelos locales por regiones tiene antecedentes en la identificación de sistemas \cite{takagi1985fuzzy}. En esta tesis, los modelos reducidos se evalúan como descripciones predictivas sobre trayectorias reservadas del simulador, no como clasificadores de regímenes ni certificados de estabilidad.
+
+Comparar el modelo completo con su aproximación debe ir más allá del ajuste dentro de la muestra. Si los coeficientes se estiman con las mismas configuraciones en que se evalúa el error, el desempeño queda sobreestimado. Por eso el contraste se hace sobre configuraciones y semillas reservadas, con modelos base simples y métricas fijadas antes de la evaluación.
+
+\section{Validación y reproducibilidad}
+
+Fagiolo, Moneta y Windrum \cite{fagiolo2007critical} y Windrum, Fagiolo y Moneta \cite{windrum2007empirical} discuten las dificultades de validar empíricamente los ABM económicos. La verificación busca establecer si la implementación respeta la especificación; la validación considera si la especificación es adecuada para el fenómeno que representa \cite{sargent2013verification}. La distinción es indispensable en un modelo financiero: una identidad de conservación bien implementada no prueba que una política de negociación represente a participantes reales.
+
+Grimm y colaboradores \cite{grimm2020odd} proponen el protocolo ODD para describir modelos basados en agentes. Su uso permite especificar entidades, variables, escalas, calendario de procesos, inicialización e información disponible (anexo~\ref{sec:odd}). El protocolo no reemplaza el diseño de experimentos; se complementa con un registro de escenarios, parámetros, semillas y resultados para que las comparaciones puedan repetirse \cite{railsback2019agent,thiele2014facilitating}.
+
+\section{Síntesis comparativa y brecha delimitada}
+
+La tabla~\ref{tab:antecedentes} resume lo que cada grupo de antecedentes aporta al problema y lo que implica para el estudio.
+
+\begin{table}[htbp]
+\centering
+\caption{Comparación focalizada de antecedentes.}
+\label{tab:antecedentes}
+\small
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{3.3cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X@{}}
+\toprule
+Antecedente & Aporte al problema & Implicación para el estudio \\
+\midrule
+Brock y Hommes \cite{brock1998heterogeneous}; Lux y Marchesi \cite{lux1999scaling} & Heterogeneidad y dinámica financiera. & Comparar reglas de ruido y de tendencia; no atribuir toda la dinámica a la emergencia. \\
+Cocco et al. \cite{cocco2017artificial,cocco2019agent} & Mercados artificiales de Bitcoin. & Reconocer los antecedentes de ABM en criptoactivos; distinguir el mecanismo AMM. \\
+Angeris et al. \cite{angeris2020uniswap} & Seguimiento de precios y simulación de agentes en Uniswap. & Usar la banda de arbitraje y reconocer la similitud con el sistema propuesto. \\
+Xu et al. \cite{xu2023sok}; Bartoletti et al. \cite{bartoletti2022theory} & Taxonomía y teoría formal de los AMM. & Limitar el dominio al producto constante. \\
+Palit \cite{palit2022shuffled} & Alteración controlada del orden de eventos históricos. & Separar efectos de reglas y de secuencias con flujos comunes. \\
+Campbell et al. \cite{campbell2025optimal} & CEX/DEX, rentabilidad de proveedores y comisiones. & Distinguir el propósito del mapa reducido del problema de las tarifas óptimas. \\
+Bergault et al. \cite{bergault2025exit} & Retiro de liquidez como parada óptima. & Evaluar una regla heurística, no la política óptima. \\
+Gear et al. \cite{gear2003equationfree}; Roubal et al. \cite{roubal2010linearization} & Mapas de grano grueso y linealización local. & Declarar dominio de validez y comparar fuera de muestra. \\
+Grimm et al. \cite{grimm2020odd}; Fagiolo et al. \cite{fagiolo2007critical} & Documentación y validación de ABM. & Separar verificación, experimentación y validación. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+El problema específico es cuantificar el seguimiento del AMM en las condiciones ensayadas de capacidad de arbitraje y profundidad de la piscina después de un choque a la referencia, y evaluar con qué precisión un mapa de bajo orden describe las trayectorias resultantes del error en horizonte finito. La comparación reservada predice el error de seguimiento continuo frente a referencias de persistencia y AR escalar; las etiquetas de ventana finita son resúmenes descriptivos, no observaciones independientes de regímenes ni objetivos de clasificación.
+
+% Cerrar los flotantes anteriores y mantener juntos el título y la pregunta completa.
+\FloatBarrier
+\begin{samepage}
+\section{Pregunta de investigación}
+
+\begin{quote}
+% QUESTION_LOCK:main:BEGIN
+\emph{Dentro de la grilla especificada de capacidad de arbitraje y profundidad de liquidez, ¿cómo varía el seguimiento posperturbación de un AMM de producto constante frente a un precio CEX exógeno y con qué precisión los mapas dinámicos reducidos describen las trayectorias de error resultantes en un micromundo con agentes heterogéneos?}
+% QUESTION_LOCK:main:END
+\end{quote}
+\end{samepage}
+
+La pregunta se refiere a un modelo computacional especificado y no estima efectos de mercado ni desempeño operativo. Su primera cláusula se responde solo para las configuraciones ensayadas de capacidad, profundidad y reglas de agentes. La cláusula del mapa se operacionaliza como predicción reservada del error de seguimiento continuo, no como clasificación de regímenes. Cada tick es un paso de evento sin duración de reloj calibrada. Extender los resultados a sistemas reales requiere reproducir eventos sincronizados con comisiones, gas, latencia, restricciones de capital y orden transaccional realistas.

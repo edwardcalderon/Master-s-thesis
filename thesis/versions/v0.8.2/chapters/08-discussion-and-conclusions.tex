@@ -1,0 +1,35 @@
+\chapter{Discussion and Conclusions}
+\label{cap:discusion}
+
+\section{Discussion of the results}
+
+\subsection{Arbitrage capacity and price tracking (OE2, H1)}
+
+For an isolated constant-product pool, the arbitrage result is a direct consequence of the swap equation: capacity $c$ moves the log price by at most $2\log(1+c)$ per tick until the no-arbitrage band is reached. For the tested log shock of $0.20$, low capacity $c=0.005$ requires 20 ideal ticks to correct the excess outside the band. The simulated reduction in excess area therefore confirms the implementation under interacting order flow, but its direction is not an independent discovery. Its more useful quantitative content is the finite-horizon recovery pattern and the difference between the isolated benchmark and the noisy schedule.
+
+\subsection{Liquidity withdrawal and the H2 sensitivity (OE3)}
+
+The existing withdrawal rule is activated in all E3 runs because every applied shock exceeds its fixed threshold. It represents a one-time deterministic response, not heterogeneous provider adaptation. The original statistic measures displacement from the pre-shock AMM price and saturates when the AMM displacement matches the new reference shift plus the band. It is unsuitable as a general amplification measure. Furthermore, reserve withdrawal reduces the arbitrage order cap $c x$ as well as pool depth, so the two mechanisms are confounded. The fresh-seed order-scale sensitivity makes the main boundary visible: the shallow-depth contrast disappears when the noise and trend orders scale with reserves and weakens when panic is disabled. H2 should be read as a property of this specific trigger, metric, order convention and event schedule, not as evidence of general liquidity fragility.
+
+\subsection{Reduced maps and predictive scope (OE4, H3)}
+
+The two-state map improves on persistence in some held-out conditions but does not beat a scalar AR(1); its second state adds no demonstrated one-step predictive value in this design. The band-aware map's roughly 1.7\,\% mean replay-error improvement is concentrated in one low-capacity/depth condition and depends on the realized future CEX path. It is a conditional replay result, not a real-time forecast or a regime classifier.
+
+\section{Conclusions by objective}
+
+\begin{description}
+  \item[OE1.] The simulator passed its implementation invariants and its recorded outputs are reproducible. This establishes consistency with the encoded rules.
+  \item[OE2.] The ideal capacity correction is derived exactly. Simulation shows the finite-horizon consequences of adding the specified noise, trend and event schedule; it does not provide an independent test that arbitrage moves price toward the reference.
+  \item[OE3.] The measured withdrawal contrast depends on a trigger that fires in every tested run, a pre-shock displacement metric, fixed-size orders and an arbitrage cap linked to reserves. No general amplification or adaptive-provider effect is established.
+  \item[OE4.] The two-state map does not improve on scalar AR(1). The band-aware map has a small, localized replay advantage using future realized reference input; evidence for operational prediction is absent.
+\end{description}
+
+\section{General conclusion}
+
+The strongest result for later engineering research is that a first return to the no-arbitrage band can be temporary: 31.2\,\% of recovered paths later leave the band, rising to 98.8\,\% at the shallowest tested depth. A monitoring study should therefore distinguish first re-entry from sustained tracking and record later departures. The other useful candidate quantities are order size relative to active reserves and discrepancy relative to the correction available per event. They are measurement proposals derived from a synthetic mechanism study, not validated monitoring requirements.
+
+The thesis's contribution is methodological and bounded: it derives the constant-product capacity benchmark, tests how selected rules interact in a reproducible simulator, and reports sensitivity and negative model-comparison results. A real-system claim would require synchronized replay of market events with pool fees, gas, latency, finite capital, transaction ordering and competition among searchers. The current manuscript contains no such empirical replay.
+
+\section{Limitations and threats to validity}
+
+The simulator uses an exogenous CEX price, zero-fee swaps, no gas or execution delay, ample agent inventories, one representative agent per role, a constant-product pool and event ticks without calibrated wall-clock duration. It does not represent concentrated-liquidity positions, competition among searchers or MEV. The withdrawal and panic rules are fixed heuristics; the H2 trigger fires in every tested run, and withdrawal changes both depth and the arbitrage cap. The sensitivity and held-out model comparisons remain within this one synthetic rule family. The hybrid comparison additionally uses the realized future CEX path. No calibration, synchronized event replay or external validation is included.

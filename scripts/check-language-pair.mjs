@@ -9,6 +9,24 @@ function requireCondition(condition, message) {
   if (!condition) throw new Error(message);
 }
 
+function normalizeAbstractText(text) {
+  return text
+    .replace(/\\,(?=\d{3}(?:\D|$))/g, ",")
+    .replace(/\\,/g, " ")
+    .replace(/\\%/g, "%")
+    .replace(/\\kappa/g, "κ")
+    .replace(/(\d)\\log/g, "$1 log")
+    .replace(/\\log/g, "log")
+    .replace(/\$([^$]+)\$/g, "$1")
+    .replace(/--/g, "–")
+    .replace(/(^|[^\w])-(?=\d)/g, "$1−")
+    .replace(/(\w)\+(\w)/g, "$1 + $2")
+    .replace(/\s*([=<>])\s*/g, "$1")
+    .replace(/\s+%/g, "%")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function macroValue(source, macroName, sourcePath) {
   const pattern = new RegExp("\\\\newcommand\\{\\\\" + macroName + "\\}\\{([^}]+)\\}");
   const match = source.match(pattern);
@@ -238,7 +256,7 @@ for (const locale of locales) {
   const sourceParagraphs = abstractSource.slice(paragraphStart, keywordStart)
     .trim()
     .split(/\n\s*\n/)
-    .map((paragraph) => paragraph.replace(/\s+/g, " ").trim())
+    .map(normalizeAbstractText)
     .filter(Boolean);
   const sourceKeywords = abstractSource.slice(keywordStart + keywordMarker.length)
     .trim()
@@ -246,7 +264,7 @@ for (const locale of locales) {
     .split(";")
     .map((keyword) => keyword.trim());
   requireCondition(
-    webAbstract?.heading === abstractHeading && JSON.stringify(webAbstract.paragraphs) === JSON.stringify(sourceParagraphs),
+    webAbstract?.heading === abstractHeading && JSON.stringify(webAbstract.paragraphs.map(normalizeAbstractText)) === JSON.stringify(sourceParagraphs),
     locale + " web abstract must match the text in " + abstractPath + "."
   );
   requireCondition(

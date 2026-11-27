@@ -1,0 +1,10 @@
+{
+  "run_id": "cex-dex-hybrid-1d1d9d2f8c5b",
+  "source_metadata_sha256": "a4d3d92da923f24eed6d8cdbbfaf5566efcfa6c6dca81c96196b4bf257e42d63",
+  "exporter_sha256": "3972be66e74206e5c7c230f9bedbd6bb613dca3799d02dad0e23ca52ee773fb6",
+  "outputs": {
+    "apps/web/src/data/hybrid-findings.json": "e156ac0a3f31f7643cacd3272b669310b47b18465a87f46f91c067400f9cac46",
+    "hybrid_depth_condition.csv": "97f49d569f5ab286ddc4a7b3678c6d8dd87dbca0bb17a864e966f02f69538bf0",
+    "hybrid_shock_depth_condition.csv": "1f91f94fddd864ce05e868244cbc402515e523f733c371658d6f5467e897ceb5"
+  }
+}

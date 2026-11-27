@@ -3,9 +3,9 @@
 
 \section{Enfoque}
 
-El estudio es computacional y experimental. Se construye un micromundo discreto, se interviene sobre un mecanismo a la vez mediante comparaciones pareadas, y se contrastan tres hipótesis con un protocolo confirmatorio fijado antes de simular las semillas de confirmación. El diseño sigue la lógica de ciencia del diseño \cite{hevner2004design} en cuanto a que el artefacto (el simulador y el mapa reducido) se construye, se verifica y se evalúa con criterios explícitos, y se apoya en la metodología de modelado y simulación descrita en la literatura en español \cite{hernandez2014metodologia}. La estrategia de integración entre una fase de exploración y otra de confirmación es la propia de un diseño de métodos mixtos secuencial \cite{creswell2018research}, aunque aquí ambas fases son cuantitativas.
+El estudio combina una derivación analítica con experimentos computacionales. Se especifica un micromundo discreto y las corridas pareadas modifican reglas seleccionadas mientras reutilizan los mismos choques exógenos y órdenes de ruido. El diseño sigue la lógica de ciencia del diseño \cite{hevner2004design} en cuanto a que se construyen el simulador y los mapas reducidos, se verifican y se evalúan con criterios explícitos, y se apoya en la metodología de modelado y simulación descrita en la literatura en español \cite{hernandez2014metodologia}. Las corridas de exploración estiman mapas candidatos; se usan semillas y celdas disjuntas para las comparaciones reservadas. Los resultados de simulación están condicionados al modelo codificado y no son inferencias de una muestra de mercados.
 
-El procedimiento tiene cinco pasos: (i) especificar el AMM, la referencia CEX y las reglas de los agentes; (ii) verificar la implementación con invariantes; (iii) estimar el mapa reducido con semillas y celdas de exploración; (iv) simular las semillas y celdas de confirmación con parámetros congelados; (v) contrastar las hipótesis con inferencia pareada por semilla.
+El procedimiento tiene cuatro pasos: (i) especificar el AMM, la referencia CEX y las reglas de los agentes; (ii) verificar la implementación con invariantes; (iii) estimar el mapa reducido con semillas y celdas de exploración; (iv) comparar de forma pareada sus resultados en semillas y celdas reservadas.
 
 \section{Revisión bibliográfica focalizada}
 
@@ -73,7 +73,7 @@ El estado contable compacto registrado en el tick $t$ es
   S_t = \bigl(x_t,\,y_t,\,\pC_t,\,W_t\bigr),
   \label{eq:estado}
 \end{equation}
-donde $W_t$ reúne los inventarios de los agentes. Este vector es un estado contable compacto; no se afirma que $S_t$ por sí solo sea un estado completo de Markov. La regla de tendencia depende del cambio de precio del AMM respecto del tick anterior; por tanto, el estado de transición debe conservar ese precio o una memoria equivalente del agente. También deben conservarse las banderas de reglas de una sola activación que no puedan inferirse de los inventarios. En una formulación estocástica, la siguiente orden aleatoria puede representarse como entrada explícita; la reproducción determinista requiere además el estado del generador o el índice de la secuencia de órdenes pregenerada. El presente análisis no formaliza ese estado aumentado del simulador completo. Cada agente opera con inventario finito; los agentes de ruido y tendencia disponen de dos veces las reservas iniciales y el arbitrajista de cinco veces. En las ejecuciones de confirmación ninguna orden estuvo limitada por capital (0 de 13\,500).
+donde $W_t$ reúne los inventarios de los agentes. Este vector es un estado contable compacto; no se afirma que $S_t$ por sí solo sea un estado completo de Markov. La regla de tendencia depende del cambio de precio del AMM respecto del tick anterior; por tanto, el estado de transición debe conservar ese precio o una memoria equivalente del agente. También deben conservarse las banderas de reglas de una sola activación que no puedan inferirse de los inventarios. En una formulación estocástica, la siguiente orden aleatoria puede representarse como entrada explícita; la reproducción determinista requiere además el estado del generador o el índice de la secuencia de órdenes pregenerada. El presente análisis no formaliza ese estado aumentado del simulador completo. Cada agente opera con inventario finito; los agentes de ruido y tendencia disponen de dos veces las reservas iniciales y el arbitrajista de cinco veces. En las corridas Monte Carlo archivadas ninguna orden estuvo limitada por capital (0 de 13\,500).
 
 \paragraph{Ruido.} Con probabilidad $0.7$ por tick, emite una orden de lado aleatorio por el $0.4\,\%$ de la reserva inicial del activo de entrada. El calendario de órdenes se genera antes de la simulación a partir de la semilla, de modo que los diseños pareados comparten el mismo flujo.
 
@@ -81,58 +81,41 @@ donde $W_t$ reúne los inventarios de los agentes. Este vector es un estado cont
 
 \paragraph{Arbitraje.} Ejecuta la regla de la sección anterior con capacidad $c$.
 
-\paragraph{Provisión de liquidez.} En el escenario adaptativo, un proveedor retira una sola vez, de forma proporcional, el $45\,\%$ de las reservas (conserva el $55\,\%$) si $|e_t|>0.02$. En el escenario estático no retira. Esta regla es una decisión de modelado propia: no reproduce la política de parada óptima de la literatura \cite{bergault2025exit} ni se calibró con datos.
+\paragraph{Provisión de liquidez.} Con la regla de retiro por umbral, un proveedor retira una sola vez, de forma proporcional, el $45\,\%$ de las reservas (conserva el $55\,\%$) si $|e_t|>0.02$. En el escenario estático no retira. Esta regla es una decisión de modelado propia: no reproduce la política de parada óptima de la literatura \cite{bergault2025exit} ni se calibró con datos.
 
 \section{Calendario de un tick}
 
-En cada tick: (1) se aplica el choque de la referencia (solo en el tick 1); (2) se ejecuta la orden de ruido pregenerada; (3) el agente de tendencia o pánico evalúa el retorno del AMM; (4) el proveedor adaptativo evalúa su regla de retiro; (5) el arbitrajista ejecuta su orden acotada; (6) se registran el estado y las métricas y se comprueban las identidades de conservación de activos (tolerancia $10^{-8}$ veces el mayor total del sistema) y la positividad y finitud de las reservas. El horizonte es de 20 ticks, con reservas iniciales $x_0=y_0=10\,000$ y precio inicial 1. La profundidad se modifica con un factor $\kappa$ que multiplica las reservas y divide las fracciones de las órdenes, de modo que el tamaño absoluto de las órdenes de ruido se mantiene (40 unidades) y el impacto de una venta de ruido es $0.016$, $0.008$ y $0.004$ con $\kappa=0.5,1,2$.
+En cada tick: (1) se aplica el choque de la referencia (solo en el tick 1); (2) se ejecuta la orden de ruido pregenerada; (3) el agente de tendencia o pánico evalúa el retorno del AMM; (4) el proveedor aplica el umbral de retiro único; (5) el arbitrajista ejecuta su orden acotada; (6) se registran el estado y las métricas y se comprueban las identidades de conservación de activos (tolerancia $10^{-8}$ veces el mayor total del sistema) y la positividad y finitud de las reservas. El horizonte es de 20 ticks, con reservas iniciales $x_0=y_0=10\,000$ y precio inicial 1. La profundidad se modifica con un factor $\kappa$ que multiplica las reservas y divide las fracciones de las órdenes, de modo que el tamaño absoluto de las órdenes de ruido se mantiene (40 unidades) y el impacto de una venta de ruido es $0.016$, $0.008$ y $0.004$ con $\kappa=0.5,1,2$.
 
 \section{Mapa dinámico de bajo orden}
 
 Las dos variables del mapa son el exceso de error $d_t$ y la presión neta de compra $z_t$, definida como la suma con signo de las órdenes de ruido y tendencia (se excluye el arbitraje) dividida por la reserva inicial de $Y$. Con la entrada exógena $u_t=-\Delta\log\pC_t$, el mapa es
 \begin{align}
-  d_{t+1} &= (1-\alpha)\,d_t + \beta\,z_t + u_{t+1}, \label{eq:mapa-d}\\
-  z_{t+1} &= -\chi\,d_t + \rho\,z_t. \label{eq:mapa-z}
+  d_{t+1} &= A_{11}\,d_t + A_{12}\,z_t + u_{t+1}, \label{eq:mapa-d}\\
+  z_{t+1} &= A_{21}\,d_t + A_{22}\,z_t. \label{eq:mapa-z}
 \end{align}
-El código ajusta $a=1-\alpha$ y $\beta$ con mínimos cuadrados sin intercepto sobre el objetivo $d_{t+1}-u_{t+1}$, y $c=-\chi$ y $\rho$ con la ecuación de $z$. Si el predictor $d_t$ es numéricamente nulo (caso sin variación del exceso), se usa solo el segundo predictor y se marca la ecuación como degenerada. Los parámetros no se suponen universales: se estiman por condición.
+Las entradas $A_{ij}$ se ajustan con mínimos cuadrados sin intercepto: la primera fila usa el objetivo $d_{t+1}-u_{t+1}$ y la segunda el objetivo $z_{t+1}$. Esta notación distingue los coeficientes ajustados del parámetro $c$ de capacidad de arbitraje. Como $d_t$ vale cero dentro de la banda y cambia de forma en su límite, un único mapa afín no puede representar exactamente ese umbral. Si el predictor $d_t$ es numéricamente nulo (caso sin variación del exceso), se usa solo el segundo predictor y se marca la ecuación como degenerada. Los parámetros no se suponen universales: se estiman por condición.
 
-\subsection{Estabilidad de Schur}
-
-La parte autónoma tiene matriz $A=\begin{pmatrix} a & \beta\\ c & \rho\end{pmatrix}$, con traza $T=a+\rho$ y determinante $\Delta=a\rho-\beta c$. Es estable en el sentido de Schur, es decir, con radio espectral menor que uno, si y solo si \cite{jury1962simplified,schur1917potenzreihen,elaydi2005difference}
-\begin{equation}
-  1-T+\Delta>0,\qquad 1+T+\Delta>0,\qquad 1-\Delta>0.
-  \label{eq:schur}
-\end{equation}
-La estabilidad de la matriz estimada describe la dinámica lineal autónoma y no implica estabilidad del simulador estocástico.
-
-\subsection{Análisis de Lyapunov no exhaustivo del mapa reducido}
-
-Para cada condición ajustada, sea $A$ la matriz del mapa reducido autónomo y sea $Q=I$. Como las matrices ajustadas satisfacen las condiciones de Schur, la ecuación de Lyapunov discreta
-\begin{equation}
-  A^{\mathsf T}PA-P=-I
-  \label{eq:lyap-reducido}
-\end{equation}
-tiene una solución única definida positiva $P$. Una construcción es $P=\sum_{j=0}^{\infty}(A^j)^{\mathsf T}A^j$, que converge cuando el radio espectral de $A$ es menor que uno. Como el mapa ajustado no tiene intercepto, su equilibrio sin entrada es $w^*=0$. Con $w_t=(d_t,z_t)^{\mathsf T}$ y $V(w_t)=w_t^{\mathsf T}Pw_t$, se obtiene
-\begin{equation}
-  V(w_{t+1})-V(w_t)=-\lVert w_t\rVert_2^2.
-  \label{eq:lyap-decrecimiento}
-\end{equation}
-Por tanto, el origen es asintóticamente estable para cada mapa reducido autónomo ajustado. Este es un certificado lineal específico de cada condición: fija en cero la entrada del choque y omite las innovaciones estocásticas y los residuos del ajuste del simulador. No demuestra la estabilidad del simulador no lineal, por tramos y estocástico, ni la de su estado completo.
 
 \subsection{Estimación y evaluación reservada}
 
-Cada condición tiene su propio ajuste, estimado solo con las ejecuciones de exploración (semillas 0 a 299, profundidad 1, choques $\pm0.1$). La evaluación usa el error absoluto medio a un paso sobre las 20 transiciones de cada ejecución de confirmación, en las celdas reservadas. Los modelos de referencia son la persistencia, $\hat d_{t+1}=d_t+u_{t+1}$, y un autorregresivo escalar $d_{t+1}-u_{t+1}=a_s d_t$ ajustado por condición con los datos de exploración. Además, cada ejecución recibe una etiqueta observada: \emph{en banda} si $|d_t|<10^{-9}$ en los ticks 1 a 5 y 16 a 20; \emph{contractiva} si no lo es y el valor medio de $|d_t|$ en los ticks 16 a 20 es menor que en los ticks 1 a 5; \emph{persistente} en otro caso.
+Cada condición tiene su propio ajuste, estimado solo con las ejecuciones de exploración (semillas 0 a 299, profundidad 1, choques $\pm0.1$). La evaluación usa el error absoluto medio a un paso sobre 20 transiciones de las ejecuciones reservadas y disjuntas. Los modelos de referencia son la persistencia, $\hat d_{t+1}=d_t+u_{t+1}$, y un autorregresivo escalar $d_{t+1}-u_{t+1}=a_s d_t$, ajustado por condición con los datos de exploración. Cada trayectoria recibe además una etiqueta descriptiva: \emph{en banda} si $|d_t|<10^{-9}$ en los ticks 1--5 y 16--20; \emph{contractiva} si no está en banda y la media de $|d_t|$ es menor en los ticks 16--20 que en los ticks 1--5; \emph{persistente} en otro caso. Estas etiquetas resumen trayectorias del simulador, no regímenes observados de forma independiente. Por tanto, la cláusula del mapa en la pregunta de investigación se evalúa como predicción del error continuo en condiciones reservadas; esta versión no estima la precisión de una clasificación de regímenes.
 
 \subsection{Comparación con un mapa híbrido sensible a la banda}
 \label{sec:hybrid-method}
 
 Un análisis separado (modelo 0.5.0, análisis 0.1.0) compara el mapa afín L0 con el candidato híbrido Hyb. Esta comparación es distinta de H1, la hipótesis de la tesis sobre el arbitraje. Usa el error de seguimiento con signo $e_t=\log(p_t^D/p_t^C)$ y la misma variable de flujo normalizada $z_t$. La entrada externa conocida es $u_{t+1}=-\Delta\log p^C_{t+1}$. Se definen el exceso con signo $\phi_\gamma(e)=\operatorname{sgn}(e)\max(|e|-\gamma,0)$ y el indicador $I_t=\mathbf{1}(|e_t|>\gamma)$, con banda configurada $\gamma=0.003$. Las ecuaciones son
 \begin{align}
-  \text{L0:}\quad e_{t+1}&=e_t+u_{t+1}+a e_t+b z_t,& z_{t+1}&=c e_t+\rho z_t,\\
-  \text{Hyb:}\quad e_{t+1}&=e_t+u_{t+1}+a e_t+b z_t+g\phi_\gamma(e_t)+h z_t I_t,&
-  z_{t+1}&=c e_t+\rho z_t+k\phi_\gamma(e_t)+m z_t I_t.
+  \text{L0:}\quad e_{t+1}&=e_t+u_{t+1}+A_{11} e_t+A_{12} z_t,& z_{t+1}&=A_{21} e_t+A_{22} z_t,\\
+  \text{Hyb:}\quad e_{t+1}&=e_t+u_{t+1}+A_{11} e_t+A_{12} z_t+g_e\phi_\gamma(e_t)+h_e z_t I_t,&
+  z_{t+1}&=A_{21} e_t+A_{22} z_t+g_z\phi_\gamma(e_t)+h_z z_t I_t.
 \end{align}
-Los coeficientes se ajustan sin intercepto y por separado para las cuatro condiciones operativas compartidas. Por tanto, Hyb añade dos términos dependientes de la banda por variable predicha; no añade ramas de estado para la capacidad o el retiro. La cuadrícula de selección usa las semillas 3000--3299, profundidad 1 y choques $\pm0.10$. La evaluación intacta usa semillas 4000--4299, profundidades 0.5 y 2, y choques $\pm0.05$ y $\pm0.20$. La métrica primaria es el MAE recursivo por semilla en $e$, promediado sobre las 32 celdas reservadas por semilla y 20 transiciones. La predicción recursiva recibe la trayectoria exógena conocida del CEX y alimenta sus propios valores predichos $(e,z)$. El intervalo bootstrap percentílico pareado usa 10 000 remuestreos de las 300 unidades semilla; los contrastes por celda y las demás métricas de estado son resultados secundarios descriptivos. Esto evalúa la predicción del mapa reducido frente al simulador sintético especificado; no valida mercados ni demuestra estabilidad del sistema híbrido completo. La configuración exacta, las sumas de verificación del código y los resultados se registran en \code{experiments/cex\_dex\_mvp/hybrid\_config.json}.
+Los coeficientes se ajustan sin intercepto y por separado para las cuatro condiciones operativas compartidas. Por tanto, Hyb añade dos términos dependientes de la banda por variable predicha; no añade ramas de estado para la capacidad o el retiro. La cuadrícula de selección usa las semillas 3000--3299, profundidad 1 y choques $\pm0.10$. La evaluación intacta usa semillas 4000--4299, profundidades 0.5 y 2, y choques $\pm0.05$ y $\pm0.20$. La métrica primaria es el MAE recursivo por semilla en $e$, promediado sobre las 32 celdas reservadas por semilla y 20 transiciones. La predicción recursiva recibe la trayectoria exógena conocida del CEX y alimenta sus propios valores predichos $(e,z)$. El intervalo bootstrap percentílico pareado usa 10 000 remuestreos de las 300 unidades semilla; los contrastes por celda y las demás métricas de estado son resultados secundarios descriptivos. La evaluación compara errores de mapas reducidos en trayectorias generadas por el simulador; no prueba pronósticos en tiempo real ni la estabilidad del sistema híbrido completo.
+\ifdefined\blindreviewmode
+Los archivos y metadatos específicos de esta ejecución se omiten en la copia anónima.
+\else
+La configuración exacta, las sumas de verificación del código y los resultados se registran en \code{experiments/cex\_dex\_mvp/hybrid\_config.json}.
+\fi
 
 La ecuación de $z_{t+1}$ no recibe como entrada el flujo de órdenes estocástico realizado en el tick siguiente. Su objetivo incluye sorteos futuros de ruido o tendencia que este mapa basado solo en el estado no observa; por tanto, los errores de presión de flujo diagnostican una especificación incompleta de las entradas y no que el flujo del simulador sea determinista.
 
@@ -151,7 +134,7 @@ E0 & Referencia sin arbitraje & 0 & estática & primaria \\
 E1-baja & Arbitraje de capacidad baja & 0.005 & estática & primaria \\
 E1-alta & Arbitraje de capacidad alta & 0.03 & estática & primaria \\
 E2 & Reducción de profundidad (factor $\kappa$) & --- & --- & control analítico \\
-E3 & Arbitraje alto con retiro adaptativo & 0.03 & adaptativa & primaria \\
+E3 & Arbitraje alto con retiro por umbral & 0.03 & por umbral & primaria \\
 E1-máx & Arbitraje de capacidad máxima & 0.10 & estática & extrapolación \\
 \bottomrule
 \end{tabularx}
@@ -163,15 +146,17 @@ E2 no se simula como condición independiente: la profundidad entra como factor 
 \centering
 \caption{Factores del diseño. Solo los niveles marcados como ejecutados forman parte de los resultados.}
 \label{tab:factores}
-\small
-\begin{tabularx}{\textwidth}{@{}l >{\raggedright\arraybackslash}X l@{}}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{0.9}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.19\textwidth} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{0.19\textwidth}@{}}
 \toprule
 Factor & Niveles & Estado \\
 \midrule
 Capacidad de arbitraje $c$ & 0; 0.005; 0.03; 0.10 & ejecutado \\
-Profundidad $\kappa$ & 0.5; 1; 2 (confirmación); 1 (exploración) & ejecutado \\
-Choque de la referencia & $-0.05$; $-0.10$; $-0.20$ (confirmación); $\pm0.10$ (exploración) & ejecutado \\
-Retiro de liquidez & estático; adaptativo & ejecutado \\
+Profundidad $\kappa$ & 0.5; 1; 2 (reservado); 1 (exploración) & ejecutado \\
+Choque de la referencia & $-0.05$; $-0.10$; $-0.20$ (reservado); $\pm0.10$ (exploración) & ejecutado \\
+Retiro de liquidez & estático; por umbral & ejecutado \\
 Comisión $f$ & niveles por definir & candidato, no ejecutado \\
 Latencia del arbitraje & niveles por definir & candidato, no ejecutado \\
 Volatilidad externa $\sigma$ & niveles por definir & candidato, no ejecutado \\
@@ -179,9 +164,9 @@ Volatilidad externa $\sigma$ & niveles por definir & candidato, no ejecutado \\
 \end{tabularx}
 \end{table}
 
-\subsection{Exploración y confirmación}
+\subsection{Ajuste de mapas y comparaciones reservadas}
 
-La exploración usa las semillas 0 a 299, profundidad 1 y choques $\pm0.10$. La confirmación usa las semillas 1000 a 1299, las profundidades 0.5, 1 y 2 y los choques $-0.05$, $-0.10$ y $-0.20$, con 5 condiciones y 9 celdas por semilla, es decir 13\,500 ejecuciones (2700 por condición). Las semillas de confirmación son disjuntas de las de exploración. Para H3 se evalúan las 8 celdas cuyo par (profundidad, choque) no pertenece a la rejilla de exploración; se excluye la celda $(1.0,-0.10)$. El protocolo, con sus niveles, se fijó antes de simular la confirmación y su suma de verificación se registra (anexo~\ref{cap:anexos}).
+La exploración usa las semillas 0 a 299, profundidad 1 y choques $\pm0.10$. Las corridas reservadas usan las semillas 1000 a 1299, profundidades 0.5, 1 y 2 y choques $-0.05$, $-0.10$ y $-0.20$, con 5 condiciones y 9 celdas por semilla, o 13\,500 ejecuciones (2700 por condición). Los rangos de semillas son disjuntos. Para la comparación del mapa a un paso se evalúan las 8 celdas cuyo par (profundidad, choque) no pertenece a la grilla de exploración; se excluye la celda $(1.0,-0.10)$. Estas decisiones se fijaron antes de ejecutar el conjunto reservado y se registran en el anexo. Definen comparaciones Monte Carlo dentro de este modelo, no pruebas preregistradas sobre el comportamiento del mercado.
 
 \section{Métricas}
 
@@ -194,34 +179,49 @@ La exploración usa las semillas 0 a 299, profundidad 1 y choques $\pm0.10$. La 
 \toprule
 Métrica & Definición & Uso \\
 \midrule
-Área de exceso $A$ & $\sum_{t=1}^{20}|d_t|$ & primaria, H1 \\
-Respuesta máxima $M$ & $\max_{1\le t\le 20}|\log(\pD_t/\pD_0)|$ & primaria, H2 \\
-Error de predicción & MAE a un paso sobre 20 transiciones & primaria, H3 \\
-Recuperación & existe un tick con $|e_t|\le\gamma$ durante 2 ticks consecutivos & secundaria \\
-Tiempo de retorno & tick de inicio del retorno sostenido; 21 si no ocurre & secundaria \\
-Error pico & $\max_t|e_t|$ & secundaria \\
-Profundidad mínima & $\min_t\sqrt{x_ty_t}$ & secundaria \\
-Activación del retiro & indicador de retiro aplicado & mecanismo \\
-Órdenes limitadas por capital & conteo & verificación \\
-Etiqueta observada & en banda, contractiva o persistente & complementaria \\
-Estabilidad de Schur & condiciones de la ecuación~\eqref{eq:schur} & complementaria \\
+Área de exceso $A$ & Suma del exceso absoluto en 20 ticks & H1 descriptivo; comparar con referente ideal \\
+Desplazamiento legado $M$ & Cambio máximo del log-precio AMM desde antes del choque & Diagnóstico H2; no es sobrepaso \\
+Pico de horizonte completo $P$ & $\max_{0\le t\le20}|e_t|$ al final de cada tick & Diagnóstico legado dominado por el choque \\
+Área posrecuperación $A_{\mathrm{post}}$ & $\sum_{t>t_c}(|e_t|-\gamma)_+$ & Resultado H2 exploratorio principal \\
+Pico posrecuperación $P_{\mathrm{post}}$ & $\max_{t>t_c}(|e_t|-\gamma)_+$ & Resultado H2 exploratorio secundario \\
+Episodios de salida & Observaciones consecutivas al final del tick fuera de banda tras $t_c$ & Diagnóstico descriptivo del mecanismo \\
+Error de predicción & MAE a un paso sobre 20 transiciones & Comparación reservada H3 \\
+Retorno sostenido & Dos ticks consecutivos con $|e_t|\le\gamma$ & Secundaria \\
+Tiempo de retorno & Tick de inicio; 21 si no hay retorno sostenido & Secundaria \\
+Profundidad mínima & $\min_t\sqrt{x_ty_t}$ & Secundaria \\
+Activación del retiro & Si se aplicó el disparador fijo & Mecanismo \\
+Órdenes limitadas por capital & Conteo & Verificación \\
+Etiqueta de trayectoria & En banda, contractiva o persistente & Solo descriptiva \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 El tiempo de retorno está censurado a la derecha: una ejecución sin retorno sostenido recibe el valor 21 y se informa la media restringida, que no debe leerse como un tiempo esperado de recuperación.
 
-\section{Análisis estadístico}
+El pico de horizonte completo usa solo estados registrados al final de cada tick y omite excursiones de precio entre actualizaciones. Incluye el choque impuesto y se conserva como diagnóstico legado, no como resultado H2 primario. Para las métricas posrecuperación, $t_c$ es la segunda observación del primer par de estados consecutivos registrados al final del tick que cumplen $|e_t|\le\gamma$; la suma y el máximo comienzan en el tick siguiente. Un episodio de salida es un tramo consecutivo de observaciones al final del tick fuera de banda tras $t_c$. La coincidencia con un tick de orden de pánico es descriptiva y no identifica causalidad intratick.
+
+\subsection{Repetición exploratoria de H2}
+\label{sec:h2-replay-method}
+
+Tras la revisión crítica, el protocolo 0.7.0 repitió las semillas 2000--2299 de la ejecución de ingeniería archivada. Incluye 5\,400 trayectorias con órdenes fijas y tres profundidades/choques, 1\,800 trayectorias poco profundas con la orden de pánico desactivada y 1\,800 poco profundas con el límite de entrada de arbitraje fijado al valor calculado sobre las reservas iniciales; se ejecutaron E1-alta estático y E3 con retiro por umbral en cada variante, para 9\,000 trayectorias. La variante sin pánico conserva las órdenes de seguimiento de tendencia. La variante de capacidad fija usa $\min(c\,x_{\mathrm{inicial}},x_{\mathrm{activo}})$ como entrada máxima, con la reserva del activo de entrada pertinente. La repetición con límite original reprodujo exactamente las métricas archivadas de las 7\,200 trayectorias con órdenes fijas y sin pánico.
+
+El contraste exploratorio principal es E3 menos E1-alta del área de exceso posrecuperación. Los contrastes por celda se condicionan a que ambas trayectorias se recuperen y tengan al menos un tick posconfirmación; se aplican 10\,000 remuestreos bootstrap por semilla y se informan la cobertura de recuperación y los tamaños pareados. Las proporciones de salida usan en todas las tablas el mismo denominador de trayectorias recuperadas con seguimiento posconfirmación y emplean intervalos de Wilson. Como se excluyen las trayectorias que no se recuperan, y es plausible que tengan mayor error residual, este $\Delta A_{\mathrm{post}}$ condicionado puede subestimar un estimando de fragilidad sobre todas las trayectorias. Estos análisis reutilizan flujos de semillas existentes, se especificaron después de examinar resultados previos y no constituyen un experimento independiente ni confirmatorio.
+
+El diagnóstico posterior de razones de capacidad 0.8.0 repitió 1\,800 trayectorias E3 poco profundas con las mismas semillas: 900 con el límite fijado a las reservas iniciales y el pánico activo para verificar el control existente, y 900 con el mismo límite y la orden de pánico desactivada. La variante con pánico reprodujo 123, 101 y 53 episodios únicos de salida para los choques $-0.05$, $-0.10$ y $-0.20$, respectivamente; todos comenzaron en el tick del pánico. La variante sin pánico no tuvo salidas posteriores en sus 900 trayectorias. Es una comprobación posterior y dirigida del diagnóstico $R$, no un experimento independiente ni confirmatorio.
+
+\section{Resúmenes Monte Carlo}
 \label{sec:analisis-estadistico}
 
-La unidad independiente es la semilla: los resultados de las celdas se promedian dentro de cada semilla antes de contrastar. Para cada contraste se calcula la diferencia pareada por semilla, su media, su mediana y un intervalo de confianza del 95 por ciento por bootstrap percentílico con 10\,000 remuestreos \cite{efron1979bootstrap}. El valor $p$ unilateral proviene de una prueba de aleatorización por inversión de signos con 20\,000 sorteos, $p=(1+\text{conteo})/(1+\text{sorteos})$, cuyo mínimo es $4.9998\times10^{-5}$. Los tres contrastes primarios (H1, H2 y H3 frente a persistencia) se corrigen con el método de Holm al nivel familiar 0.05 \cite{holm1979simple}. Los demás contrastes se informan sin corrección y como no primarios. La semilla del generador de la inferencia es 20261123.
-
-Como guía de tamaño de muestra se usa $n\approx(1.96\,s/h)^2$, con $s$ la desviación de los contrastes y $h$ la semiamplitud objetivo: $0.01$ para el área de exceso, $0.01$ para la respuesta máxima y $0.0005$ para el MAE. Se calcula con la desviación piloto de exploración y con la de confirmación.
+La semilla es la unidad de réplica Monte Carlo. Las celdas se promedian dentro de cada semilla y se informan las diferencias pareadas media y mediana con intervalos bootstrap percentílicos a partir de 10\,000 remuestreos \cite{efron1979bootstrap}. Estos intervalos caracterizan la variabilidad del proceso de órdenes aleatorio programado bajo reglas y niveles fijos; no representan incertidumbre entre mercados reales. Las pruebas previas de inversión de signos con 20\,000 sorteos devolvieron el mínimo valor resoluble para los tres contrastes informados; por ello, el ajuste de Holm produjo el mismo valor en el piso para cada uno. Esos valores $p$ y los objetivos previos de tamaño de muestra se omiten de la interpretación porque no añaden información sobre la magnitud del efecto ni el alcance del modelo. Los productos archivados siguen disponibles para reproducibilidad.
 
 \section{Verificación, validación y trazabilidad}
 
-La verificación comprende nueve comprobaciones automáticas de invariantes (anexo~\ref{sec:verificacion}): conservación del producto y positividad de las reservas en ventas y compras sin comisión, preservación del precio en el retiro proporcional, estados configurados positivos y finitos, reducción del error por el arbitraje en ambas direcciones, activación del umbral adaptativo, intercambio de choques y ticks comunes en los pares, impacto creciente al reducir la liquidez, y conservación de activos con órdenes pareadas. La validación contra datos de mercado queda fuera del alcance (capítulo~\ref{cap:discusion}).
+La verificación comprende nueve comprobaciones automáticas (anexo~\ref{sec:verificacion}), que combinan identidades mecánicas y límites con comprobaciones de las reglas configuradas y la consistencia de las corridas pareadas. Algunas repiten comportamientos esperados que ya están incorporados en las reglas; aprobarlas no es respaldo independiente de afirmaciones causales.
 
-La trazabilidad se apoya en un contrato de ejecución que registra identificador, versión del código, escenario, semilla, parámetros, series, métricas y sumas de verificación (anexo~\ref{sec:contrato}). El código y los datos de las figuras están en el repositorio del trabajo \cite{calderon2026repository}. Los resultados completos de la ejecución confirmatoria no se versionan: se citan por su identificador, sus sumas de verificación y el comando que los regenera.
+La trazabilidad se apoya en un contrato de ejecución que registra identificador, versión del código, escenario, semilla, parámetros, series, métricas y sumas de verificación (anexo~\ref{sec:contrato}). El código y los datos de las figuras se documentan junto con los materiales del estudio \cite{calderon2026repository}. Los resultados completos no se versionan: se citan por identificador, sumas de verificación y el comando que los regenera.
 
+\ifdefined\blindreviewmode
+Los comandos, rutas e identificadores de ejecución de la comparación híbrida se omiten en esta copia para evitar que permitan localizar el repositorio.
+\else
 La comparación híbrida se reproduce con \code{pnpm experiment:mvp:hybrid}; sus exportaciones compactas para la web y la tesis se regeneran con \code{pnpm experiment:mvp:hybrid:export}. La ejecución \code{\HybridRunID} registra las configuraciones exactas del modelo y el análisis, los rangos de semillas, la versión de Python, los hashes de las fuentes y las sumas de verificación de los resultados.
+\fi

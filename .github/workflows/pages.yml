@@ -41,6 +41,9 @@ jobs:
       - name: Check English and Spanish project parity
         run: pnpm language:check
 
+      - name: Check approved thesis questions
+        run: pnpm thesis:questions:check
+
       - name: Build public app
         run: pnpm build
 

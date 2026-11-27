@@ -1,0 +1,38 @@
+\chapter{Objetivos}
+\label{cap:objetivos}
+
+\section{Objetivo general}
+
+Distinguir las consecuencias mecánicas de un AMM de producto constante sin comisiones de los efectos de reglas de agentes especificadas, y caracterizar el seguimiento con arbitraje acotado, la sensibilidad al retiro de liquidez y el desempeño de modelos reducidos dentro de un micromundo CEX/DEX sintético y reproducible.
+
+\section{Objetivos específicos}
+
+\begin{enumerate}[label=\textbf{OE\arabic*.}, leftmargin=3em]
+  \item Especificar y verificar un simulador discreto de un AMM de producto constante con una referencia CEX exógena, reglas de ruido, tendencia, arbitraje y provisión de liquidez, y registrar sus ejecuciones de forma reproducible.
+  \item Derivar la tasa de corrección ideal que implica la capacidad de arbitraje y compararla con trayectorias del simulador de horizonte finito bajo los flujos de órdenes configurados.
+  \item Caracterizar cómo el disparador de retiro único existente cambia el seguimiento simulado con órdenes fijas y proporcionales a las reservas, incluida la ablación del agente de pánico, sin tratar la regla como una política adaptativa validada empíricamente.
+  \item Comparar persistencia, un AR(1) escalar, un mapa de dos estados y un mapa sensible a la banda en trayectorias reservadas del simulador, y delimitar cualquier interpretación predictiva.
+\end{enumerate}
+
+\section{Correspondencia entre objetivos, afirmaciones y evidencia}
+
+La tabla~\ref{tab:oe-h} relaciona cada objetivo con su proposición analítica o pregunta de evaluación. El OE1 es instrumental.
+
+\begin{table}[H]
+\centering
+\caption{Correspondencia entre objetivos específicos, afirmaciones, método y evidencia.}
+\label{tab:oe-h}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.0}
+\begin{tabularx}{\textwidth}{@{}l l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X@{}}
+\toprule
+Objetivo & Afirmación & Método & Evidencia \\
+\midrule
+OE1 & Instrumental & Especificación, invariantes y registro de ejecuciones & Nueve verificaciones de invariantes; ID y sumas de verificación (anexo~\ref{cap:anexos}) \\
+OE2 & H1, analítica & Paso de capacidad y ticks ideales hasta la banda en forma cerrada; comparación con la grilla simulada & $2\log(1+c)$ por tick aislado; resúmenes simulados de recuperación (sección~\ref{sec:res-h1}) \\
+OE3 & H2, exploratoria & Sensibilidad pareada de la regla actual según escala de órdenes y acción de pánico & Contrastes por celda y persistencia de la recuperación (secciones~\ref{sec:res-h2} y~\ref{sec:engineering-sensitivity}) \\
+OE4 & H3, comparación de modelos & Predicción reservada frente a referencias simples & Error frente a persistencia y AR(1) escalar; resultado de reproducción sensible a la banda (sección~\ref{sec:res-h3}) \\
+\bottomrule
+\end{tabularx}
+\end{table}

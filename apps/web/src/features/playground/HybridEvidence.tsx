@@ -21,7 +21,7 @@ const messages = {
       "E0-arb-off-static": "Arbitrage off",
       "E1-arb-low-static": "Low capacity",
       "E1-arb-high-static": "High capacity",
-      "E3-adaptive-lp-high-arb": "Adaptive LP + high capacity"
+      "E3-adaptive-lp-high-arb": "Threshold-withdrawal LP + high capacity"
     },
     primary: "Primary held-out result",
     improvement: "mean rollout MAE improvement",
@@ -57,7 +57,7 @@ const messages = {
       "E0-arb-off-static": "Arbitraje desactivado",
       "E1-arb-low-static": "Capacidad baja",
       "E1-arb-high-static": "Capacidad alta",
-      "E3-adaptive-lp-high-arb": "LP adaptativo + capacidad alta"
+      "E3-adaptive-lp-high-arb": "LP con retiro por umbral + capacidad alta"
     },
     primary: "Resultado principal reservado",
     improvement: "mejora media en MAE recursivo",

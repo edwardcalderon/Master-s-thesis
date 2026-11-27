@@ -3,6 +3,8 @@ import type { Locale } from "@tesis/content";
 import { MODEL_VERSION, SUSTAINED_BAND_TICKS, runFixedSale, runTracking } from "./model";
 import HybridEvidence from "./HybridEvidence";
 import LiveMicroworld from "./LiveMicroworld";
+import RevisionFindings from "./RevisionFindings";
+import SystemOverview from "./SystemOverview";
 
 type Copy = {
   kicker: string;
@@ -166,6 +168,8 @@ export default function Playground({ locale, copy }: Props) {
       </div>
     </div>
 
+    <SystemOverview locale={locale} points={tracking.points} horizon={horizon} band={band} capacity={capacity} />
+
     <div className="playground-shell">
       <div className="playground-topline">
         <div className="playground-tabs" role="group" aria-label={copy.title}>
@@ -223,6 +227,7 @@ export default function Playground({ locale, copy }: Props) {
       <div className="playground-footnote"><span className="mono">{copy.config} · cex-dex-mvp 0.3.0</span><p>{copy.assumptionsText}</p></div>
     </div>
     <LiveMicroworld locale={locale} />
+    <RevisionFindings locale={locale} />
     <HybridEvidence locale={locale} />
   </section>;
 }

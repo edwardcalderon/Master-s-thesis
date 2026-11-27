@@ -238,6 +238,32 @@ def system_totals(
     return wallet_x, wallet_y, reserve_x + wallet_x, reserve_y + wallet_y
 
 
+def capacity_fraction_for_input_limit(
+    capacity_fraction: float,
+    capacity_reference: str,
+    side: str | None,
+    initial_x: float,
+    initial_y: float,
+    reserve_x: float,
+    reserve_y: float,
+) -> float:
+    """Translate a fixed initial-reserve capacity into the current input fraction."""
+    if capacity_reference == "current_reserves" or side is None:
+        return capacity_fraction
+    if capacity_reference != "initial_reserves":
+        raise ValueError(f"unknown arbitrage capacity reference: {capacity_reference}")
+
+    if side == "sell-x":
+        initial_input, active_input = initial_x, reserve_x
+    elif side == "buy-x":
+        initial_input, active_input = initial_y, reserve_y
+    else:
+        raise ValueError(f"unknown arbitrage side: {side}")
+    if active_input <= 0.0:
+        raise ValueError("active arbitrage input reserve must be positive")
+    return min(1.0, capacity_fraction * initial_input / active_input)
+
+
 def run_condition(
     config: dict[str, Any],
     shock: float,
@@ -246,7 +272,10 @@ def run_condition(
     capacity: float,
     adaptive_lp: bool,
     noise_schedule: list[dict[str, Any]],
+    capacity_reference: str = "current_reserves",
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    if capacity_reference not in {"current_reserves", "initial_reserves"}:
+        raise ValueError(f"unknown arbitrage capacity reference: {capacity_reference}")
     reserve_x = float(config["initial_reserve_x"])
     reserve_y = float(config["initial_reserve_y"])
     initial_x = reserve_x
@@ -429,7 +458,17 @@ def run_condition(
                 lp_withdrawal_tick = tick
                 events.append("adaptive-lp-proportional-withdrawal")
 
-        order = arbitrage_order(reserve_x, reserve_y, reference, band, capacity)
+        error_before_arbitrage = log_error(reserve_x, reserve_y, reference)
+        if error_before_arbitrage > band:
+            input_side: str | None = "sell-x"
+        elif error_before_arbitrage < -band:
+            input_side = "buy-x"
+        else:
+            input_side = None
+        effective_capacity = capacity_fraction_for_input_limit(
+            capacity, capacity_reference, input_side, initial_x, initial_y, reserve_x, reserve_y
+        )
+        order = arbitrage_order(reserve_x, reserve_y, reference, band, effective_capacity)
         arbitrage_event = "arbitrage-none"
         if order is not None:
             side, requested, event_name = order
@@ -489,6 +528,7 @@ def run_condition(
         "scenario": scenario,
         "lp_policy": "one-shot-threshold-withdrawal" if adaptive_lp else "static",
         "arbitrage_capacity_fraction": capacity,
+        "arbitrage_capacity_reference": capacity_reference,
         "seed": seed,
         "maximum_absolute_log_error": max(errors),
         "mean_absolute_log_error": statistics.mean(errors[1:]),

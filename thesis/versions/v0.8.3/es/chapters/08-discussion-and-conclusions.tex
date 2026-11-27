@@ -1,0 +1,41 @@
+\chapter{Discusión y conclusiones}
+\label{cap:discusion}
+
+\section{Discusión de los resultados}
+
+\subsection{Capacidad de arbitraje y seguimiento de precios (OE2, H1)}
+
+En una piscina aislada de producto constante, el resultado del arbitraje se deriva directamente de la ecuación de intercambio: la capacidad $c$ mueve el precio logarítmico hasta en $2\log(1+c)$ por tick hasta llegar a la banda de no arbitraje. Para el choque logarítmico ensayado de $0.20$, la capacidad baja $c=0.005$ requiere 20 ticks ideales para corregir el exceso fuera de la banda. Por tanto, la reducción simulada del área de exceso confirma la implementación bajo un flujo de órdenes interactivo, pero su dirección no constituye un descubrimiento independiente. Su contenido cuantitativo más útil es el patrón de recuperación en horizonte finito y la diferencia entre el referente aislado y el calendario con ruido.
+
+\subsection{Retiro de liquidez y sensibilidad H2 (OE3)}
+
+La regla de retiro actual se activa en todas las corridas E3 porque cada choque aplicado supera el umbral fijo. Representa una respuesta determinista única, no adaptación heterogénea de proveedores. El estadístico original mide el desplazamiento respecto del precio del AMM previo al choque y se satura cuando este coincide con el cambio de la nueva referencia más la banda. No sirve como medida general de amplificación. Además, el retiro reduce el límite de orden de arbitraje $c x$ junto con la profundidad de la piscina, por lo que ambos mecanismos están confundidos. La sensibilidad con semillas nuevas muestra el límite principal: el contraste de baja profundidad desaparece al escalar las órdenes de ruido y tendencia con las reservas y se debilita al desactivar el pánico. H2 debe leerse como una propiedad del disparador, la métrica, la convención de órdenes y el calendario específicos, no como evidencia de fragilidad general de liquidez.
+
+\subsection{Mapas reducidos y alcance predictivo (OE4, H3)}
+
+Esto responde la cláusula del mapa como descripción predictiva limitada, no como clasificación de regímenes: el mapa de dos estados mejora la persistencia en algunas condiciones reservadas, pero no supera al AR(1) escalar, por lo que su segundo estado no demuestra valor predictivo incremental a un paso. La mejora media de alrededor de 1.7\,\% del error de reproducción del mapa sensible a la banda se concentra en una condición de baja capacidad/profundidad y depende de la trayectoria futura realizada del CEX. Es un resultado condicional de reproducción, no un pronóstico en tiempo real.
+
+\section{Conclusiones por objetivo}
+
+\begin{description}
+  \item[OE1.] El simulador pasó las invariantes de implementación y sus resultados registrados son reproducibles. Esto establece consistencia con las reglas codificadas.
+  \item[OE2.] La corrección ideal según la capacidad se deriva exactamente. La simulación muestra las consecuencias en horizonte finito de añadir el ruido, la tendencia y el calendario especificados; no ofrece una prueba independiente de que el arbitraje mueva el precio hacia la referencia.
+  \item[OE3.] El contraste de retiro depende de un disparador que se activa en todas las corridas ensayadas, una métrica de desplazamiento previo al choque, órdenes de tamaño fijo y un límite de arbitraje ligado a las reservas. No se establece un efecto general de amplificación ni de adaptación de proveedores.
+  \item[OE4.] El mapa de dos estados no mejora el AR(1) escalar. El mapa sensible a la banda tiene una ventaja de reproducción pequeña y localizada que utiliza la referencia futura realizada; no hay evidencia de predicción operativa.
+\end{description}
+
+\section{Conclusión general}
+
+Dentro de la grilla especificada, el cálculo de piscina aislada da la corrección ideal por evento, mientras que la trayectoria simulada posperturbación también depende de la profundidad de reservas, el tamaño de las órdenes, las reglas de agentes y el orden de eventos. La pregunta revisada se refiere a estas trayectorias finitas de error y no a regímenes de mercado. Para ese objetivo, el mapa de dos estados no supera al AR(1) escalar, y la pequeña ganancia de reproducción del mapa sensible a la banda es localizada y usa la trayectoria futura realizada del CEX. Por tanto, la evidencia responde la pregunta revisada dentro de este simulador, pero no establece un efecto de mercado real, un pronóstico operativo ni un clasificador de regímenes.
+
+El resultado de persistencia de la recuperación se concentra en E3. En sus nueve celdas de profundidad y choque ponderadas por igual, el 31.2\,\% de las trayectorias que logró una recuperación sostenida salió después de la banda; con factor de profundidad 0.5, la proporción condicional fue 98.8\,\%, mientras que con factores 1 y 2 fue cero. El 31.2\,\% es un resumen ponderado del diseño del simulador, no una frecuencia de mercado estimada. En una futura reproducción de eventos, la primera entrada a la banda, el retorno sostenido de dos ticks, las salidas posteriores y el máximo error de seguimiento al final del tick deberían permanecer como observables separados para no confundir una recuperación temporal con un seguimiento durable.
+
+El análisis posterior del error pico añade un hallazgo H2 condicional: con profundidad 0.5, E3 menos E1-alta fue $0.05193$, $0.02443$ y $0.01037$ para choques de $-0.05$, $-0.10$ y $-0.20$, respectivamente, con intervalos bootstrap por semilla positivos; con profundidades 1 y 2, los contrastes fueron cero a precisión numérica. La razón $R_{\mathrm{nom}}$ ofrece una forma plausible de comparar el impacto nominal de un flujo unidireccional con una corrección de capacidad completa, pero sus entradas actuales no son el flujo realizado. Con el mismo $R_{\mathrm{nom}}=0.67$, las corridas estáticas de baja profundidad mostraron salidas posteriores en 30.0\,\%, 17.7\,\% y 0\,\% de las trayectorias recuperadas para los tres choques. Este caso contradice usar $R_{\mathrm{nom}}<1$ como condición suficiente de seguimiento sostenido; la razón es un diagnóstico exploratorio, no una ley de umbral.
+
+Para ingeniería, estos resultados justifican proponer campos de telemetría para futuros experimentos de reproducción: precios de referencia y piscina sincronizados, reservas activas, flujo de órdenes con signo, capacidad de arbitraje disponible, orden de eventos/transacciones, primera entrada a la banda, retorno sostenido y salidas posteriores. Es una propuesta de qué medir en el siguiente estudio, no evidencia de que una regla de monitoreo en vivo esté validada.
+
+El aporte de la tesis es metodológico y acotado: deriva el referente de capacidad de producto constante, estudia la interacción de reglas seleccionadas en un simulador reproducible e informa sensibilidades y resultados negativos en la comparación de modelos. Una afirmación sobre sistemas reales exigiría reproducir eventos de mercado sincronizados, con comisiones del pool, gas, latencia, capital finito, orden transaccional y competencia entre buscadores. El manuscrito actual no incluye tal reproducción empírica.
+
+\section{Limitaciones y amenazas a la validez}
+
+El simulador usa un precio CEX exógeno, intercambios sin comisión, sin gas ni retraso de ejecución, inventarios amplios, un agente representativo por función, una piscina de producto constante y ticks de eventos sin duración de reloj calibrada. No representa posiciones de liquidez concentrada, competencia entre buscadores ni MEV. Las reglas de retiro y pánico son heurísticas fijas; el disparador H2 se activa en todas las corridas ensayadas y el retiro cambia tanto la profundidad como el límite de arbitraje. La sensibilidad y las comparaciones reservadas de modelos se mantienen dentro de esta única familia sintética de reglas. La comparación híbrida también usa la trayectoria futura realizada del CEX. No se incluye calibración, reproducción sincronizada de eventos ni validación externa.

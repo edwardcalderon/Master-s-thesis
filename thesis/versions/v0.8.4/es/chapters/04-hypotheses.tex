@@ -1,0 +1,29 @@
+\chapter{Proposición analítica y preguntas de evaluación}
+\label{cap:hipotesis}
+
+El estudio distingue una consecuencia algebraica de la regla de intercambio de dos preguntas que requieren simulación. Estas son afirmaciones sobre el micromundo especificado sin comisiones; no son hipótesis sobre mercados observados.
+
+\section{H1: corrección ideal con arbitraje acotado}
+
+Sea $e_t=\log(p_t^D/p_t^C)$ y $D_t=(|e_t|-\gamma)_+$. En una piscina aislada sin comisión, con referencia fija, sin otras órdenes y sin una restricción vinculante de inventario, la orden máxima $q=cx$ cambia el precio logarítmico en $\delta_c=2\log(1+c)$. Como el arbitrajista se detiene en la banda, el exceso de error evoluciona según
+\[
+  D_{t+1}=\max(0,D_t-\delta_c),\qquad
+  N_\gamma=\left\lceil\frac{D_0}{2\log(1+c)}\right\rceil \quad(c>0).
+\]
+Para $c=0$ no hay corrección finita. Este es un referente mecánico derivado de la ecuación del intercambio de producto constante, no un hallazgo empírico. La simulación sirve para cuantificar las desviaciones respecto de ese referente causadas por otros agentes, el orden de eventos, el horizonte finito y las reglas de inventario especificadas.
+
+\section{H2: retiro, escala de órdenes y respuesta de seguimiento}
+
+La pregunta de evaluación que responden las corridas disponibles es más acotada:
+% QUESTION_LOCK:h2:BEGIN
+\emph{Dentro de los niveles de capacidad y profundidad ensayados, ¿cómo afecta al seguimiento posterior al choque la regla especificada de retiro único de liquidez, y cómo varía ese efecto cuando el tamaño de las órdenes escala con las reservas o se desactiva la conducta de pánico?}
+% QUESTION_LOCK:h2:END
+La regla E3 es un disparador de umbral único, no una política adaptativa estimada: retira el 45\,\% de las reservas en cuanto $|e_t|>0.02$. Los choques ejecutados superan este umbral en todas las corridas E3. El desplazamiento máximo original respecto al precio del AMM previo al choque se trata solo como diagnóstico; no mide el sobrepaso frente a la nueva referencia.
+
+\section{H3: precisión descriptiva de los mapas reducidos}
+
+La cláusula del mapa en la pregunta de investigación se operacionaliza como descripción predictiva del error de seguimiento continuo en trayectorias reservadas del simulador. Las etiquetas de trayectoria por ventana finita resumen esas trayectorias; no son regímenes observados independientemente ni objetivos de una prueba de clasificación. H3 pregunta:
+% QUESTION_LOCK:h3:BEGIN
+\emph{¿Con qué precisión predice el mapa de dos estados las trayectorias reservadas del error de seguimiento frente a la persistencia y un AR(1) escalar, y cómo se desempeña un mapa sensible a la banda frente al mapa afín en la reproducción recursiva?}
+% QUESTION_LOCK:h3:END
+La comparación se refiere a trayectorias generadas por el simulador. La reproducción híbrida recibe la trayectoria futura realizada del CEX, por lo que su resultado no evalúa un pronóstico en tiempo real. No se propone una hipótesis de clasificación de regímenes ni de estabilidad.

@@ -1,0 +1,38 @@
+\chapter{Objectives}
+\label{cap:objetivos}
+
+\section{General objective}
+
+To distinguish the mechanical consequences of a zero-fee constant-product AMM from the effects of specified agent rules, and to characterize bounded-arbitrage tracking, liquidity-withdrawal sensitivity and reduced-model performance within a reproducible synthetic CEX/DEX micro-world.
+
+\section{Specific objectives}
+
+\begin{enumerate}[label=\textbf{OE\arabic*.}, leftmargin=3em]
+  \item To specify and verify a discrete simulator of a constant-product AMM with an exogenous CEX reference, noise, trend, arbitrage and liquidity-provision rules, and to record its runs reproducibly.
+  \item To derive the ideal correction rate implied by the arbitrage capacity and compare it with finite-horizon simulator trajectories under the configured order flows.
+  \item To characterize how the existing one-time withdrawal trigger changes simulated tracking under fixed-size and reserve-proportional orders, including the panic-agent ablation, without treating the rule as an empirically validated adaptive policy.
+  \item To assess the descriptive accuracy of reduced maps on held-out simulator tracking paths against persistence and a scalar AR(1), compare band-aware recursive replay with an affine map, and delimit predictive claims from regime classification.
+\end{enumerate}
+
+\section{Correspondence between objectives, claims and evidence}
+
+Table~\ref{tab:oe-h} connects each objective with its analytical proposition or evaluation question. OE1 is instrumental.
+
+\begin{table}[H]
+\centering
+\caption{Correspondence between specific objectives, claims, method and evidence.}
+\label{tab:oe-h}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.0}
+\begin{tabularx}{\textwidth}{@{}l l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X@{}}
+\toprule
+Objective & Claim & Method & Evidence \\
+\midrule
+OE1 & Instrumental & Specification, invariants and run record & Nine invariant checks; ID and checksums (annex~\ref{cap:anexos}) \\
+OE2 & H1, analytical & Closed-form capacity step and ideal ticks-to-band; comparison with the simulated grid & $2\log(1+c)$ per isolated tick; simulated recovery summaries (section~\ref{sec:res-h1}) \\
+OE3 & H2, exploratory & Paired current-rule sensitivity by order scaling and panic action & Cell-level contrasts and recovery persistence (sections~\ref{sec:res-h2} and~\ref{sec:engineering-sensitivity}) \\
+OE4 & H3, model comparison & Held-out predictive description of tracking-error paths against simple baselines & Error versus persistence and scalar AR(1); band-aware replay result (section~\ref{sec:res-h3}) \\
+\bottomrule
+\end{tabularx}
+\end{table}

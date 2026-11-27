@@ -1,8 +1,8 @@
 {
-  "seo": { "title": "Seguimiento de precios y fragilidad de liquidez en mercados cripto híbridos CEX/DEX", "description": "Una tesis CEX/DEX basada en agentes con un laboratorio de simulación reproducible en el navegador." },
+  "seo": { "title": "Seguimiento de precios con arbitraje acotado: estudio sintético CEX/DEX basado en agentes", "description": "Una tesis CEX/DEX basada en agentes con un laboratorio de simulación reproducible en el navegador." },
   "language": { "label": "Idioma del sitio", "english": "English", "spanish": "Español" },
   "header": {
-    "home": "Inicio de Master Thesis Lab", "subtitle": "edición de investigación", "navigation": "Navegación principal",
+    "home": "Inicio de Master Thesis Lab", "subtitle": "edición de investigación", "navigation": "Navegación principal", "openNavigation": "Abrir navegación", "closeNavigation": "Cerrar navegación",
     "overview": "Resumen", "lab": "Laboratorio de simulación", "abstract": "Resumen", "notebooks": "Cuadernos", "notes": "Notas", "manuscript": "Manuscrito",
     "readingOn": "Lectura activa", "reading": "Lectura", "exitReading": "Salir del modo de lectura", "enterReading": "Activar modo de lectura",
     "useLight": "Usar tema claro", "useDark": "Usar tema oscuro", "openRepository": "Abrir repositorio"

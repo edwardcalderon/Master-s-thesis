@@ -9,38 +9,35 @@ together.
 - English PDF: `main.pdf`
 - Spanish PDF: `es/main.pdf`
 
-The current manuscript revision is v0.8.0. It retains the frozen v0.5.0 confirmatory
-findings, corrects bilingual pagination and removes the editorial source-replacement
-note from both annexes. It adds a fresh-seed engineering sensitivity: recovery can be
-followed by a later departure, and the shallow-depth effect changes with order size
-relative to reserves and with the panic rule. The new conclusions derive monitoring
-and stress-test requirements while keeping all findings explicitly synthetic and
-requiring real-pair validation before operational use.
+The current manuscript revision is v0.8.5. The approved main research question is unchanged. H1 now interprets the difference between the isolated-pool deadline and simulated sustained recovery. The H2 replay and the 1,800-path capacity-ratio check distinguish one-off panic-associated shallow E1 departures from recurring E3 departures, and show that the fixed-capacity control equalizes the configured pressure ratios rather than decomposing capacity from depth. The primary H2 comparison uses post-recovery excess area, which excludes the imposed shock and the two recovery-confirmation ticks; its conditional denominator is reported consistently. The abstracts summarize the analytical, simulation, sensitivity and reduced-map findings. The PDF layout check reports their page share and ensures each abstract and its keywords remain together on one page.
 
-Revision v0.6.1 added a bilingual technical glossary after the notation tables,
-including ABM and the market, dynamical-systems, experimental-design, and inference
-terms used throughout the thesis. Revision v0.7.0 adds a non-exhaustive quadratic
-Lyapunov check for the fitted affine maps and clarifies that the recorded accounting
-state is not claimed to be Markov-complete. Revision v0.8.0 adds a frozen, held-out
-comparison of a band-aware hybrid reduced map with the affine baseline, reports its
-condition-dependent predictive gain and limits, and links the finding to empirical
-monitoring requirements. It does not establish stability of the full stochastic
-simulator or validate a market model.
+All results remain conditional on the synthetic model. The H2 replay uses existing seeds rather than an independent Monte Carlo sample; 7,200 reserve-linked-cap paths exactly reproduce archived metrics. The shallow fixed-capacity control substantially reduces the post-recovery E3 contrast, but recovery conditioning, one tested depth and post-hoc design prevent a general causal decomposition. Panic overlap is descriptive and end-of-tick episode counts do not identify within-tick causality. No market-data validation was performed. Future work extends the capacity control into a factorial design and performs synchronized event replay with realistic costs and delays.
 
-The manuscript follows the structure introduced in response to the advisor's feedback (introduction in six paragraphs; problem and state of the art;
-justification; hypotheses; objectives; methodology; results; discussion and
-conclusions; future work; bibliography; annexes) and reports a confirmatory run
-(`cex-dex-confirm-5b06486d695e`) with disjoint exploration and confirmation seeds. The
-workspace release version is tracked separately by the root `VERSION` file and is
-synchronized into both LaTeX entry points. Snapshots `versions/v0.4.0/` and earlier
-keep the previous sources; v0.2.0 holds the October 29 draft and its unverified
-preliminary values.
+The v0.8.1 pilot of three public DEX swaps is no longer presented as thesis evidence and its dataset citation has been removed from the active bibliography. The BibTeX source contains 87 records; the compiled bibliography contains 56 cited items (55 scholarly works and one repository record).
 
-The original confirmatory figure and table data in `figures/data/` are exported from the frozen run by
-`experiments/cex_dex_mvp/export_thesis_data.py`; `figures/data/manifest.json` records
-the source run and file hashes. The supplementary data in `figures/engineering/` come from analysis 0.6.0 and carry
-the fresh run ID and file hashes. The bibliography (87 entries) was verified entry by
-entry; see `literature-audit/REFERENCE_AUDIT.md`.
+The archived Monte Carlo outputs retain the historical identifier `cex-dex-confirm-5b06486d695e`; the exploratory H2 replay is `cex-dex-h2-review-81af3e984e2c`, and the capacity-ratio check is `cex-dex-capacity-ratio-e269f980fd26`. Reproduce them with `python3 experiments/cex_dex_mvp/analyze_h2_revision.py` and `python3 experiments/cex_dex_mvp/analyze_capacity_ratio_check.py`; their manifests record input and output checksums, and the scripts export manuscript tables and the interactive web summary. The workspace release version remains separate in the root `VERSION` file. Earlier snapshots remain unchanged; v0.8.5 records this bilingual revision and the approved question unchanged.
+
+## Research-question change control
+
+The main research question and the H2/H3 evaluation subquestions are locked in both
+language editions. Every manuscript render runs the guard, and a pull-request workflow
+checks edits to the question sections. An unapproved wording change fails the check.
+
+A question change requires explicit thesis-author or supervisor approval. Append a new
+approved record to thesis/question-control.json with the approver, date, rationale and
+provenance (for example, an approved feedback document, meeting record, or issue); then
+update the marked question text in English and Spanish and the record's approved wording.
+Do not overwrite prior approval records. Run the guard with:
+
+```bash
+pnpm thesis:questions:check
+```
+
+The guard compares the marked source text with the latest approval record and checks that
+older records remain unchanged in pull requests. It validates the recorded provenance but
+does not authenticate the person named as approver. To make consent a required gate, keep
+question changes in pull requests and require reviewer approval through repository branch
+protection.
 
 ## Build both PDFs
 
@@ -57,10 +54,42 @@ both PDFs. CI publishes the pair as `master-thesis.pdf` and
 
 The PDF build also runs `python3 ../scripts/check-thesis-layout.py` after compilation.
 This requires Poppler (`pdftotext`) and rejects a research question split across pages
-or separated from its heading. The Pages workflow runs the same check before upload.
+or separated from its heading. It also checks that each abstract and its keywords remain
+on one page and reports their rendered page share. The Pages workflow runs the same check before upload.
 
 Both editions use the shared citation keys in `references.bib`; `make pdf` runs
 BibTeX for each source tree before producing the final PDFs.
+
+## Double-blind review copies
+
+Generate only the current blind English or Spanish PDF:
+
+```bash
+pnpm thesis:pdf:en-blind
+pnpm thesis:pdf:es-blind
+```
+
+To generate both blind copies without first compiling the named editions:
+
+```bash
+make -C thesis pdf-blind
+```
+
+To render both named editions and include both blind copies on demand:
+
+```bash
+make -C thesis pdf BLIND=1
+# equivalent:
+pnpm thesis:pdf:blind
+```
+
+The outputs are thesis/build/manuscript-en-double-blind.pdf and
+thesis/build/manuscrito-es-doble-ciego.pdf. The build removes names, advisors, degree
+program, institution and location from the covers; clears PDF author metadata; masks the
+repository self-citation and repository-identifying run IDs, checksums and local paths;
+then scans each extracted PDF for those markers and checks that the full research question
+appears on one page with its heading. Both language editions retain the same research
+question.
 
 ## Local similarity preflight
 

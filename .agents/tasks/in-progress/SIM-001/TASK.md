@@ -35,6 +35,9 @@ lightweight, versioned summaries before they are loaded.
   preserving starting marginal price and displaying absolute log-price impact.
 - A compact held-out nonlinear-map evidence view exposes aggregate L0/Hyb findings,
   a selectable metric chart, and all 32 confirmation cells with provenance and limits.
+- A compact bilingual H2 view exposes post-recovery excess area by depth, panic/no-panic
+  departure episodes, and the shallow fixed-capacity counterfactual from checksummed
+  precomputed outputs; it states that the replay reuses existing seeds and is exploratory.
 - The UI identifies model/config versions, synthetic scope, assumptions, and reproducible
   scenario inputs; selected settings can be copied or exported.
 - Workloads are bounded in browser and do not depend on a backend. Future stochastic
@@ -77,13 +80,20 @@ lightweight, versioned summaries before they are loaded.
   `cex-dex-hybrid-1d1d9d2f8c5b`; the bilingual view toggles among price/flow and
   one-step/recursive errors, groups cells by depth and condition, and expands to the
   full 32-cell table. It labels the no-future-flow-input limit and synthetic scope.
+- Added `RevisionFindings.tsx` using the reproducible H2 review export. It visualizes the
+  paired post-recovery contrast across depth, panic-ablation outcomes, and linked versus
+  initial-reserve arbitrage-cap summaries; bilingual provenance records 9,000 paths and
+  7,200 exact archived metric matches.
+- Updated the website abstracts and rule labels to reflect v0.8.4 and describe the LP
+  mechanism as threshold withdrawal; the older whole-horizon peak label now states that
+  it includes the imposed shock.
 
-## Current state — workspace v0.1.10 / manuscript v0.8.0
+## Current state — workspace v0.1.10 / manuscript v0.8.4
 
-The deterministic E0/E1/E2 playground and bilingual L0/Hyb evidence panel are present
-in the static web app. No server, database, 3D scene, or continuously evolving world was
-added. The hybrid panel summarizes the frozen synthetic run; it does not execute that
-stochastic experiment in the browser.
+The deterministic E0/E1/E2 playground and bilingual L0/Hyb and H2 evidence panels are
+present in the static web app. The H2 panel summarizes a post-hoc replay of existing
+synthetic seeds; it does not run that stochastic experiment in the browser. The separate
+server/database and 3D continuously evolving world remain out of scope here.
 
 ## Remaining work
 

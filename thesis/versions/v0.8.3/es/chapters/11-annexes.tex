@@ -1,0 +1,182 @@
+\chapter{Anexos técnicos}
+\label{cap:anexos}
+
+\section{Descripción ODD del modelo}
+\label{sec:odd}
+
+La descripción sigue el protocolo ODD \cite{grimm2020odd}.
+
+\subsection*{Visión general}
+
+\textbf{Propósito.} Estudiar cómo un AMM de producto constante sigue un precio de referencia exógeno después de una perturbación, bajo distintas capacidades de arbitraje, profundidades y reglas de provisión de liquidez.
+
+\textbf{Entidades y variables de estado.} El AMM (reservas $x_t$, $y_t$); la referencia CEX ($\pC_t$); cuatro billeteras: ruido, tendencia y pánico, arbitrajista y proveedor de liquidez, con inventarios en $X$ e $Y$. Las variables derivadas son $e_t$, $d_t$ y $z_t$.
+
+\textbf{Escalas.} Un tick es una unidad discreta de tiempo sin equivalencia calendario; el horizonte es de 20 ticks. Las reservas iniciales son $10\,000$ unidades por activo y el precio inicial es 1.
+
+\textbf{Resumen del proceso.} En cada tick: choque de la referencia (solo en el tick 1), orden de ruido, decisión de tendencia o pánico, decisión del proveedor adaptativo, orden de arbitraje, registro y comprobaciones.
+
+\subsection*{Conceptos de diseño}
+
+\textbf{Emergencia.} La trayectoria del error de seguimiento resulta de la interacción entre el arbitraje acotado y el flujo de órdenes. \textbf{Adaptación.} El proveedor retira liquidez ante un error mayor que $0.02$ (una vez); el agente de pánico reacciona ante un retorno del AMM menor o igual a $-1.5\,\%$ (una vez por ejecución); el agente de tendencia sigue retornos de magnitud mayor o igual a $0.1\,\%$. \textbf{Objetivos.} Ninguno de los agentes optimiza; las reglas son heurísticas. \textbf{Observación.} Los agentes observan el precio del AMM y, el arbitrajista, también la referencia. \textbf{Estocasticidad.} Solo el flujo de ruido es aleatorio (actividad y lado); la mecánica del AMM y las reglas son deterministas. \textbf{Interacción.} Indirecta, a través del precio y de las reservas.
+
+\subsection*{Detalles}
+
+\textbf{Inicialización.} Reservas $10\,000/10\,000$, precio inicial de la referencia 1; billeteras de ruido y de tendencia con dos veces las reservas iniciales, arbitrajista con cinco veces, proveedor con cero. \textbf{Entrada.} El choque de la referencia y el calendario de ruido pregenerado a partir de la semilla. \textbf{Submodelos.} Las ecuaciones~\eqref{eq:reservas} a~\eqref{eq:qstar} y las reglas de la sección de agentes del capítulo~\ref{cap:metodologia}. La tabla~\ref{tab:parametros} resume los parámetros.
+
+\begin{table}[htbp]
+\centering
+\caption{Parámetros del modelo ejecutado (versión 0.4.0).}
+\label{tab:parametros}
+\small
+\begin{tabular}{@{}lr@{}}
+\toprule
+Parámetro & Valor \\
+\midrule
+Reservas iniciales $x_0=y_0$ & 10\,000 \\
+Precio inicial de la referencia & 1 \\
+Horizonte & 20 ticks \\
+Tick del choque & 1 \\
+Semiancho de la banda $\gamma$ & 0.003 \\
+Ticks dentro de la banda para el retorno sostenido & 2 \\
+Capacidades de arbitraje $c$ & 0; 0.005; 0.03; 0.10 \\
+Inventario de ruido y tendencia (múltiplo de las reservas) & 2 \\
+Inventario del arbitrajista (múltiplo) & 5 \\
+Probabilidad de actividad del ruido & 0.7 \\
+Tamaño de la orden de ruido (fracción de la reserva inicial) & 0.004 \\
+Umbral de tendencia (retorno logarítmico) & 0.001 \\
+Tamaño de la orden de tendencia & 0.006 \\
+Umbral de pánico (retorno logarítmico) & $-0.015$ \\
+Tamaño de la venta de pánico & 0.02 \\
+Ventas de pánico máximas por ejecución & 1 \\
+Umbral del retiro adaptativo (error logarítmico) & 0.02 \\
+Fracción de reservas que se conserva & 0.55 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Contrato de ejecución y reproducibilidad}
+\label{sec:contrato}
+
+Cada ejecución del simulador queda descrita por los campos de la tabla~\ref{tab:contrato}.
+
+\begin{table}[htbp]
+\centering
+\caption{Contrato de ejecución.}
+\label{tab:contrato}
+\small
+\begin{tabularx}{\textwidth}{@{}l X@{}}
+\toprule
+Campo & Contenido \\
+\midrule
+\code{run\_id} & Identificador derivado de los parámetros. \\
+Commit & Versión del código y estado del árbol de trabajo. \\
+Escenario & Condición, capacidad y regla de liquidez. \\
+Semilla & Semilla del flujo de ruido. \\
+Parámetros & Configuración completa del modelo y del protocolo. \\
+Reloj & Tick y evento registrado. \\
+Series & Precios, reservas, errores, órdenes. \\
+Métricas & Las de la tabla~\ref{tab:metricas}. \\
+Comprobaciones & Conservación de activos, positividad y finitud. \\
+Entorno & Versión de Python y de la plataforma. \\
+Suma de verificación & SHA-256 de configuraciones, código y productos. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection*{Registro de la ejecución Monte Carlo archivada}
+
+\begin{itemize}
+  \raggedright
+  \item Identificador: \code{\RunID}, versión de análisis 0.5.0, versión del modelo 0.4.0, Python 3.12.3.
+  \item Commit de código: \ifdefined\blindreviewmode\code{[omitido para revisión anónima]}\else\code{06778ccfb4db032d8ae143dcd4396d8786ee7814}\fi, con el árbol de trabajo limpio (\code{git\_working\_tree\_dirty} falso).
+  \item Recuento de ejecuciones: 3000 de exploración y 13\,500 ejecuciones de simulación reservadas (denominadas históricamente de confirmación).
+  \ifdefined\blindreviewmode
+  \item Las configuraciones, fuentes, ejecuciones y productos cuentan con sumas de verificación archivadas; sus valores se omiten en esta copia porque permiten localizar los artefactos públicos.
+  \else
+  \item SHA-256 de la configuración de confirmación archivada:\newline\code{dcf2ef01fdc7504834362f7cb38b93801b2effa861f6d0e3be8ed74796cef16f}; de la configuración del modelo:\newline\code{9c221ada2b8a2150d238c11d320e34fd3697a6a67d193ab4951b48547b09623f}.
+  \item SHA-256 del código fuente: \code{confirm.py} \code{9b2c7df09f49bd2f\ldots}, \code{abm.py} \code{f15c666856519b8\ldots}, \code{run.py} \code{1530471be964587e\ldots}, \code{h1c.py} \code{6c26ed25f8796d1c\ldots} (valores completos en el resumen de la ejecución).
+  \item SHA-256 de los productos: \code{run\_metrics.csv} \code{2a0fbd17bb3e5eb6\ldots}; \code{inference.csv} \code{d4828a48cd0f8f2a\ldots}; \code{cell\_breakdown.csv} \code{0a87125ca4a09068\ldots}; \code{h3\_by\_condition.csv} \code{28d31f52e5c4be41\ldots};\newline\code{condition\_summary.csv} \code{ee6c02c5ac37544b\ldots};\newline\code{exploration\_fits.csv} \code{1f5f7ffbe00a86c6\ldots}; \code{sample\_size\_guidance.csv} \code{86d4a3a45fedd0a2\ldots}.
+  \fi
+\end{itemize}
+
+\subsection*{Sensibilidad de ingeniería y repetición completa}
+
+\ifdefined\blindreviewmode
+Las fuentes de los ejecutores originales y la configuración archivada no cambiaron. Cinco flujos existentes reprodujeron byte por byte sus artefactos registrados y pasaron las nueve comprobaciones automáticas de implementación y reglas. Los identificadores y hashes que permiten localizar el repositorio se omiten en esta copia.
+\else
+Las fuentes de los ejecutores originales y la configuración archivada no cambiaron. Cinco flujos existentes reprodujeron byte por byte sus artefactos de resultados registrados: mecánica determinista \code{cex-dex-mvp-f183520b90aa}, barrido \code{cex-dex-sweep-5e33d51c51a3}, selección estocástica \code{cex-dex-abm-a99f9be866b2}, mapa reservado \code{cex-dex-h1c-43e446f04adf} y la ejecución históricamente denominada de confirmación \code{cex-dex-confirm-5b06486d695e}. Pasaron las nueve comprobaciones automáticas de implementación y reglas.
+\fi
+
+El análisis suplementario es la sensibilidad de ingeniería (análisis 0.6.0; modelo 0.4.0), 300 semillas nuevas (2000--2299), 40\,500 trayectorias. El protocolo y la configuración documentan tres variantes del flujo de órdenes y las 15 celdas evaluadas. La unidad independiente es la semilla; los intervalos de recuperación por celda son Wilson y los intervalos pareados por profundidad son aproximaciones normales sin ajuste. La reproducción en una segunda carpeta generó artefactos numéricos y de configuración idénticos.
+
+\ifdefined\blindreviewmode
+Los comandos y rutas específicos para regenerar la ejecución se omiten en esta copia de evaluación anónima.
+\else
+Los productos de la ejecución no se versionan en el repositorio. Para regenerarlos y exportar los datos de las figuras:
+
+\begin{verbatim}
+python3 experiments/cex_dex_mvp/confirm.py
+python3 experiments/cex_dex_mvp/export_thesis_data.py \
+  --run-dir experiments/cex_dex_mvp/output/confirm/<run_id>
+python3 experiments/cex_dex_mvp/check_invariants.py
+\end{verbatim}
+\fi
+
+La repetición de la ejecución produjo el mismo identificador y archivos de resultados idénticos byte a byte, salvo los campos \code{generated\_at\_utc} y \code{git\_working\_tree\_dirty} del resumen.
+
+\section{Plan de verificación}
+\label{sec:verificacion}
+
+La tabla~\ref{tab:verificacion} lista las nueve comprobaciones automáticas de \code{check\_invariants.py}. Todas pasaron en la versión usada para los resultados archivados. La lista combina comprobaciones mecánicas de implementación y comprobaciones de que ciertos comportamientos esperados se siguen de las reglas configuradas; aprobarlas no constituye evidencia independiente de efectos de mercado.
+
+\begin{table}[htbp]
+\centering
+\caption{Verificaciones del simulador y resultado.}
+\label{tab:verificacion}
+\small
+\begin{tabularx}{\textwidth}{@{}l X l@{}}
+\toprule
+Id. & Comprobación & Resultado \\
+\midrule
+V01 & La venta de $X$ sin comisión conserva $k$ y mantiene reservas positivas. & pasa \\
+V02 & La compra de $X$ sin comisión conserva $k$ y mantiene reservas positivas. & pasa \\
+V03 & El retiro proporcional conserva el precio marginal. & pasa \\
+V04 & Los estados configurados de E0 a E3 tienen reservas positivas y finitas. & pasa \\
+V05 & La regla de arbitraje configurada acerca el precio de la piscina a la referencia en ambas direcciones del choque. & pasa \\
+V06 & El umbral fijo de retiro se activa con los choques ejecutados y aplica el retiro proporcional configurado. & pasa \\
+V07 & La comparación estática y adaptativa comparte la trayectoria exógena y los ticks. & pasa \\
+V08 & El impacto de una venta fija crece con cada reducción de liquidez. & pasa \\
+V09 & Las condiciones pareadas comparten las órdenes de ruido y conservan los activos (24 trayectorias, 504 estados). & pasa \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Estas comprobaciones verifican la implementación. La validación frente a mercados reales no se realizó. No hay una comprobación automática de que el simulador reproduzca hechos estilizados, ni se verificó el comportamiento con comisión, porque no está implementada.
+
+\section{Protocolo de literatura y auditoría de referencias}
+\label{sec:protocolo-literatura}
+
+La fuente BibTeX activa contiene 87 registros. La bibliografía compilada de esta revisión contiene 56 elementos citados: 55 trabajos académicos y un registro del repositorio. La verificación de metadatos frente a editoriales (Crossref) o repositorios de preprints cubrió título, autores, año, publicación, volumen y páginas de los trabajos citados. Los trabajos académicos se priorizaron por su relevancia: los centrales sustentan afirmaciones principales (mecánica del AMM, arbitraje, modelos basados en agentes y validación), los recomendados amplían el contexto y los de reserva apoyan una afirmación específica. Los siguientes casos se declaran para hacer explícito su estado:
+
+\begin{itemize}
+  \item Campbell et al., Bergault et al., Dean et al. y Cohen et al. se citan como preprints o documentos de trabajo, sin revisión por pares localizada.
+  \item En Dean et al., el registro de Crossref indica a Dean como primera autora, y otra base de datos bibliográfica indica otro nombre; se usa Crossref y se recomienda confirmarlo en la página del editor del documento de trabajo.
+  \item Windrum et al. (2007) se localizó solo por URL y no tiene DOI verificado en el registro consultado.
+  \item Holm (1979) está verificado parcialmente (página del editor); la paginación se tomó de la cita habitual.
+  \item Schär (2021): las páginas se infirieron del registro y no se confirmaron en el sitio de la revista. Angeris et al. (2020): no se confirmaron volumen y número.
+  \item Creswell: hay un conflicto de fecha entre ediciones (2014 y 2018). Para Kleijnen y Law no se confirmó la edición.
+\end{itemize}
+
+La lista detallada, con la evidencia por entrada, se conserva \ifdefined\blindreviewmode en los materiales del estudio.\else en el repositorio (\code{thesis/literature-audit/}).\fi No se encontró un ABM previo de un AMM con retiro de liquidez dependiente del error de seguimiento; esta afirmación se limita a las bases consultadas.
+
+\section{Protocolo de sensibilidad}
+\label{sec:sensibilidad}
+
+El trabajo de sensibilidad posterior debe variar los factores candidatos de la tabla~\ref{tab:factores}. Los cambios de un factor a la vez pueden servir de cribado; los diseños factoriales o de cribado \cite{morris1991factorial,saltelli2010variance} son preferibles si el objetivo es estudiar interacciones entre varios factores. Antes de ejecutar un nuevo experimento, se deben especificar el estimando principal, el contraste, la unidad de remuestreo por semilla, el objetivo de precisión práctica y la regla de parada; luego se registra la justificación del tamaño de muestra con el protocolo y los resultados. El archivo histórico \code{figures/data/sample\_size\_guidance.csv} pertenece a un diseño anterior y no es una guía general de tamaño de muestra.
+
+\ifdefined\blindreviewmode
+Los resúmenes posteriores de H1/H2 y de presión nominal de la sección~\ref{cap:resultados} se obtuvieron de métricas archivadas. El análisis reutiliza simulaciones existentes; no las vuelve a ejecutar ni aporta validación externa. En esta copia anónima se omiten las rutas y los comandos del repositorio.
+\else
+Los resúmenes posteriores de H1/H2 y de presión nominal de la sección~\ref{cap:resultados} se regeneran a partir de las métricas archivadas con \code{python3 experiments/cex\_dex\_mvp/analyze\_revision\_findings.py}. El script escribe los CSV por celda y un manifiesto con sumas de verificación de entradas y productos. Reanaliza simulaciones existentes; no las vuelve a ejecutar ni aporta validación externa.
+\fi

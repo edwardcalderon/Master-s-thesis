@@ -1,0 +1,7 @@
+arm,shock_log_return,runs,recovered_with_followup,departure_paths,departure_rate_given_recovery,total_departure_episodes,mean_departure_episodes_per_recovered_path,recovered_paths_with_multiple_episodes,panic_associated_departure_episodes,panic_orders_total,capital_limited_orders_total
+fixed_cap_no_panic,-0.2,300,300,0,0.0,0,0.0,0,0,0,0
+fixed_cap_no_panic,-0.1,300,300,0,0.0,0,0.0,0,0,0,0
+fixed_cap_no_panic,-0.05,300,300,0,0.0,0,0.0,0,0,0,0
+fixed_cap_panic,-0.2,300,300,53,0.17666666666666667,53,0.17666666666666667,0,53,300,0
+fixed_cap_panic,-0.1,300,300,101,0.33666666666666667,101,0.33666666666666667,0,101,300,0
+fixed_cap_panic,-0.05,300,300,123,0.41,123,0.41,0,123,300,0

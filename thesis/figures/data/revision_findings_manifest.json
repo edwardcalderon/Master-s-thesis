@@ -1,0 +1,55 @@
+{
+  "analysis": "manuscript-v0.8.3-critical-findings-review",
+  "script": "experiments/cex_dex_mvp/analyze_revision_findings.py",
+  "script_sha256": "af30203e77957e3b82c8df342c36bd6cde3d608b0d0bfd05cd44d648b34b5643",
+  "source_runs": {
+    "held_out_confirmation": "cex-dex-confirm-5b06486d695e",
+    "engineering_sensitivity": "cex-dex-engineering-9438e194aa7e"
+  },
+  "inputs": {
+    "confirm_csv": {
+      "path": "experiments/cex_dex_mvp/output/confirm/cex-dex-confirm-5b06486d695e/run_metrics.csv",
+      "sha256": "2a0fbd17bb3e5eb6cbf587eff2f228de8b2f23d5f408bf0c5a0bc1963fb848c6"
+    },
+    "engineering_csv": {
+      "path": "experiments/cex_dex_mvp/output/release-0.1.9/engineering/cex-dex-engineering-9438e194aa7e/run_metrics.csv",
+      "sha256": "d7cf4fbae64d620bd7b6d94ec189e7f89ac5f91831b41fa4981e63993070ce08"
+    },
+    "model_json": {
+      "path": "experiments/cex_dex_mvp/output/confirm/cex-dex-confirm-5b06486d695e/model_config.json",
+      "sha256": "9c221ada2b8a2150d238c11d320e34fd3697a6a67d193ab4951b48547b09623f"
+    },
+    "engineering_config_json": {
+      "path": "experiments/cex_dex_mvp/output/release-0.1.9/engineering/cex-dex-engineering-9438e194aa7e/abm_config.json",
+      "sha256": "9c221ada2b8a2150d238c11d320e34fd3697a6a67d193ab4951b48547b09623f"
+    }
+  },
+  "procedure": {
+    "bootstrap_resamples": 10000,
+    "bootstrap_seed": 20261123,
+    "h1_rate_intervals": "95% Wilson intervals for simulated binary return rates",
+    "h2_resampling_unit": "paired seed; equally weighted design cells in the aggregate",
+    "pressure_ratio_status": "post-hoc nominal diagnostic, not a fitted or validated threshold",
+    "simulation_rerun": false
+  },
+  "outputs": {
+    "h1_ideal_vs_simulated.csv": {
+      "rows": 18,
+      "sha256": "c1bd6127bfa6b13fdd2a47ed55321e703d45acc25ab798815280f13850b34a23"
+    },
+    "h2_peak_tracking_error.csv": {
+      "rows": 10,
+      "sha256": "70f6936e44dc5923d000be2aca0e452e388a7e1fbe573de5d4de7ba7562d8a21"
+    },
+    "pressure_ratio_diagnostic.csv": {
+      "rows": 27,
+      "sha256": "c26e99958110df96c7a50d080873d67e34426301ff03dcf55cff6e846d71ad4e"
+    }
+  },
+  "limitations": [
+    "All estimates remain conditional on the archived synthetic model and its configured event schedule.",
+    "The H2 peak-error measure is post-hoc and records end-of-tick states only.",
+    "The nominal pressure ratio assumes same-direction configured orders and approximate post-withdrawal reserves.",
+    "No market-data validation or new simulation experiment is included in this summary analysis."
+  ]
+}
