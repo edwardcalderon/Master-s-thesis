@@ -1,0 +1,12 @@
+{
+  "model_version": "infra-001-placeholder-0.1",
+  "tick": 350,
+  "seed": 1234,
+  "reserve_x": 980863.0229902853,
+  "reserve_y": 1019510.3460535943,
+  "cex_price": 1.0370461822357617,
+  "no_arbitrage_band_log": 0.003,
+  "capacity_fraction": 0.5,
+  "shock_scale": 0.002,
+  "last_event": "arbitrage-none"
+}

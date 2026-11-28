@@ -1,0 +1,93 @@
+[
+  {
+    "model_version": "infra-001-placeholder-0.1",
+    "synthetic": true,
+    "updated_at": "2026-11-26T19:18:29.713499+00:00",
+    "tick": 50,
+    "cex_price": 1.015961565326181,
+    "dex_price": 1.0179801108681423,
+    "log_error": 0.001984861442476739,
+    "no_arbitrage_band_log": 0.003,
+    "capacity_fraction": 0.5,
+    "last_event": "arbitrage-none",
+    "checksum": "c12c294190f39c710237fc51c94a1dbdcd736dc6dfd643c7adb98e728dc249f8"
+  },
+  {
+    "model_version": "infra-001-placeholder-0.1",
+    "synthetic": true,
+    "updated_at": "2026-11-27T01:50:43.927671+00:00",
+    "tick": 100,
+    "cex_price": 1.0216864227206706,
+    "dex_price": 1.0186259564472682,
+    "log_error": -0.002999999999999864,
+    "no_arbitrage_band_log": 0.003,
+    "capacity_fraction": 0.5,
+    "last_event": "arbitrage-buy-x",
+    "checksum": "c98abd96660406c006199aa226a266b2310a8b221f0924eaae75d84e5db90a41"
+  },
+  {
+    "model_version": "infra-001-placeholder-0.1",
+    "synthetic": true,
+    "updated_at": "2026-11-27T10:15:45.754896+00:00",
+    "tick": 150,
+    "cex_price": 1.011764378814785,
+    "dex_price": 1.0133284028944538,
+    "log_error": 0.001544644674817748,
+    "no_arbitrage_band_log": 0.003,
+    "capacity_fraction": 0.5,
+    "last_event": "arbitrage-none",
+    "checksum": "28d950ece08f1f10f4c904e7505b58f36b7f2ebd73ca4c6c52aba927f6247734"
+  },
+  {
+    "model_version": "infra-001-placeholder-0.1",
+    "synthetic": true,
+    "updated_at": "2026-11-27T19:33:32.450947+00:00",
+    "tick": 200,
+    "cex_price": 1.0261925167493704,
+    "dex_price": 1.0231185524510429,
+    "log_error": -0.002999999999999753,
+    "no_arbitrage_band_log": 0.003,
+    "capacity_fraction": 0.5,
+    "last_event": "arbitrage-buy-x",
+    "checksum": "807d948ccde49df386ddf656ab7b9ed2065e1de768084c185337e537f8503401"
+  },
+  {
+    "model_version": "infra-001-placeholder-0.1",
+    "synthetic": true,
+    "updated_at": "2026-11-28T02:09:57.548814+00:00",
+    "tick": 250,
+    "cex_price": 1.0321210674114125,
+    "dex_price": 1.031435558169938,
+    "log_error": -0.0006643958863963948,
+    "no_arbitrage_band_log": 0.003,
+    "capacity_fraction": 0.5,
+    "last_event": "arbitrage-none",
+    "checksum": "7bf57e7aeb201d20264700c5320a7f65da1ff2465f7b2b30d5ec5cf8b7533ffc"
+  },
+  {
+    "model_version": "infra-001-placeholder-0.1",
+    "synthetic": true,
+    "updated_at": "2026-11-28T10:17:34.886306+00:00",
+    "tick": 300,
+    "cex_price": 1.0263423131507776,
+    "dex_price": 1.0232679001366556,
+    "log_error": -0.0030000000000003093,
+    "no_arbitrage_band_log": 0.003,
+    "capacity_fraction": 0.5,
+    "last_event": "arbitrage-buy-x",
+    "checksum": "5e49636a24bd7aeed78989272e6336e0cedb5122a6d50ba3a3ba9bb3bc23e218"
+  },
+  {
+    "model_version": "infra-001-placeholder-0.1",
+    "synthetic": true,
+    "updated_at": "2026-11-28T18:19:31.283065+00:00",
+    "tick": 350,
+    "cex_price": 1.0370461822357617,
+    "dex_price": 1.039401345710319,
+    "log_error": 0.0022684555740621584,
+    "no_arbitrage_band_log": 0.003,
+    "capacity_fraction": 0.5,
+    "last_event": "arbitrage-none",
+    "checksum": "e8ec8f2fcc0003a069d2dff265c5a0430aa55e8ecb395c30cbe970bdc9d8516b"
+  }
+]

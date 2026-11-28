@@ -1,0 +1,13 @@
+{
+  "model_version": "infra-001-placeholder-0.1",
+  "synthetic": true,
+  "updated_at": "2026-11-28T18:19:31.283065+00:00",
+  "tick": 350,
+  "cex_price": 1.0370461822357617,
+  "dex_price": 1.039401345710319,
+  "log_error": 0.0022684555740621584,
+  "no_arbitrage_band_log": 0.003,
+  "capacity_fraction": 0.5,
+  "last_event": "arbitrage-none",
+  "checksum": "e8ec8f2fcc0003a069d2dff265c5a0430aa55e8ecb395c30cbe970bdc9d8516b"
+}
